@@ -1,1 +1,1 @@
-Incompleate Readme
+# Nazaria Arts Collective Mentorship Portal
