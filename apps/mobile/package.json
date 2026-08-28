@@ -37,6 +37,7 @@
   "scripts": {
     "build": "echo 'Expo build is handled by EAS, not turbo'",
     "start": "expo start",
+    "dev": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",

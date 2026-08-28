@@ -4,6 +4,4 @@ const path = require("path");
 
 const config = getDefaultConfig(__dirname);
 
-module.exports = withNativeWind(config, { 
-  input: path.resolve(__dirname, "./global.css") 
-});
+module.exports = withNativeWind(config, { input: "./src/global.css" });
