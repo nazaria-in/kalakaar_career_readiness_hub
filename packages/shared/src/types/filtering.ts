@@ -1,0 +1,133 @@
+// /packages/shared/src/types/filtering.ts
+
+/** The 3-state chip value already used by FilterChip — reused here so enum
+ *  fields can be "include" or "exclude", not just on/off. */
+export type ChipState = "selected" | "anti-selected" | null;
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface DateRangeValue {
+  from?: string; // ISO date
+  to?: string; // ISO date
+}
+
+export interface NumberRangeValue {
+  min?: number;
+  max?: number;
+}
+
+/**
+ * One entry per filterable/sortable field on a page. This is the ONLY thing
+ * a page author writes — SmartFilterBar and apply-filters/apply-sort read
+ * this array and do the rest. Never hand-roll .eq()/.ilike() chains outside
+ * of apply-filters.ts; add a new `kind` here instead if something doesn't fit.
+ */
+export type FilterFieldDef =
+  | {
+      key: string;
+      kind: "text";
+      label?: string;
+      /** Columns OR'd together via .ilike() — e.g. ["title","description"] */
+      columns: string[];
+      searchable?: boolean; // renders in the single global search box instead of its own control
+    }
+  | {
+      key: string;
+      kind: "enum";
+      label: string;
+      column: string;
+      options: SelectOption[];
+      sortable?: boolean;
+    }
+  | {
+      key: string;
+      kind: "boolean";
+      label: string;
+      column: string;
+      /** Label shown on the single toggle chip, e.g. "Active only" */
+      chipLabel: string;
+    }
+  | {
+      key: string;
+      kind: "date" | "dateRange";
+      label: string;
+      column: string;
+      sortable?: boolean;
+      defaultSort?: "asc" | "desc";
+    }
+  | {
+      key: string;
+      kind: "number" | "numberRange";
+      label: string;
+      column: string;
+      sortable?: boolean;
+      defaultSort?: "asc" | "desc";
+    }
+  | {
+      key: string;
+      kind: "entity";
+      label: string;
+      /** FK column that lives directly on the table being queried, e.g. pod_id on pods table itself */
+      column: string;
+      options: SelectOption[];
+    }
+  | {
+      key: string;
+      kind: "relation";
+      label: string;
+      /** The relation lives on a joined table, not the row itself — e.g.
+       *  filtering `users` by pod membership via `pod_members`. Uses
+       *  PostgREST embedded-resource `!inner` filtering. */
+      relation: { table: string; column: string; foreignTable?: string };
+      options: SelectOption[];
+    }
+  | {
+      key: string;
+      kind: "computed";
+      label: string;
+      options: SelectOption[];
+      sortable?: boolean;
+      /** Escape hatch only — prefer backing a SQL view and using `enum`/
+       *  `boolean` against that view instead of reaching for this. Typed
+       *  as unknown[] since the row shape varies per call site — cast
+       *  inside your resolver, e.g. `(rows as MyRow[]).filter(...)`.
+       *  `selected` = chips clicked to include, `excluded` = chips
+       *  clicked to exclude (2nd click). Resolver owns how a row's
+       *  underlying status maps to option values — return true if the
+       *  row's status is NOT in `excluded` when excluded is non-empty. */
+      resolver: (rows: unknown[], selected: string[], excluded: string[]) => unknown[];
+    };
+
+export type FilterValue = ChipState | boolean | string | DateRangeValue | NumberRangeValue | Record<string, ChipState>;
+
+export interface FilterState {
+  values: Record<string, FilterValue>;
+  search: string;
+}
+
+export interface SortState {
+  key: string | null;
+  direction: "asc" | "desc";
+}
+
+export const EMPTY_FILTER_STATE: FilterState = { values: {}, search: "" };
+
+/**
+ * Structural shape of the Supabase query-builder methods apply-filters.ts
+ * and apply-sort.ts call. Supabase's real PostgrestFilterBuilder returns
+ * `this` from each of these, so any real query object satisfies this
+ * interface — we just need something more specific than `any` to constrain
+ * the generic in applyFilters/applySort.
+ */
+export interface FilterableQuery<Self> {
+  eq(column: string, value: string | number | boolean): Self;
+  in(column: string, values: (string | number)[]): Self;
+  not(column: string, operator: string, value: string): Self;
+  gte(column: string, value: string | number): Self;
+  lte(column: string, value: string | number): Self;
+  or(filters: string): Self;
+  order(column: string, options?: { ascending?: boolean }): Self;
+}

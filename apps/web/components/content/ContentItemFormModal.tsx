@@ -1,0 +1,1023 @@
+// /components/content/ContentItemFormModal.tsx
+
+"use client";
+
+import * as React from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { BookOpen, ClipboardList, FileBox, Plus, X, type LucideIcon } from "lucide-react";
+import { useRole } from "@/providers/role-provider";
+import { Modal } from "@/components/shared/Modal";
+import { PeopleGrid } from "@/components/shared/PeopleGrid";
+import { fetchSelectablePeople } from "@/lib/api/people-picker";
+import { fetchCohortOptions } from "@/lib/api/admin-users";
+import {
+  createContentItem,
+  createTag,
+  createWeek,
+  defaultTemplateFor,
+  deleteTag,
+  fetchContentItem,
+  fetchPortionClusters,
+  fetchTags,
+  fetchWeeks,
+  updateContentItem,
+} from "@/lib/api/content-items";
+import {
+  dispatchContentItem,
+  fetchAssignedMenteeRefs,
+  removeContentDispatch,
+} from "@/lib/api/content-dispatches";
+import {
+  ContentSubmissionTemplateEditor,
+  type ContentSubmissionTemplate,
+  type ContentType,
+} from "@/components/content/ContentSubmissionTemplateEditor";
+import { normalizePortionCluster } from "@/lib/content/portion-cluster";
+import type { FilterFieldDef } from "@/lib/filtering/types";
+import type { ContentItemWithMeta, Week } from "@/types/content";
+
+function buildPickerFieldDefs(
+  isStaff: boolean,
+  cohortOptions: { value: string; label: string }[]
+): FilterFieldDef[] {
+  const base: FilterFieldDef[] = [
+    { key: "search", kind: "text", columns: ["full_name"], searchable: true },
+  ];
+  if (!isStaff) return base;
+  return [
+    ...base,
+    { key: "cohort", kind: "entity", label: "Cohort", column: "cohort_id", options: cohortOptions },
+  ];
+}
+
+const TYPE_OPTIONS: { value: ContentType; label: string; icon: LucideIcon }[] = [
+  { value: "assignment", label: "Assignment", icon: ClipboardList },
+  { value: "course", label: "Course", icon: BookOpen },
+  { value: "resource", label: "Resource", icon: FileBox },
+];
+
+export interface ContentItemFormModalProps {
+  open: boolean;
+  onClose: () => void;
+  mode: "create" | "edit";
+  /**
+   * In create mode this is just the initial selection. The type selector can
+   * change it before the first save. In edit mode it's authoritative and
+   * immutable: content_type is never sent in updateContentItem.
+   */
+  contentType: ContentType;
+  contentItemId?: string;
+  currentUserId: string;
+  scopeToMentorId?: string;
+  onSaved: () => void;
+}
+
+type Step = "details" | "roster";
+
+/** yyyy-mm-dd for a native <input type="date">, from an ISO timestamp or null. */
+function toDateInputValue(iso: string | null): string {
+  if (!iso) return "";
+  return iso.slice(0, 10);
+}
+
+export function ContentItemFormModal({
+  open,
+  onClose,
+  mode,
+  contentType: initialContentType,
+  contentItemId,
+  currentUserId,
+  scopeToMentorId,
+  onSaved,
+}: ContentItemFormModalProps) {
+  const queryClient = useQueryClient();
+
+  const [step, setStep] = React.useState<Step>("details");
+  const [contentType, setContentType] = React.useState<ContentType>(initialContentType);
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [instructions, setInstructions] = React.useState("");
+  const [weekId, setWeekId] = React.useState<string | null>(null);
+  const [portionCluster, setPortionCluster] = React.useState("");
+  const [tagIds, setTagIds] = React.useState<string[]>([]);
+  const [template, setTemplate] = React.useState<ContentSubmissionTemplate>(
+    defaultTemplateFor(initialContentType)
+  );
+  // Submission window: plain date strings (native input shape), converted to
+  // ISO only at save time. null/null is only sent for "disabled" requirement,
+  // matching content_items_submission_window_check.
+  const [submissionStartsAt, setSubmissionStartsAt] = React.useState("");
+  const [submissionEndsAt, setSubmissionEndsAt] = React.useState("");
+  const [workingItem, setWorkingItem] = React.useState<ContentItemWithMeta | null>(null);
+  const [selectedMenteeIds, setSelectedMenteeIds] = React.useState<string[]>([]);
+  const [dueAt, setDueAt] = React.useState("");
+  const [locallyRemovedIds, setLocallyRemovedIds] = React.useState<Set<string>>(new Set());
+
+  const isInitialized = React.useRef(false);
+  const hasHydrated = React.useRef(false);
+  // Only used to decide whether a type switch needs confirmation before it
+  // resets the template.
+  const hasEditedTemplate = React.useRef(false);
+
+  const { permissionLevel } = useRole();
+  const isStaffScoped = permissionLevel === "staff";
+
+  const { data: cohortOptions } = useQuery({
+    queryKey: ["cohort-options"],
+    queryFn: fetchCohortOptions,
+    enabled: open && isStaffScoped,
+  });
+  const pickerFieldDefs = buildPickerFieldDefs(isStaffScoped, cohortOptions ?? []);
+
+  const { data: weeks } = useQuery({ queryKey: ["weeks"], queryFn: fetchWeeks, enabled: open });
+  const { data: tags, refetch: refetchTags } = useQuery({
+    queryKey: ["tags"],
+    queryFn: fetchTags,
+    enabled: open,
+  });
+  const { data: portionClusters } = useQuery({
+    queryKey: ["portion-clusters"],
+    queryFn: fetchPortionClusters,
+    enabled: open,
+  });
+
+  const { data: existingItem, isLoading: loadingItem } = useQuery({
+    queryKey: ["content-item", contentItemId],
+    queryFn: () => fetchContentItem(contentItemId!),
+    enabled: open && mode === "edit" && !!contentItemId,
+  });
+
+  // Hydrate local form state once when the saved item arrives for editing.
+  // Type-agnostic: submission_template has the same shape for every content
+  // type, so a resource with 0 questions hydrates the same way a course does.
+  React.useEffect(() => {
+    if (existingItem && mode === "edit" && !hasHydrated.current) {
+      setContentType(existingItem.content_type);
+      setTitle(existingItem.title);
+      setDescription(existingItem.description ?? "");
+      setInstructions(existingItem.instructions ?? "");
+      setWeekId(existingItem.week_id);
+      setPortionCluster(existingItem.portion_cluster ?? "");
+      setTagIds(existingItem.tags.map((t) => t.id));
+      setTemplate(existingItem.submission_template);
+      setSubmissionStartsAt(toDateInputValue(existingItem.submission_starts_at));
+      setSubmissionEndsAt(toDateInputValue(existingItem.submission_ends_at));
+      hasHydrated.current = true;
+    }
+  }, [existingItem, mode]);
+
+  const { data: assignedRefs, isLoading: loadingRoster } = useQuery({
+    queryKey: ["content-item-roster", contentItemId],
+    queryFn: () => fetchAssignedMenteeRefs(contentItemId!),
+    enabled: open && mode === "edit" && !!contentItemId && step === "roster",
+  });
+
+  // Hydrate selected mentee ids once the roster refs arrive.
+  React.useEffect(() => {
+    if (assignedRefs && mode === "edit" && !isInitialized.current) {
+      setSelectedMenteeIds(assignedRefs.map((r) => r.menteeId));
+      isInitialized.current = true;
+    }
+  }, [assignedRefs, mode]);
+
+  const committedIds = React.useMemo(
+    () => (assignedRefs ?? []).map((r) => r.menteeId),
+    [assignedRefs]
+  );
+  const effectiveCommittedIds = React.useMemo(
+    () => committedIds.filter((id) => !locallyRemovedIds.has(id)),
+    [committedIds, locallyRemovedIds]
+  );
+  const menteeIdToDispatchId = React.useMemo(() => {
+    const map = new Map<string, string>();
+    (assignedRefs ?? []).forEach((r) => map.set(r.menteeId, r.contentDispatchId));
+    return map;
+  }, [assignedRefs]);
+
+  // Derived during render. Drives whether the window fields render and whether
+  // they're required before save.
+  const requirement = template.metadata.is_not_required
+    ? "disabled"
+    : template.metadata.is_required
+    ? "required"
+    : "optional";
+  const submissionWindowRequired = requirement !== "disabled";
+  const submissionWindowInvalid =
+    submissionWindowRequired &&
+    submissionStartsAt !== "" &&
+    submissionEndsAt !== "" &&
+    new Date(submissionEndsAt).getTime() < new Date(submissionStartsAt).getTime();
+
+  const canSubmitDetails =
+    title.trim().length > 0 &&
+    (!submissionWindowRequired || (submissionStartsAt !== "" && submissionEndsAt !== "")) &&
+    !submissionWindowInvalid;
+
+  function handleTypeChange(next: ContentType) {
+    if (next === contentType) return;
+    if (hasEditedTemplate.current) {
+      const confirmed = window.confirm(
+        "Switching type resets the submission form below (type-specific fields and questions don't carry over cleanly between types). Continue?"
+      );
+      if (!confirmed) return;
+    }
+    setContentType(next);
+    setTemplate(defaultTemplateFor(next));
+    hasEditedTemplate.current = false;
+  }
+
+  function handleTemplateChange(next: ContentSubmissionTemplate) {
+    hasEditedTemplate.current = true;
+    setTemplate(next);
+  }
+
+  const saveDetailsMutation = useMutation({
+    mutationFn: async () => {
+      // Must match content_items_submission_window_check, or the insert/update fails.
+      const windowStartsAt =
+        submissionWindowRequired && submissionStartsAt
+          ? new Date(submissionStartsAt).toISOString()
+          : null;
+      const windowEndsAt =
+        submissionWindowRequired && submissionEndsAt
+          ? new Date(submissionEndsAt).toISOString()
+          : null;
+      const portion_cluster = normalizePortionCluster(portionCluster);
+
+      if (mode === "create") {
+        return createContentItem({
+          content_type: contentType,
+          portion_cluster,
+          title,
+          description: description || null,
+          instructions: instructions || null,
+          week_id: weekId,
+          submission_template: template,
+          created_by: currentUserId,
+          tag_ids: tagIds,
+          submission_starts_at: windowStartsAt,
+          submission_ends_at: windowEndsAt,
+        });
+      }
+      return updateContentItem({
+        id: contentItemId!,
+        portion_cluster,
+        title,
+        description: description || null,
+        instructions: instructions || null,
+        week_id: weekId,
+        submission_template: template,
+        tag_ids: tagIds,
+        submission_starts_at: windowStartsAt,
+        submission_ends_at: windowEndsAt,
+      });
+    },
+    onSuccess: (saved) => {
+      setWorkingItem(saved);
+      setStep("roster");
+    },
+    onError: (error: unknown) => {
+      // Fallback only. The disabled Continue button should make this unreachable.
+      console.error("content item save failed", error);
+    },
+  });
+
+  const dispatchMutation = useMutation({
+    mutationFn: async () => {
+      const target = workingItem ?? existingItem;
+      if (!target) throw new Error("No content item to assign mentees to");
+      const newIds = selectedMenteeIds.filter((id) => !effectiveCommittedIds.includes(id));
+      if (newIds.length === 0) return;
+      // Derived from the saved row, not the form, so the requirement matches
+      // what was actually persisted.
+      const targetRequirement = target.submission_template.metadata.is_not_required
+        ? "disabled"
+        : target.submission_template.metadata.is_required
+        ? "required"
+        : "optional";
+      return dispatchContentItem({
+        contentItemId: target.id,
+        menteeIds: newIds,
+        assignedBy: currentUserId,
+        dueAt: dueAt || null,
+        contentItemTitle: target.title,
+        requirement: targetRequirement,
+        submissionStartsAt: target.submission_starts_at,
+        submissionEndsAt: target.submission_ends_at,
+      });
+    },
+    onSuccess: () => {
+      reset();
+      onClose();
+      onSaved();
+    },
+  });
+
+  async function handleRemoveCommitted(menteeId: string) {
+    const dispatchId = menteeIdToDispatchId.get(menteeId);
+    if (!dispatchId) return;
+    await removeContentDispatch(dispatchId);
+    setLocallyRemovedIds((prev) => new Set(prev).add(menteeId));
+  }
+
+  function reset() {
+    setStep("details");
+    setContentType(initialContentType);
+    setTitle("");
+    setDescription("");
+    setInstructions("");
+    setWeekId(null);
+    setPortionCluster("");
+    setTagIds([]);
+    setTemplate(defaultTemplateFor(initialContentType));
+    setSubmissionStartsAt("");
+    setSubmissionEndsAt("");
+    setWorkingItem(null);
+    setSelectedMenteeIds([]);
+    setDueAt("");
+    setLocallyRemovedIds(new Set());
+    isInitialized.current = false;
+    hasHydrated.current = false;
+    hasEditedTemplate.current = false;
+  }
+
+  function handleClose() {
+    reset();
+    onClose();
+  }
+
+  const canFinishRoster = mode === "create" ? selectedMenteeIds.length > 0 : true;
+
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      title={
+        step === "details"
+          ? `${mode === "create" ? "New" : "Edit"} ${contentTypeLabel(contentType)}`
+          : "Assign to mentees"
+      }
+      description={
+        step === "details"
+          ? "Set the details and the submission form mentees will fill out."
+          : "Choose which mentees should receive this, and when it's due for new additions."
+      }
+      className="max-w-2xl"
+    >
+      {step === "details" ? (
+        loadingItem && mode === "edit" ? (
+          <p className="p-4 text-sm text-text-muted dark:text-text-muted">Loading…</p>
+        ) : (
+          <form
+            className="flex max-h-[70vh] flex-col gap-5 overflow-y-auto p-1"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (canSubmitDetails) saveDetailsMutation.mutate();
+            }}
+          >
+            <TypeSelector mode={mode} value={contentType} onChange={handleTypeChange} />
+
+            <Field label="Title">
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={inputClass}
+                placeholder="e.g. Week 3 — Character study"
+              />
+            </Field>
+
+            <Field label="Description" optional>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={2}
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="Instructions" optional>
+              <textarea
+                value={instructions}
+                onChange={(e) => setInstructions(e.target.value)}
+                rows={3}
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="Week" optional>
+              <WeekField
+                weeks={weeks ?? []}
+                weekId={weekId}
+                onSelect={setWeekId}
+                onCreated={(week) => {
+                  queryClient.setQueryData<Week[]>(["weeks"], (prev) => [...(prev ?? []), week]);
+                  setWeekId(week.id);
+                }}
+              />
+            </Field>
+
+            <Field label="Semester" optional>
+              <SemesterField
+                semesters={portionClusters ?? []}
+                value={portionCluster}
+                onSelect={setPortionCluster}
+              />
+            </Field>
+
+            <Field label="Tags" optional>
+              <TagMultiSelect
+                allTags={tags ?? []}
+                selectedIds={tagIds}
+                onChange={setTagIds}
+                onCreateTag={async (name) => {
+                  const tag = await createTag(name);
+                  await refetchTags();
+                  setTagIds((prev) => [...prev, tag.id]);
+                }}
+                onTagDeleted={(tagId) => {
+                  queryClient.setQueryData<{ id: string; name: string }[]>(["tags"], (prev) =>
+                    (prev ?? []).filter((t) => t.id !== tagId)
+                  );
+                  setTagIds((prev) => prev.filter((id) => id !== tagId));
+                }}
+              />
+            </Field>
+
+            <div className="border-t border-border pt-4 dark:border-border">
+              <ContentSubmissionTemplateEditor
+                contentType={contentType}
+                value={template}
+                onChange={handleTemplateChange}
+              />
+            </div>
+
+            {/*
+              Placed after the template editor because its visibility depends on
+              the requirement control inside it. Hidden for "No submission" items,
+              matching the DB constraint: a disabled item has no window.
+            */}
+            {submissionWindowRequired && (
+              <Field label="Submission window">
+                <div className="flex gap-2">
+                  <input
+                    type="date"
+                    value={submissionStartsAt}
+                    onChange={(e) => setSubmissionStartsAt(e.target.value)}
+                    className={inputClass}
+                  />
+                  <input
+                    type="date"
+                    value={submissionEndsAt}
+                    min={submissionStartsAt || undefined}
+                    onChange={(e) => setSubmissionEndsAt(e.target.value)}
+                    aria-invalid={submissionWindowInvalid}
+                    className={`${inputClass} aria-[invalid=true]:border-destructive dark:aria-[invalid=true]:border-destructive`}
+                  />
+                </div>
+                {submissionWindowInvalid && (
+                  <p className="mt-1 text-[11px] text-destructive dark:text-destructive">
+                    End date can&apos;t be before the start date.
+                  </p>
+                )}
+                <p className="mt-1 text-[11px] text-text-muted dark:text-text-muted">
+                  When mentees can submit. Powers the calendar/timeline view and due-date reminders.
+                </p>
+              </Field>
+            )}
+
+            {saveDetailsMutation.isError && (
+              <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive dark:bg-destructive/15">
+                Couldn&apos;t save. Try again.
+              </p>
+            )}
+
+            <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-border bg-surface pt-4 dark:border-border dark:bg-surface">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="rounded-xl border border-border px-5 py-2.5 text-sm font-medium text-text-primary dark:border-border dark:text-text-primary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={!canSubmitDetails || saveDetailsMutation.isPending}
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+              >
+                {saveDetailsMutation.isPending ? "Saving…" : "Continue"}
+              </button>
+            </div>
+          </form>
+        )
+      ) : (
+        <div className="flex flex-col gap-5">
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-text-muted dark:text-text-muted">
+              Due date for newly added mentees
+            </span>
+            <input
+              type="date"
+              value={dueAt}
+              onChange={(e) => setDueAt(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+
+          {mode === "edit" && loadingRoster ? (
+            <p className="text-xs text-text-muted dark:text-text-muted">Loading current roster…</p>
+          ) : (
+            <PeopleGrid
+              fieldDefs={pickerFieldDefs}
+              viewKey={`content-item-roster-${contentItemId ?? "new"}`}
+              queryKey={[
+                "selectable-mentees",
+                isStaffScoped ? "all-cohorts" : scopeToMentorId ?? "all",
+              ]}
+              queryFn={(filterState) =>
+                fetchSelectablePeople(
+                  {
+                    role: "mentee",
+                    mentorId: isStaffScoped ? undefined : scopeToMentorId,
+                    cohortId: (filterState.values.cohort as string | undefined) ?? undefined,
+                  },
+                  filterState.search
+                )
+              }
+              groupBy="pod"
+              groupKeyFn={(p) => (p as { podName?: string }).podName ?? "No team"}
+              selectable
+              selectedIds={selectedMenteeIds}
+              onSelectionChange={setSelectedMenteeIds}
+              alreadyCommittedIds={mode === "edit" ? effectiveCommittedIds : undefined}
+              onRemoveCommitted={mode === "edit" ? handleRemoveCommitted : undefined}
+              removalWarningTitle="Remove from this item?"
+              removalWarningDescription={(names) =>
+                `This has already been assigned to ${names.join(", ")}. Remove ${
+                  names.length > 1 ? "them" : "this mentee"
+                }? This can't be undone.`
+              }
+              emptyMessage="No teams with mentees found."
+              showSelectAllVisible={isStaffScoped}
+            />
+          )}
+
+          {dispatchMutation.isError && (
+            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive dark:bg-destructive/15">
+              Couldn&apos;t update the mentee list. Try again.
+            </p>
+          )}
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              disabled={!canFinishRoster || dispatchMutation.isPending}
+              onClick={() => dispatchMutation.mutate()}
+              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+            >
+              {dispatchMutation.isPending
+                ? "Saving…"
+                : mode === "create"
+                ? `Assign to ${selectedMenteeIds.length || ""} mentee${selectedMenteeIds.length === 1 ? "" : "s"}`
+                : "Done"}
+            </button>
+          </div>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+function contentTypeLabel(contentType: ContentType): string {
+  if (contentType === "assignment") return "assignment";
+  if (contentType === "course") return "course";
+  return "resource";
+}
+
+const inputClass =
+  "w-full rounded-xl border border-border bg-card-alt px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary dark:border-border dark:bg-card-alt dark:text-text-primary dark:placeholder:text-text-muted dark:focus:border-primary";
+
+function Field({
+  label,
+  optional,
+  children,
+}: {
+  label: string;
+  optional?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex w-full flex-col gap-1.5">
+      <span className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+        {label}{" "}
+        {optional && (
+          <span className="lowercase font-normal text-text-muted/70 dark:text-text-muted/70">
+            (optional)
+          </span>
+        )}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Type selector. Create mode shows the choice; edit mode shows a fixed chip
+// because content_type is immutable once dispatches or submissions exist.
+// ---------------------------------------------------------------------------
+
+function TypeSelector({
+  mode,
+  value,
+  onChange,
+}: {
+  mode: "create" | "edit";
+  value: ContentType;
+  onChange: (next: ContentType) => void;
+}) {
+  const activeOption = TYPE_OPTIONS.find((o) => o.value === value) ?? TYPE_OPTIONS[0];
+
+  if (mode === "edit") {
+    const Icon = activeOption.icon;
+    return (
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+          Type
+        </span>
+        <span className="flex w-fit items-center gap-1.5 rounded-full border border-border bg-card-alt px-3 py-1.5 text-xs font-medium text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary">
+          <Icon className="h-3.5 w-3.5" />
+          {activeOption.label}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+        Type
+      </span>
+      <div className="inline-flex w-fit flex-wrap gap-1 rounded-full border border-border bg-card-alt p-1 dark:border-border dark:bg-card-alt">
+        {TYPE_OPTIONS.map((option) => {
+          const Icon = option.icon;
+          const isActive = option.value === value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => onChange(option.value)}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                isActive
+                  ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+                  : "text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-primary"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Week field: select an existing week, or create one inline.
+// ---------------------------------------------------------------------------
+
+function WeekField({
+  weeks,
+  weekId,
+  onSelect,
+  onCreated,
+}: {
+  weeks: Week[];
+  weekId: string | null;
+  onSelect: (id: string | null) => void;
+  onCreated: (week: Week) => void;
+}) {
+  const [creating, setCreating] = React.useState(false);
+  const [name, setName] = React.useState("");
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
+
+  const createWeekMutation = useMutation({
+    mutationFn: () =>
+      createWeek(
+        { name: name.trim(), start_date: startDate || null, end_date: endDate || null },
+        weeks
+      ),
+    onSuccess: (week) => {
+      onCreated(week);
+      setCreating(false);
+      setName("");
+      setStartDate("");
+      setEndDate("");
+    },
+  });
+
+  const canCreate = name.trim().length > 0;
+
+  if (!creating) {
+    return (
+      <div className="flex items-center gap-2">
+        <select
+          value={weekId ?? ""}
+          onChange={(e) => onSelect(e.target.value || null)}
+          className={inputClass}
+        >
+          <option value="">No week</option>
+          {weeks.map((w) => (
+            <option key={w.id} value={w.id}>
+              {w.name}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={() => setCreating(true)}
+          className="flex shrink-0 items-center gap-1 rounded-lg border border-dashed border-border px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          New
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="surface-card-alt flex flex-col gap-2 dark:surface-card-alt">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-text-primary dark:text-text-primary">
+          New week
+        </span>
+        <button
+          type="button"
+          onClick={() => setCreating(false)}
+          aria-label="Cancel new week"
+          className="rounded p-1 text-text-muted hover:bg-card hover:text-text-primary dark:text-text-muted dark:hover:bg-card dark:hover:text-text-primary"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="e.g. Week 4"
+        className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+      />
+      <div className="flex gap-2">
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+        />
+      </div>
+      {createWeekMutation.isError && (
+        <p className="text-[11px] text-destructive dark:text-destructive">
+          Couldn&apos;t create week. Try again.
+        </p>
+      )}
+      <button
+        type="button"
+        disabled={!canCreate || createWeekMutation.isPending}
+        onClick={() => createWeekMutation.mutate()}
+        className="w-fit rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+      >
+        {createWeekMutation.isPending ? "Creating…" : "Create & select"}
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Semester field: same pattern as the week field. A dropdown of existing
+// semesters, plus a "New" button that swaps in a text input. Saved to the
+// portion_cluster column.
+// ---------------------------------------------------------------------------
+
+function SemesterField({
+  semesters,
+  value,
+  onSelect,
+}: {
+  semesters: string[];
+  value: string;
+  onSelect: (v: string) => void;
+}) {
+  const [creating, setCreating] = React.useState(false);
+  const [draft, setDraft] = React.useState("");
+
+  // The current value may not be in the list yet (a semester just typed and
+  // saved before the query refetches). Include it so the select can display it.
+  const options = value !== "" && !semesters.includes(value) ? [...semesters, value] : semesters;
+
+  const canUseDraft = draft.trim().length > 0;
+
+  function handleUseDraft() {
+    if (!canUseDraft) return;
+    onSelect(draft.trim());
+    setDraft("");
+    setCreating(false);
+  }
+
+  if (!creating) {
+    return (
+      <div className="flex items-center gap-2">
+        <select
+          value={value}
+          onChange={(e) => onSelect(e.target.value)}
+          className={inputClass}
+        >
+          <option value="">No semester</option>
+          {options.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={() => {
+            setDraft("");
+            setCreating(true);
+          }}
+          className="flex shrink-0 items-center gap-1 rounded-lg border border-dashed border-border px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          New
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <input
+        autoFocus
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            // Stop the enter key from submitting the surrounding form.
+            e.preventDefault();
+            handleUseDraft();
+          }
+        }}
+        placeholder="e.g. Coms 101"
+        className={inputClass}
+      />
+      <button
+        type="button"
+        disabled={!canUseDraft}
+        onClick={handleUseDraft}
+        className="shrink-0 rounded-full bg-primary px-3 py-2 text-xs font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+      >
+        Use
+      </button>
+      <button
+        type="button"
+        onClick={() => setCreating(false)}
+        aria-label="Cancel new semester"
+        className="shrink-0 rounded p-1 text-text-muted hover:bg-card hover:text-text-primary dark:text-text-muted dark:hover:bg-card dark:hover:text-text-primary"
+      >
+        <X className="h-3.5 w-3.5" />
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tag multi-select. Tags can be created inline and, for mentors and staff,
+// deleted.
+// ---------------------------------------------------------------------------
+
+function TagMultiSelect({
+  allTags,
+  selectedIds,
+  onChange,
+  onCreateTag,
+  onTagDeleted,
+}: {
+  allTags: { id: string; name: string }[];
+  selectedIds: string[];
+  onChange: (ids: string[]) => void;
+  onCreateTag: (name: string) => Promise<void>;
+  onTagDeleted: (tagId: string) => void;
+}) {
+  const { permissionLevel } = useRole();
+  const canDeleteTags = permissionLevel === "mentor" || permissionLevel === "staff";
+
+  const [creating, setCreating] = React.useState(false);
+  const [newTagName, setNewTagName] = React.useState("");
+  const [deletingTagId, setDeletingTagId] = React.useState<string | null>(null);
+
+  function toggle(id: string) {
+    onChange(
+      selectedIds.includes(id) ? selectedIds.filter((i) => i !== id) : [...selectedIds, id]
+    );
+  }
+
+  async function handleCreate() {
+    const name = newTagName.trim();
+    if (!name) return;
+    await onCreateTag(name);
+    setNewTagName("");
+    setCreating(false);
+  }
+
+  async function handleDelete(tagId: string, tagName: string) {
+    const confirmed = window.confirm(
+      `Delete the tag "${tagName}"? This removes it from every item using it. The items themselves aren't affected. This can't be undone.`
+    );
+    if (!confirmed) return;
+    setDeletingTagId(tagId);
+    try {
+      await deleteTag(tagId);
+      onTagDeleted(tagId);
+    } catch (err) {
+      console.error("[TagMultiSelect] Failed to delete tag", tagId, err);
+      window.alert("Couldn't delete that tag. Try again.");
+    } finally {
+      setDeletingTagId(null);
+    }
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {allTags.map((tag) => (
+        <span
+          key={tag.id}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+            selectedIds.includes(tag.id)
+              ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+              : "border border-border text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
+          }`}
+        >
+          <button type="button" onClick={() => toggle(tag.id)}>
+            {tag.name}
+          </button>
+          {canDeleteTags && (
+            <button
+              type="button"
+              onClick={() => handleDelete(tag.id, tag.name)}
+              disabled={deletingTagId === tag.id}
+              aria-label={`Delete tag ${tag.name}`}
+              className="rounded-full p-0.5 hover:bg-black/10 disabled:opacity-50 dark:hover:bg-white/10"
+            >
+              <X className="h-2.5 w-2.5" />
+            </button>
+          )}
+        </span>
+      ))}
+
+      {creating ? (
+        <span className="flex items-center gap-1">
+          <input
+            autoFocus
+            value={newTagName}
+            onChange={(e) => setNewTagName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleCreate();
+              }
+            }}
+            placeholder="New tag"
+            className="w-24 rounded-full border border-border bg-card px-2.5 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+          />
+          <button
+            type="button"
+            onClick={handleCreate}
+            className="text-text-accent dark:text-text-accent"
+          >
+            <Plus className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setCreating(false)}
+            className="text-text-muted dark:text-text-muted"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </span>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setCreating(true)}
+          className="flex items-center gap-1 rounded-full border border-dashed border-border px-2.5 py-1 text-xs text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
+        >
+          <Plus className="h-3 w-3" />
+          New tag
+        </button>
+      )}
+    </div>
+  );
+}

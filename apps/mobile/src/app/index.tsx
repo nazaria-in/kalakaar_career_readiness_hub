@@ -1,8 +1,12 @@
 import { View, Text, Pressable } from "react-native";
 import { useState } from "react";
+import { ContentType, createDefaultSubmissionTemplate } from "@repo/shared";
+
 
 export default function HomeScreen() {
   const [count, setCount] = useState(0);
+
+  console.log(createDefaultSubmissionTemplate("assignment" as ContentType));
 
   return (
     <View className="flex-1 items-center justify-center bg-slate-900 p-6">

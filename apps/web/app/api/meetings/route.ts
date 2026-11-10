@@ -1,0 +1,281 @@
+// /app/api/meetings/route.ts
+
+import { SeverityNumber } from "@opentelemetry/api-logs";
+import { after, NextRequest, NextResponse } from "next/server";
+import { posthogLogProvider } from "@/instrumentation";
+import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { createCalendarEvent } from "@/lib/google/calendar-events";
+import type { UserRole } from "@/types/users";
+import { createPendingExitSurveys } from "@/lib/server/exit-survey-provisioning";
+import { notifyMeetingInvite, scheduleMeetingReminders } from "@/lib/notifications/meeting-notifications";
+import { scheduleExitSurveyReminders, scheduleExitSurveyOverdueReminder } from "@/lib/notifications/exit-survey-notifications";
+import { triggerDispatch } from "@/lib/push/trigger-dispatch";
+
+interface CreateMeetingRequestBody {
+  title: string;
+  description?: string;
+  startsAt: string;
+  endsAt: string;
+  participantUserIds: string[];
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const supabase = await createClient();
+
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+
+  if (!authUser) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const body = (await request.json()) as CreateMeetingRequestBody;
+
+  if (!body.title || !body.startsAt || !body.endsAt) {
+    return NextResponse.json({ error: "title, startsAt and endsAt are required" }, { status: 400 });
+  }
+
+  const { data: creatorProfile, error: creatorError } = await supabase
+    .from("users")
+    .select("id, role")
+    .eq("id", authUser.id)
+    .single();
+
+  if (creatorError || !creatorProfile) {
+    return NextResponse.json({ error: "Could not load creator profile" }, { status: 400 });
+  }
+
+  const creatorRole = creatorProfile.role as UserRole;
+  const participantIds = Array.from(new Set(body.participantUserIds.filter((id) => id !== authUser.id)));
+
+  // Server-side re-check of invite permissions.
+  if (creatorRole === "mentee" || creatorRole === "mentor") {
+    const { data: myPodRows, error: myPodError } = await supabase
+      .from("pod_members")
+      .select("pod_id")
+      .eq("user_id", authUser.id);
+
+    if (myPodError) {
+      return NextResponse.json({ error: "Could not verify team membership" }, { status: 400 });
+    }
+
+    const myPodIds = (myPodRows ?? []).map((r) => r.pod_id as string);
+
+    const { data: podMemberRows, error: podMemberError } = await supabase
+      .from("pod_members")
+      .select("user_id")
+      .in("pod_id", myPodIds);
+
+    if (podMemberError) {
+      return NextResponse.json({ error: "Could not verify team members" }, { status: 400 });
+    }
+
+    const { data: staffRows, error: staffError } = await supabase
+      .from("users")
+      .select("id")
+      .in("role", ["associate", "pm"])
+      .is("deleted_at", null);
+
+    if (staffError) {
+      return NextResponse.json({ error: "Could not verify staff list" }, { status: 400 });
+    }
+
+    const allowedIds = new Set([
+      ...(podMemberRows ?? []).map((r) => r.user_id as string),
+      ...(staffRows ?? []).map((r) => r.id as string),
+    ]);
+    const invalid = participantIds.filter((id) => !allowedIds.has(id));
+
+    if (invalid.length > 0) {
+      return NextResponse.json({ error: "You can only invite members of your own team or staff" }, { status: 403 });
+    }
+  }
+
+  const admin = supabaseAdmin;
+  const allUserIds = [authUser.id, ...participantIds];
+
+  const { data: emailRows, error: emailError } = await admin
+    .from("users")
+    .select("id, email")
+    .in("id", allUserIds);
+
+  if (emailError) {
+    return NextResponse.json({ error: "Could not resolve participant emails" }, { status: 500 });
+  }
+
+  const attendeeEmails = (emailRows ?? [])
+    .filter((row) => Boolean(row.email))
+    .map((row) => ({ email: row.email as string }));
+
+  let meetLink: string | null = null;
+  let googleEventId: string | null = null;
+
+  try {
+    const event = await createCalendarEvent({
+      summary: body.title,
+      description: body.description,
+      start: { dateTime: body.startsAt, timeZone: "Asia/Kolkata" },
+      end: { dateTime: body.endsAt, timeZone: "Asia/Kolkata" },
+      attendees: attendeeEmails,
+    });
+
+    googleEventId = event.id;
+    meetLink = event.hangoutLink ?? null;
+  } catch (calendarError) {
+    console.error("[meetings] Google Calendar event creation failed", calendarError);
+  }
+
+  const { data: meeting, error: meetingError } = await admin
+    .from("meetings")
+    .insert({
+      created_by: authUser.id,
+      title: body.title,
+      description: body.description ?? null,
+      meet_link: meetLink,
+      google_event_id: googleEventId,
+      starts_at: body.startsAt,
+      ends_at: body.endsAt,
+      status: "scheduled",
+    })
+    .select("*")
+    .single();
+
+  if (meetingError || !meeting) {
+    return NextResponse.json({ error: "Failed to create meeting" }, { status: 500 });
+  }
+
+  const meetingId = meeting.id as string;
+
+  const participantRows = [
+    {
+      meeting_id: meetingId,
+      user_id: authUser.id,
+      status: "accepted" as const,
+      invited_by: authUser.id,
+      responded_at: new Date().toISOString(),
+    },
+    ...participantIds.map((id) => ({
+      meeting_id: meetingId,
+      user_id: id,
+      status: "pending" as const,
+      invited_by: authUser.id,
+      responded_at: null,
+    })),
+  ];
+
+  const { error: participantsError } = await admin.from("meeting_participants").insert(participantRows);
+
+  if (participantsError) {
+    return NextResponse.json({ error: "Meeting created but failed to add participants" }, { status: 500 });
+  }
+
+  const meetingForNotifications = {
+    id: meetingId,
+    title: meeting.title as string,
+    starts_at: meeting.starts_at as string,
+    ends_at: meeting.ends_at as string,
+    meet_link: meeting.meet_link as string | null,
+  };
+
+  // ── Notifications for invited participants (invite + reminder cascade) ──
+  for (const participantId of participantIds) {
+    try {
+      await notifyMeetingInvite(admin, meetingForNotifications, participantId, authUser.id);
+      await scheduleMeetingReminders(admin, meetingForNotifications, participantId);
+    } catch (notificationError) {
+      console.error("[meetings] Failed to notify/schedule reminders for participant", notificationError, {
+        meetingId,
+        participantId,
+      });
+    }
+  }
+
+  // ── Reminder cascade for the creator ──────────────────────────────────
+  try {
+    await scheduleMeetingReminders(admin, meetingForNotifications, authUser.id);
+  } catch (creatorReminderError) {
+    console.error("[meetings] Failed to schedule reminders for creator", creatorReminderError, {
+      meetingId,
+      creatorId: authUser.id,
+    });
+  }
+
+  // ── Trigger immediate push dispatch for the invite notifications ───────
+  // Reminders are scheduled for the future so the cron handles those fine.
+  // Only the invite notification (scheduled_for = now) benefits from
+  // immediate dispatch — participants should get it within seconds, not
+  // up to 5 minutes later.
+  after(async () => {
+    await triggerDispatch();
+  });
+
+  // ── Exit survey provisioning ───────────────────────────────────────────
+  let exitSurveyWarnings: string[] = [];
+  try {
+    const result = await createPendingExitSurveys(meetingId, allUserIds);
+    exitSurveyWarnings = result.warnings;
+    if (result.warnings.length > 0) {
+      console.warn("[meetings] Exit survey provisioning warnings:", result.warnings, { meetingId });
+    }
+
+    if (result.rowsCreated > 0) {
+      const { data: createdSurveyRows, error: createdSurveyRowsError } = await admin
+        .from("exit_surveys")
+        .select("id, user_id")
+        .eq("meeting_id", meetingId);
+
+      if (createdSurveyRowsError) {
+        console.error("[meetings] Failed to load created exit survey rows for reminder scheduling", createdSurveyRowsError, { meetingId });
+      } else if (createdSurveyRows && createdSurveyRows.length > 0) {
+        const pendingRows = createdSurveyRows.map((row) => ({
+          exitSurveyId: row.id as string,
+          submitterUserId: row.user_id as string,
+          meetingTitle: meeting.title as string,
+        }));
+
+        await scheduleExitSurveyReminders(admin, pendingRows, {
+          startsAt: meeting.starts_at as string,
+          endsAt: meeting.ends_at as string,
+        });
+
+        for (const row of pendingRows) {
+          try {
+            await scheduleExitSurveyOverdueReminder(admin, row, meeting.ends_at as string);
+          } catch (overdueError) {
+            console.error("[meetings] Failed to schedule overdue exit survey reminder", overdueError, {
+              meetingId,
+              exitSurveyId: row.exitSurveyId,
+            });
+          }
+        }
+      }
+    }
+  } catch (exitSurveyError) {
+    console.error("[meetings] Failed to create pending exit surveys", exitSurveyError, { meetingId });
+    exitSurveyWarnings = ["Exit surveys could not be created for this meeting — see server logs."];
+  }
+
+  const logProvider = posthogLogProvider;
+  const meetingLog = logProvider?.getLogger("posthog-meeting-creation");
+  meetingLog?.emit({
+    body: "meeting creation completed",
+    severityNumber: SeverityNumber.INFO,
+    attributes: {
+      event: "meeting_creation_completed",
+      creator_role: creatorRole,
+      invited_participant_count: participantIds.length,
+      calendar_event_created: Boolean(googleEventId),
+      exit_survey_warning_count: exitSurveyWarnings.length,
+    },
+  });
+
+  if (logProvider) {
+    after(async () => {
+      await logProvider.forceFlush();
+    });
+  }
+
+  return NextResponse.json({ meeting, exitSurveyWarnings }, { status: 201 });
+}
