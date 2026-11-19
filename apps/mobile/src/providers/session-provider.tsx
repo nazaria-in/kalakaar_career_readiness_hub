@@ -15,7 +15,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     async function hydrate(user: User) {
       const { data, error } = await supabase
         .from("users")
-        .select("id, role, full_name, approval_status")
+        .select("id, role, full_name, approval_status, onboarding_completed_at")
         .eq("id", user.id)
         .single();
 
@@ -30,6 +30,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         fullName: snapshot.fullName,
         role: snapshot.role as Role,
         approvalStatus: snapshot.approvalStatus,
+        onboardingCompleted: Boolean((data as { onboarding_completed_at?: string | null }).onboarding_completed_at),
       });
     }
 

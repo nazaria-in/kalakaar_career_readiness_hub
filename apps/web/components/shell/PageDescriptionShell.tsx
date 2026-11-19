@@ -30,7 +30,7 @@ export function PageDescriptionShell({ children }: PageDescriptionShellProps) {
   if (!resolved) return null;
 
   return (
-    <div className="border-b border-border bg-surface px-4 py-3 text-sm text-text-muted dark:border-white/10 dark:bg-surface">
+    <div className="border-b border-border bg-surface px-4 py-3 text-sm text-text-muted  ">
       {resolved}
     </div>
   );

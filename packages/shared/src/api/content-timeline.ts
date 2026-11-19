@@ -11,7 +11,7 @@ import type { ContentSubmissionTemplate } from "../types/content-template";
 
 type RawTagJoinRow = { tag: Tag };
 
-interface RawContentItemRow {
+export interface RawContentItemRow {
   id: string;
   content_type: ContentType;
   title: string;
@@ -62,7 +62,12 @@ export function normalizeContentItemRow(row: RawContentItemRow): ContentItemWith
     tags: (row.content_item_tags ?? []).map((join) => join.tag),
   };
 }
-
+export function normalizeJoinedContentItem(
+  raw: ContentItemWithMeta & { content_item_tags?: { tag: Tag }[] }
+): ContentItemWithMeta {
+  const tagsJoin = raw.content_item_tags;
+  return { ...raw, tags: tagsJoin ? tagsJoin.map((j) => j.tag) : raw.tags };
+}
 /**
  * Binary fallback status. Known gap: assignments can have richer states via
  * v_mentee_assignment_status. Wire through content-dispatches if that exists.

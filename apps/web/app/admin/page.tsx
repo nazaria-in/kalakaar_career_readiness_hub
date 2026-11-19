@@ -142,7 +142,7 @@ export function AdminDashboardContent() {
   // Still resolving the scope for a given ?id= — avoid flashing the
   // unscoped org-wide layout before we know which branch to render.
   if (scopedId && !scope) {
-    return <p className="max-w-5xl mx-auto p-6 text-sm text-text-muted dark:text-text-muted">Loading…</p>;
+    return <p className="max-w-5xl mx-auto p-6 text-sm text-text-muted ">Loading…</p>;
   }
 
   const orgWideTiles: StatusTile[] = [
@@ -186,7 +186,7 @@ export function AdminDashboardContent() {
       {/* --- Case B: mentee-scoped --- */}
       {isMenteeTarget && scope && (
         <section>
-          <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 dark:text-text-primary">
+          <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 ">
             About this mentee
           </h2>
           <AboutMenteeBlock scope={scope} />
@@ -196,7 +196,7 @@ export function AdminDashboardContent() {
       {/* --- Case C: mentor-scoped --- */}
       {isMentorTarget && scope && (
         <section>
-          <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 dark:text-text-primary">
+          <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 ">
             About this mentor
           </h2>
           <AboutMentorBlock scope={scope} />
@@ -211,7 +211,7 @@ export function AdminDashboardContent() {
       )}
 
       <section className="space-y-3">
-        <h2 className="font-heading text-lg font-semibold text-text-primary dark:text-text-primary">
+        <h2 className="font-heading text-lg font-semibold text-text-primary ">
           Escalation Desk
         </h2>
         <EscalationDesk
@@ -226,21 +226,21 @@ export function AdminDashboardContent() {
       {isUnscoped && (
         <>
           <section>
-            <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 dark:text-text-primary">
+            <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 ">
               Teams at a glance
             </h2>
             <PodCompletionSection data={podStats.data ?? []} isLoading={podStats.isLoading} />
           </section>
 
           <section>
-            <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 dark:text-text-primary">
+            <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 ">
               Mentors at a glance
             </h2>
             <MentorCompletionSection data={mentorStats.data ?? []} isLoading={mentorStats.isLoading} />
           </section>
 
           <section>
-            <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 dark:text-text-primary">
+            <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 ">
               Content analytics
             </h2>
             <ContentAnalyticsSection rollup={analyticsRollup.data ?? []} isLoading={analyticsRollup.isLoading} />
@@ -249,7 +249,7 @@ export function AdminDashboardContent() {
       )}
 
       <section>
-        <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 dark:text-text-primary">
+        <h2 className="font-heading text-lg font-semibold text-text-primary mb-3 ">
           Exit Survey Signals
         </h2>
         <ExitSurveySignalsSection

@@ -5,8 +5,8 @@ import Link from "next/link";
 
 export function StaffScopeBlock() {
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-xl border border-border bg-card p-8 text-center dark:border-border dark:bg-card">
-      <p className="text-sm text-text-primary dark:text-text-primary">
+    <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-xl border border-border bg-card p-8 text-center  ">
+      <p className="text-sm text-text-primary ">
         This user is not a mentor or mentee.
       </p>
       <Link

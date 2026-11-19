@@ -31,13 +31,13 @@ export function EscalationDesk({ escalations, subjects, isLoading, onMarkReviewe
   }, [escalations]);
 
   if (isLoading) {
-    return <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>;
+    return <p className="text-sm text-text-muted ">Loading…</p>;
   }
 
   if (escalations.length === 0) {
     return (
-      <div className="rounded-xl border border-border bg-card px-4 py-6 text-center dark:border-border dark:bg-card">
-        <p className="text-sm text-text-muted dark:text-text-muted">Nothing needs attention right now.</p>
+      <div className="rounded-xl border border-border bg-card px-4 py-6 text-center  ">
+        <p className="text-sm text-text-muted ">Nothing needs attention right now.</p>
       </div>
     );
   }
@@ -49,7 +49,7 @@ export function EscalationDesk({ escalations, subjects, isLoading, onMarkReviewe
         if (items.length === 0) return null;
         return (
           <div key={key} className="flex flex-col gap-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-text-muted ">
               {label} · {items.length}
             </h4>
             <div className="grid gap-3 sm:grid-cols-2">

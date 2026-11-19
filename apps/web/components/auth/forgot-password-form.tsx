@@ -6,7 +6,7 @@ import Link from "next/link";
 import { requestPasswordReset } from "@/lib/api/auth";
 
 const inputClass =
-  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-text-primary outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30 dark:bg-white/5 dark:border-white/10";
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-text-primary outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30  ";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm ">
         <h1 className="text-lg font-heading text-text-primary">Check your email</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
           If an account exists for <span className="text-text-primary">{email.trim()}</span>, we
@@ -53,7 +53,7 @@ export function ForgotPasswordForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none"
+      className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm "
     >
       <h1 className="text-lg font-heading text-text-primary">Reset your password</h1>
       <p className="mt-1.5 text-sm text-muted-foreground">
@@ -77,7 +77,7 @@ export function ForgotPasswordForm() {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive dark:bg-destructive/15">
+        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive ">
           {error}
         </p>
       )}

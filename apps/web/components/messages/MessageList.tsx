@@ -138,12 +138,12 @@ export function MessageList({
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="h-full overflow-y-auto px-4 py-3 space-y-3 bg-surface dark:bg-surface"
+        className="h-full overflow-y-auto px-4 py-3 space-y-3 bg-surface "
       >
         <div ref={topSentinelRef} />
 
         {isFetchingNextPage && (
-          <p className="text-center text-xs text-text-muted dark:text-text-muted">Loading earlier messages…</p>
+          <p className="text-center text-xs text-text-muted ">Loading earlier messages…</p>
         )}
 
         {items.map(({ message, showDaySeparator }) => {
@@ -156,7 +156,7 @@ export function MessageList({
             <Fragment key={message.id}>
               {showDaySeparator && (
                 <div className="flex items-center justify-center py-2">
-                  <span className="text-xs text-text-muted dark:text-text-muted bg-card dark:bg-card px-3 py-1 rounded-full border border-border-strong dark:border-border-strong">
+                  <span className="text-xs text-text-muted  bg-card  px-3 py-1 rounded-full border border-border-strong ">
                     {formatDayLabel(message.created_at)}
                   </span>
                 </div>

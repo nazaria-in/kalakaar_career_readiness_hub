@@ -30,9 +30,9 @@ export function MentorCompletionSection({ data, isLoading }: { data: MentorStats
   return (
     <div className="flex flex-col gap-3">
       <SmartFilterBar fieldDefs={FIELD_DEFS} state={filterState} />
-      {isLoading && <p className="text-sm bg-gray-100 rounded-xl p-4 text-text-muted dark:text-text-muted">Loading…</p>}
+      {isLoading && <p className="text-sm bg-gray-100 rounded-xl p-4 text-text-muted ">Loading…</p>}
       {!isLoading && rows.length === 0 && (
-        <p className="text-sm text-text-muted dark:text-text-muted">No mentors match this search.</p>
+        <p className="text-sm text-text-muted ">No mentors match this search.</p>
       )}
       <div className="flex flex-col gap-2">
         {rows.map((mentor) => (

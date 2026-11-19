@@ -21,7 +21,7 @@ export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) 
             key={i}
             className={cn(
               "h-1.5 flex-1 rounded-full transition-colors",
-              i < filled ? strengthColor(filled, total) : "bg-border dark:bg-white/10",
+              i < filled ? strengthColor(filled, total) : "bg-border ",
             )}
           />
         ))}
@@ -40,7 +40,7 @@ export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) 
               {ok ? (
                 <Check className="h-3.5 w-3.5 shrink-0 text-text-accent" />
               ) : (
-                <X className="h-3.5 w-3.5 shrink-0 opacity-40 dark:opacity-30" />
+                <X className="h-3.5 w-3.5 shrink-0 opacity-40 " />
               )}
               {check.label}
             </li>
@@ -54,6 +54,6 @@ export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) 
 function strengthColor(filled: number, total: number) {
   const ratio = filled / total;
   if (ratio < 0.4) return "bg-destructive";
-  if (ratio < 0.8) return "bg-accent dark:bg-accent";
+  if (ratio < 0.8) return "bg-accent ";
   return "bg-primary";
 }

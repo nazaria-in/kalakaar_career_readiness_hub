@@ -142,11 +142,11 @@ function SubmissionRequirementSection({
   onRequirementChange: (requirement: SubmissionRequirement) => void;
 }) {
   return (
-    <section className="surface-card flex flex-col gap-2 dark:surface-card">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+    <section className="surface-card flex flex-col gap-2 ">
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
         Submission
       </h3>
-      <div className="inline-flex w-fit flex-wrap gap-1 rounded-full border border-border bg-card-alt p-1 dark:border-border dark:bg-card-alt">
+      <div className="inline-flex w-fit flex-wrap gap-1 rounded-full border border-border bg-card-alt p-1  ">
         {REQUIREMENT_OPTIONS.map((option) => (
           <button
             key={option.value}
@@ -155,15 +155,15 @@ function SubmissionRequirementSection({
             title={option.hint}
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               requirement === option.value
-                ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
-                : "text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-primary"
+                ? "bg-primary text-primary-foreground  "
+                : "text-text-muted hover:text-text-primary  "
             }`}
           >
             {option.label}
           </button>
         ))}
       </div>
-      <p className="flex items-center gap-1 text-xs text-text-muted dark:text-text-muted">
+      <p className="flex items-center gap-1 text-xs text-text-muted ">
         <Info className="h-3.5 w-3.5 shrink-0" />
         {REQUIREMENT_OPTIONS.find((o) => o.value === requirement)?.hint}
       </p>
@@ -195,15 +195,15 @@ function ResourceLinksSection({
   }
 
   return (
-    <section className="surface-card flex flex-col gap-4 dark:surface-card">
+    <section className="surface-card flex flex-col gap-4 ">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
           External links
         </h3>
         <button
           type="button"
           onClick={() => onChange([...links, emptyLink()])}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-card-alt dark:border-border dark:text-text-primary dark:hover:bg-card-alt"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-card-alt   "
         >
           <Plus className="h-3.5 w-3.5" />
           Add link
@@ -211,25 +211,25 @@ function ResourceLinksSection({
       </div>
 
       {links.length === 0 && (
-        <p className="text-xs text-text-muted dark:text-text-muted">No external links attached yet.</p>
+        <p className="text-xs text-text-muted ">No external links attached yet.</p>
       )}
 
       <div className="flex flex-col gap-3">
         {links.map((link, index) => (
-          <div key={index} className="surface-card-alt flex flex-col gap-2 dark:surface-card-alt">
+          <div key={index} className="surface-card-alt flex flex-col gap-2 ">
             <div className="flex items-center gap-2">
-              <Link2 className="h-4 w-4 shrink-0 text-text-muted dark:text-text-muted" />
+              <Link2 className="h-4 w-4 shrink-0 text-text-muted " />
               <input
                 value={link.link}
                 onChange={(e) => patchLink(index, { link: e.target.value })}
                 placeholder="https://..."
-                className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+                className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary   "
               />
               <button
                 type="button"
                 onClick={() => removeLink(index)}
                 aria-label="Remove link"
-                className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-destructive dark:text-text-muted dark:hover:bg-card dark:hover:text-destructive"
+                className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-destructive   "
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -238,13 +238,13 @@ function ResourceLinksSection({
               value={link.title}
               onChange={(e) => patchLink(index, { title: e.target.value })}
               placeholder="Link title"
-              className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+              className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary   "
             />
             <input
               value={link.description}
               onChange={(e) => patchLink(index, { description: e.target.value })}
               placeholder="Short description (optional)"
-              className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+              className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary   "
             />
           </div>
         ))}
@@ -273,15 +273,15 @@ function TypeSpecificSection({
   if (contentType === "resource") return null;
 
   return (
-    <section className="surface-card flex flex-col gap-4 dark:surface-card">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+    <section className="surface-card flex flex-col gap-4 ">
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
         {contentType === "assignment" ? "Assignment settings" : "Course settings"}
       </h3>
 
       {contentType === "assignment" && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-text-muted dark:text-text-muted">
+            <label className="text-xs font-medium text-text-muted ">
               Max revisions allowed
             </label>
             <input
@@ -296,7 +296,7 @@ function TypeSpecificSection({
                   },
                 })
               }
-              className="w-24 rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+              className="w-24 rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
             />
           </div>
           <ReadOnlyNote label="Difficulty level" note="Set by the mentee after they submit an attempt." />
@@ -306,7 +306,7 @@ function TypeSpecificSection({
       {contentType === "course" && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-text-muted dark:text-text-muted">
+            <label className="text-xs font-medium text-text-muted ">
               Total modules
             </label>
             <input
@@ -316,7 +316,7 @@ function TypeSpecificSection({
               onChange={(e) =>
                 onPatchCourse({ modules_total: e.target.value === "" ? null : Number(e.target.value) })
               }
-              className="w-24 rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+              className="w-24 rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
             />
           </div>
           <ReadOnlyNote label="Modules completed" note="Filled in by the mentee as they progress." />
@@ -329,9 +329,9 @@ function TypeSpecificSection({
 
 function ReadOnlyNote({ label, note }: { label: string; note: string }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-dashed border-border bg-card-alt px-3 py-2 dark:border-border dark:bg-card-alt">
-      <span className="text-xs font-medium text-text-muted dark:text-text-muted">{label}</span>
-      <span className="flex items-center gap-1 text-xs text-text-muted dark:text-text-muted">
+    <div className="flex items-center justify-between rounded-lg border border-dashed border-border bg-card-alt px-3 py-2  ">
+      <span className="text-xs font-medium text-text-muted ">{label}</span>
+      <span className="flex items-center gap-1 text-xs text-text-muted ">
         <Info className="h-3.5 w-3.5 shrink-0" />
         {note}
       </span>
@@ -376,12 +376,12 @@ function AdditionalQuestionsSection({
   }
 
   return (
-    <section className="surface-card flex flex-col gap-4 dark:surface-card">
+    <section className="surface-card flex flex-col gap-4 ">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
           Additional questions
         </h3>
-        <span className="text-xs text-text-muted dark:text-text-muted">
+        <span className="text-xs text-text-muted ">
           {questions.length} question{questions.length === 1 ? "" : "s"}
         </span>
       </div>
@@ -403,7 +403,7 @@ function AdditionalQuestionsSection({
         ))}
 
         {questions.length === 0 && (
-          <p className="text-xs text-text-muted dark:text-text-muted">
+          <p className="text-xs text-text-muted ">
             No additional questions yet — add one below.
           </p>
         )}
@@ -418,10 +418,10 @@ function AdditionalQuestionsSection({
               key={component}
               type="button"
               onClick={() => addQuestion(component)}
-              className="flex flex-col items-center gap-1.5 rounded-xl border border-dashed border-border bg-card-alt px-3 py-3 text-center transition-colors hover:border-solid hover:border-primary hover:bg-accent dark:border-border dark:bg-card-alt dark:hover:border-primary dark:hover:bg-accent"
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-dashed border-border bg-card-alt px-3 py-3 text-center transition-colors hover:border-solid hover:border-primary hover:bg-accent    "
             >
-              <Icon className="h-4 w-4 text-text-accent dark:text-text-accent" />
-              <span className="text-[11px] font-medium leading-tight text-text-primary dark:text-text-primary">
+              <Icon className="h-4 w-4 text-text-accent " />
+              <span className="text-[11px] font-medium leading-tight text-text-primary ">
                 {meta.label}
               </span>
             </button>
@@ -468,22 +468,22 @@ function ContentQuestionEditor({
   }
 
   return (
-    <div className="surface-card-alt flex flex-col gap-3 dark:surface-card-alt">
+    <div className="surface-card-alt flex flex-col gap-3 ">
       <div className="flex items-start gap-2">
-        <span className="mt-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-[10px] font-semibold text-text-muted dark:bg-card dark:text-text-muted">
+        <span className="mt-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-[10px] font-semibold text-text-muted  ">
           {index + 1}
         </span>
 
         <div className="flex flex-1 flex-col gap-2">
           <div className="flex items-center gap-2">
-            <Icon className="h-3.5 w-3.5 shrink-0 text-text-accent dark:text-text-accent" />
+            <Icon className="h-3.5 w-3.5 shrink-0 text-text-accent " />
             <input
               value={question.question}
               onChange={(e) => onPatch({ question: e.target.value })}
-              className="flex-1 rounded border border-border bg-card px-2 py-1 text-sm text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+              className="flex-1 rounded border border-border bg-card px-2 py-1 text-sm text-text-primary   "
             />
           </div>
-          <span className="w-fit rounded-full bg-card px-2 py-0.5 text-[10px] font-medium text-text-muted dark:bg-card dark:text-text-muted">
+          <span className="w-fit rounded-full bg-card px-2 py-0.5 text-[10px] font-medium text-text-muted  ">
             {meta.label}
           </span>
         </div>
@@ -494,7 +494,7 @@ function ContentQuestionEditor({
             onClick={onMoveUp}
             disabled={isFirst}
             aria-label="Move question up"
-            className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-text-primary disabled:opacity-30 dark:text-text-muted dark:hover:bg-card dark:hover:text-text-primary"
+            className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-text-primary disabled:opacity-30   "
           >
             <ChevronUp className="h-3.5 w-3.5" />
           </button>
@@ -503,7 +503,7 @@ function ContentQuestionEditor({
             onClick={onMoveDown}
             disabled={isLast}
             aria-label="Move question down"
-            className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-text-primary disabled:opacity-30 dark:text-text-muted dark:hover:bg-card dark:hover:text-text-primary"
+            className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-text-primary disabled:opacity-30   "
           >
             <ChevronDown className="h-3.5 w-3.5" />
           </button>
@@ -511,7 +511,7 @@ function ContentQuestionEditor({
             type="button"
             onClick={onRemove}
             aria-label="Remove question"
-            className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-destructive dark:text-text-muted dark:hover:bg-card dark:hover:text-destructive"
+            className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-destructive   "
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
@@ -529,14 +529,14 @@ function ContentQuestionEditor({
                   next[i] = e.target.value;
                   updateOptions(next);
                 }}
-                className="flex-1 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+                className="flex-1 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
               />
               <button
                 type="button"
                 onClick={() => updateOptions(question.options.filter((_, oi) => oi !== i))}
                 disabled={question.options.length <= 1}
                 aria-label="Remove option"
-                className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-destructive disabled:opacity-30 dark:text-text-muted dark:hover:bg-card dark:hover:text-destructive"
+                className="rounded p-1 text-text-muted transition-colors hover:bg-card hover:text-destructive disabled:opacity-30   "
               >
                 <Trash2 className="h-3 w-3" />
               </button>
@@ -545,7 +545,7 @@ function ContentQuestionEditor({
           <button
             type="button"
             onClick={() => updateOptions([...question.options, `Option ${question.options.length + 1}`])}
-            className="flex w-fit items-center gap-1 text-xs font-medium text-text-accent transition-opacity hover:opacity-80 dark:text-text-accent"
+            className="flex w-fit items-center gap-1 text-xs font-medium text-text-accent transition-opacity hover:opacity-80 "
           >
             <Plus className="h-3 w-3" />
             Add option
@@ -555,20 +555,20 @@ function ContentQuestionEditor({
 
       {question.component === "rating" && (
         <div className="flex items-center gap-2 pl-8">
-          <label className="text-xs text-text-muted dark:text-text-muted">Scale (out of):</label>
+          <label className="text-xs text-text-muted ">Scale (out of):</label>
           <input
             type="number"
             min={2}
             value={question.scale}
             onChange={(e) => onPatch({ scale: Number(e.target.value) || 5 } as Partial<ContentQuestionEntry>)}
-            className="w-16 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+            className="w-16 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
           />
         </div>
       )}
 
       {/* Conditional visibility */}
-      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2 pl-8 dark:border-border">
-        <label className="text-xs text-text-muted dark:text-text-muted">Only show this if:</label>
+      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2 pl-8 ">
+        <label className="text-xs text-text-muted ">Only show this if:</label>
         <select
           value={question.showIf?.questionId ?? ""}
           onChange={(e) => {
@@ -586,7 +586,7 @@ function ContentQuestionEditor({
             }
           }}
           disabled={priorQuestions.length === 0}
-          className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary disabled:opacity-40 dark:border-border dark:bg-card dark:text-text-primary"
+          className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary disabled:opacity-40   "
         >
           <option value="">Always show</option>
           {priorQuestions.map((p) => (
@@ -599,13 +599,13 @@ function ContentQuestionEditor({
         {question.showIf &&
           (parentQuestion?.component === "single_select" || parentQuestion?.component === "multi_select") && (
             <>
-              <label className="text-xs text-text-muted dark:text-text-muted">
+              <label className="text-xs text-text-muted ">
                 {parentQuestion.component === "multi_select" ? "includes" : "equals"}
               </label>
               <select
                 value={typeof question.showIf.equals === "string" ? question.showIf.equals : ""}
                 onChange={(e) => onPatch({ showIf: { questionId: question.showIf!.questionId, equals: e.target.value } })}
-                className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+                className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
               >
                 {parentQuestion.options.map((option) => (
                   <option key={option} value={option}>
@@ -618,7 +618,7 @@ function ContentQuestionEditor({
 
         {question.showIf && parentQuestion?.component === "rating" && (
           <>
-            <label className="text-xs text-text-muted dark:text-text-muted">rated at least</label>
+            <label className="text-xs text-text-muted ">rated at least</label>
             <input
               type="number"
               min={1}
@@ -627,9 +627,9 @@ function ContentQuestionEditor({
               onChange={(e) =>
                 onPatch({ showIf: { questionId: question.showIf!.questionId, atLeast: Number(e.target.value) || 1 } })
               }
-              className="w-14 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+              className="w-14 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
             />
-            <span className="text-xs text-text-muted dark:text-text-muted">/ {parentQuestion.scale}</span>
+            <span className="text-xs text-text-muted ">/ {parentQuestion.scale}</span>
           </>
         )}
       </div>
@@ -644,8 +644,8 @@ function ContentQuestionEditor({
           }
           className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
             question.analyticsEnabled
-              ? "bg-accent text-accent-foreground dark:bg-accent dark:text-accent-foreground"
-              : "border border-border text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
+              ? "bg-accent text-accent-foreground  "
+              : "border border-border text-text-muted hover:text-text-primary   "
           }`}
         >
           <BarChart3 className="h-3 w-3" />
@@ -657,7 +657,7 @@ function ContentQuestionEditor({
             onChange={(e) => onPatch({ metricKey: e.target.value })}
             placeholder="metric key, e.g. confidence_rating"
             title="Reuse this exact key on other questions to combine their answers into one rollup — different keys never get grouped together."
-            className="rounded border border-border bg-card px-2 py-1 text-[11px] text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+            className="rounded border border-border bg-card px-2 py-1 text-[11px] text-text-primary   "
           />
         )}
       </div>

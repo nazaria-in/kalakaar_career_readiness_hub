@@ -67,10 +67,10 @@ function PendingSection({
 
   return (
     <section className="space-y-2">
-      <h3 className="text-sm font-semibold text-text-primary dark:text-text-primary">{title}</h3>
-      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>}
+      <h3 className="text-sm font-semibold text-text-primary ">{title}</h3>
+      {isLoading && <p className="text-sm text-text-muted ">Loading…</p>}
       {!isLoading && filtered.length === 0 && (
-        <p className="text-sm text-text-muted dark:text-text-muted">{emptyMessage}</p>
+        <p className="text-sm text-text-muted ">{emptyMessage}</p>
       )}
       <div className="flex flex-col gap-2">
         {filtered.map((user) => (
@@ -85,7 +85,7 @@ function PendingSection({
             <button
               type="button"
               onClick={() => handleDecision(user.id, "rejected")}
-              className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted dark:border-border dark:text-text-primary"
+              className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted  "
             >
               Reject
             </button>
@@ -134,7 +134,7 @@ function ApprovedRoster() {
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-text-primary dark:text-text-primary">All approved</h3>
+        <h3 className="text-sm font-semibold text-text-primary ">All approved</h3>
         <button
           type="button"
           onClick={() => setGrouped((g) => !g)}
@@ -142,7 +142,7 @@ function ApprovedRoster() {
           className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
             grouped
               ? "border-primary bg-primary text-primary-foreground"
-              : "border-border bg-transparent text-text-primary hover:bg-surface-muted dark:border-border dark:text-text-primary dark:hover:bg-white/5"
+              : "border-border bg-transparent text-text-primary hover:bg-surface-muted   "
           }`}
         >
           {grouped ? "Ungroup" : "Group by pod"}
@@ -168,7 +168,7 @@ function ApprovedRoster() {
                 value={p.role}
                 disabled={!isPm}
                 onChange={(e) => handleRoleChange(p.id, e.target.value as UserRole)}
-                className="rounded-lg border border-border bg-card-alt px-2 py-1 text-xs text-text-primary disabled:opacity-60 dark:border-border dark:bg-card-alt dark:text-text-primary"
+                className="rounded-lg border border-border bg-card-alt px-2 py-1 text-xs text-text-primary disabled:opacity-60   "
               >
                 {ROLE_OPTIONS.map((r) => (
                   <option key={r} value={r}>
@@ -179,7 +179,7 @@ function ApprovedRoster() {
               <select
                 value={podRow.podId ?? UNASSIGNED_VALUE}
                 onChange={(e) => handlePodChange(p.id, e.target.value)}
-                className="rounded-lg border border-border bg-card-alt px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+                className="rounded-lg border border-border bg-card-alt px-2 py-1 text-xs text-text-primary   "
               >
                 <option value={UNASSIGNED_VALUE}>No pod</option>
                 {(podOptions ?? []).map((pod) => (
@@ -194,7 +194,7 @@ function ApprovedRoster() {
       />
 
       {!isPm && (
-        <p className="text-xs text-text-muted dark:text-text-muted">
+        <p className="text-xs text-text-muted ">
           Only program managers can change roles — you can view but not edit.
         </p>
       )}
@@ -246,10 +246,10 @@ function RejectedSection() {
 
   return (
     <section className="space-y-2">
-      <h3 className="text-sm font-semibold text-text-primary dark:text-text-primary">Rejected</h3>
-      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>}
+      <h3 className="text-sm font-semibold text-text-primary ">Rejected</h3>
+      {isLoading && <p className="text-sm text-text-muted ">Loading…</p>}
       {!isLoading && rejected.length === 0 && (
-        <p className="text-sm text-text-muted dark:text-text-muted">No rejected requests.</p>
+        <p className="text-sm text-text-muted ">No rejected requests.</p>
       )}
       <div className="flex flex-col gap-2">
         {rejected.map((user) => (
@@ -257,7 +257,7 @@ function RejectedSection() {
             <button
               type="button"
               onClick={() => handleReconsider(user.id)}
-              className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted dark:border-border dark:text-text-primary dark:hover:bg-white/5"
+              className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted   "
             >
               Move back to pending
             </button>

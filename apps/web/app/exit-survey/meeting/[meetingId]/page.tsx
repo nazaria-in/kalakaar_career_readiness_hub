@@ -66,9 +66,9 @@ export default function ExitSurveyMeetingComparisonPage() {
   return (
       <div className="p-4 md:p-6">
         {isLoading ? (
-          <p className="text-sm text-text-muted dark:text-text-muted">Loading...</p>
+          <p className="text-sm text-text-muted ">Loading...</p>
         ) : error ? (
-          <p className="text-sm text-destructive dark:text-destructive">{error}</p>
+          <p className="text-sm text-destructive ">{error}</p>
         ) : rows.length === 0 ? (
           <EmptyState
             title="No exit surveys"
@@ -80,12 +80,12 @@ export default function ExitSurveyMeetingComparisonPage() {
               row.submittedAt ? (
                 <ExitSurveyReportView key={row.id} detail={row} redacted={false} />
               ) : (
-                <div key={row.id} className="surface-card dark:surface-card">
-                  <p className="text-sm font-medium text-text-primary dark:text-text-primary">
+                <div key={row.id} className="surface-card ">
+                  <p className="text-sm font-medium text-text-primary ">
                     {row.userRole}
                     {row.subjectFullName ? ` — about ${row.subjectFullName}` : ""} — not yet submitted
                   </p>
-                  <p className="mt-1 text-xs text-text-muted dark:text-text-muted">
+                  <p className="mt-1 text-xs text-text-muted ">
                     Waiting on {row.submitterFullName ?? "the submitter"}
                   </p>
                 </div>

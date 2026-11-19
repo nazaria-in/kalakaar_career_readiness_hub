@@ -29,15 +29,15 @@ export function EnterConversationBanner({ conversationId, onEntered }: EnterConv
   }
 
   return (
-    <div className="border-t border-border-strong dark:border-border-strong bg-card dark:bg-card px-4 py-3 flex items-center justify-between gap-3">
+    <div className="border-t border-border-strong  bg-card  px-4 py-3 flex items-center justify-between gap-3">
       <div>
-        <p className="text-sm text-text-primary dark:text-text-primary">
+        <p className="text-sm text-text-primary ">
           You&apos;re viewing this conversation as staff.
         </p>
-        <p className="text-xs text-text-muted dark:text-text-muted">
+        <p className="text-xs text-text-muted ">
           Enter to appear as a participant, or just send a message below — you&apos;ll join automatically.
         </p>
-        {error && <p className="text-xs text-destructive dark:text-destructive mt-1">{error}</p>}
+        {error && <p className="text-xs text-destructive  mt-1">{error}</p>}
       </div>
       <button
         type="button"
@@ -45,7 +45,7 @@ export function EnterConversationBanner({ conversationId, onEntered }: EnterConv
         disabled={entering}
         className={cn(
           "shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-          "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground",
+          "bg-primary text-primary-foreground  ",
           "disabled:opacity-60 disabled:cursor-not-allowed"
         )}
       >

@@ -32,25 +32,25 @@ export function PushNotificationToggle(): React.JSX.Element | null {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-4 dark:border-white/10 dark:bg-card">
+    <div className="rounded-xl border border-border bg-card p-4  ">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           {isSubscribed ? (
             <BellRing
               size={18}
-              className="shrink-0 text-text-accent dark:text-text-accent"
+              className="shrink-0 text-text-accent "
             />
           ) : (
             <BellOff
               size={18}
-              className="shrink-0 text-text-muted dark:text-text-muted"
+              className="shrink-0 text-text-muted "
             />
           )}
           <div>
-            <p className="text-sm font-medium text-text-primary dark:text-text-primary">
+            <p className="text-sm font-medium text-text-primary ">
               Browser notifications
             </p>
-            <p className="text-xs text-text-muted dark:text-text-muted">
+            <p className="text-xs text-text-muted ">
               {permissionState === "denied"
                 ? "Blocked — re-enable in browser settings"
                 : isSubscribed
@@ -63,13 +63,13 @@ export function PushNotificationToggle(): React.JSX.Element | null {
         {/* Right side — toggle or blocked indicator */}
         {permissionState === "denied" ? (
           // Can't re-prompt after denial — show state only.
-          <span className="shrink-0 rounded-full border border-border bg-card-alt px-2.5 py-1 text-xs font-medium text-text-muted dark:border-white/10 dark:bg-card-alt dark:text-text-muted">
+          <span className="shrink-0 rounded-full border border-border bg-card-alt px-2.5 py-1 text-xs font-medium text-text-muted   ">
             Blocked
           </span>
         ) : isLoading ? (
           <Loader2
             size={18}
-            className="shrink-0 animate-spin text-text-muted dark:text-text-muted"
+            className="shrink-0 animate-spin text-text-muted "
           />
         ) : (
           // Toggle switch — accessible via keyboard (role=switch + aria-checked).
@@ -80,8 +80,8 @@ export function PushNotificationToggle(): React.JSX.Element | null {
             onClick={handleToggle}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               isSubscribed
-                ? "bg-primary dark:bg-primary"
-                : "bg-border dark:bg-white/20"
+                ? "bg-primary "
+                : "bg-border "
             }`}
           >
             <span
@@ -95,7 +95,7 @@ export function PushNotificationToggle(): React.JSX.Element | null {
 
       {/* How-to-unblock hint — only shown when permission was denied */}
       {permissionState === "denied" && (
-        <p className="mt-3 text-xs leading-relaxed text-text-muted dark:text-text-muted">
+        <p className="mt-3 text-xs leading-relaxed text-text-muted ">
           To re-enable: open your browser&apos;s site settings, find
           Notifications, and change Nazaria from &quot;Block&quot; to
           &quot;Allow&quot;. Then refresh this page.

@@ -10,3 +10,4 @@ export * from "./timeline";
 export * from "./users";
 export * from "./content-template";
 export * from "./filtering"
+export * from "./people";

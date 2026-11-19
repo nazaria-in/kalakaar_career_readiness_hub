@@ -46,16 +46,16 @@ export function ForwardMessageModal({ message, isOpen, onClose }: ForwardMessage
         <div className="flex-1 overflow-hidden">
           <ConversationsListPanel pickerMode onSelectForForward={toggleSelection} />
         </div>
-        {error && <p className="text-sm text-destructive dark:text-destructive pt-2">{error}</p>}
-        <div className="border-t border-border-strong dark:border-border-strong pt-3 flex items-center justify-between">
-          <span className="text-sm text-text-muted dark:text-text-muted">{selectedIds.length} selected</span>
+        {error && <p className="text-sm text-destructive  pt-2">{error}</p>}
+        <div className="border-t border-border-strong  pt-3 flex items-center justify-between">
+          <span className="text-sm text-text-muted ">{selectedIds.length} selected</span>
           <button
             type="button"
             onClick={() => void handleForward()}
             disabled={selectedIds.length === 0 || forwarding}
             className={cn(
               "rounded-lg px-4 py-2 text-sm font-medium transition-colors",
-              "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground",
+              "bg-primary text-primary-foreground  ",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >

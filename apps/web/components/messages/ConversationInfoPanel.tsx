@@ -35,7 +35,7 @@ interface ConversationInfoPanelProps {
 }
 
 function KindIcon({ kind }: { kind: ConversationKind }) {
-  const className = "h-5 w-5 text-text-muted dark:text-text-muted";
+  const className = "h-5 w-5 text-text-muted ";
   if (kind === "broadcast") return <Megaphone className={className} />;
   if (kind === "pod") return <Users className={className} />;
   if (kind === "group") return <UsersRound className={className} />;
@@ -119,40 +119,40 @@ export function ConversationInfoPanel({
   }
 
   return (
-    <div className="flex h-full flex-col bg-card dark:bg-card border-l border-border-strong dark:border-border-strong shadow-lg">
-      <div className="flex items-center gap-2 border-b border-border-strong dark:border-border-strong px-4 py-3">
+    <div className="flex h-full flex-col bg-card  border-l border-border-strong  shadow-lg">
+      <div className="flex items-center gap-2 border-b border-border-strong  px-4 py-3">
         <button
           type="button"
           onClick={onClose}
-          className="rounded-full p-1.5 hover:bg-card-alt dark:hover:bg-card-alt"
+          className="rounded-full p-1.5 hover:bg-card-alt "
           aria-label="Close details"
         >
-          <X className="h-5 w-5 text-text-primary dark:text-text-primary" />
+          <X className="h-5 w-5 text-text-primary " />
         </button>
-        <p className="font-heading text-base text-text-primary dark:text-text-primary">Conversation details</p>
+        <p className="font-heading text-base text-text-primary ">Conversation details</p>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="flex flex-col items-center gap-2 px-4 py-6 border-b border-border dark:border-border">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface dark:bg-surface border border-border-strong dark:border-border-strong">
+        <div className="flex flex-col items-center gap-2 px-4 py-6 border-b border-border ">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface  border border-border-strong ">
             <KindIcon kind={kind} />
           </div>
-          <p className="text-base font-heading text-text-primary dark:text-text-primary text-center">{name}</p>
+          <p className="text-base font-heading text-text-primary  text-center">{name}</p>
           {description && (
-            <p className="text-sm text-text-muted dark:text-text-muted text-center max-w-xs">{description}</p>
+            <p className="text-sm text-text-muted  text-center max-w-xs">{description}</p>
           )}
         </div>
 
         <div className="px-4 py-3">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+            <p className="text-xs font-semibold uppercase tracking-wide text-text-muted ">
               {participants.length} {participants.length === 1 ? "participant" : "participants"}
             </p>
             {canManageParticipants && (
               <button
                 type="button"
                 onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-1 text-xs font-medium text-primary dark:text-primary"
+                className="flex items-center gap-1 text-xs font-medium text-primary "
               >
                 <UserPlus className="h-3.5 w-3.5" /> Add
               </button>
@@ -174,14 +174,14 @@ export function ConversationInfoPanel({
       </div>
 
       {showLeaveOption && (
-        <div className="border-t border-border-strong dark:border-border-strong p-3">
+        <div className="border-t border-border-strong  p-3">
           <button
             type="button"
             onClick={() => setConfirmLeaveOpen(true)}
             className={cn(
               "w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
-              "text-destructive dark:text-destructive border border-destructive/30 dark:border-destructive/30",
-              "hover:bg-destructive/5 dark:hover:bg-destructive/5"
+              "text-destructive  border border-destructive/30 ",
+              "hover:bg-destructive/5 "
             )}
           >
             <LogOut className="h-4 w-4" /> Leave conversation
@@ -190,7 +190,7 @@ export function ConversationInfoPanel({
       )}
 
       {actionError && (
-        <p className="px-4 pb-3 text-sm text-destructive dark:text-destructive">{actionError}</p>
+        <p className="px-4 pb-3 text-sm text-destructive ">{actionError}</p>
       )}
 
       {showAddModal && (

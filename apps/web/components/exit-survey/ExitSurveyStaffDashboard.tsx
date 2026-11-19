@@ -18,9 +18,9 @@ const SIGNAL_DOT: Record<string, string> = {
 };
 
 const SENTIMENT_STYLE: Record<string, string> = {
-  positive: "bg-green-500/15 text-green-700 dark:text-green-300",
-  neutral: "bg-border text-text-muted dark:text-text-muted",
-  negative: "bg-red-500/15 text-red-700 dark:text-red-300",
+  positive: "bg-green-500/15 text-green-700 ",
+  neutral: "bg-border text-text-muted ",
+  negative: "bg-red-500/15 text-red-700 ",
 };
 
 export function ExitSurveyStaffDashboard() {
@@ -43,7 +43,7 @@ export function ExitSurveyStaffDashboard() {
     <div className="flex flex-col gap-6">
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-text-muted dark:text-text-muted">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-text-muted ">
             All submitted surveys
           </h2>
           <Link
@@ -53,9 +53,9 @@ export function ExitSurveyStaffDashboard() {
             Edit/Create Exit Survey
           </Link>
         </div>
-        {escalationsLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading...</p>}
+        {escalationsLoading && <p className="text-sm text-text-muted ">Loading...</p>}
         {!escalationsLoading && (escalations ?? []).length === 0 && (
-          <p className="text-sm text-text-muted dark:text-text-muted">No open escalations right now.</p>
+          <p className="text-sm text-text-muted ">No open escalations right now.</p>
         )}
         <div className="flex flex-col gap-2">
           {(escalations ?? []).map((row) => (
@@ -65,7 +65,7 @@ export function ExitSurveyStaffDashboard() {
       </div>
 
       <div>
-        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-text-muted dark:text-text-muted">
+        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-text-muted ">
           All submitted surveys
         </h2>
 
@@ -77,7 +77,7 @@ export function ExitSurveyStaffDashboard() {
           <select
             value={podFilter}
             onChange={(e) => setPodFilter(e.target.value)}
-            className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+            className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
           >
             <option value="">All teams</option>
             {(podOptions ?? []).map((pod) => (
@@ -88,7 +88,7 @@ export function ExitSurveyStaffDashboard() {
           </select>
         </div>
 
-        {rowsLoading && <p className="mt-2 text-sm text-text-muted dark:text-text-muted">Loading...</p>}
+        {rowsLoading && <p className="mt-2 text-sm text-text-muted ">Loading...</p>}
 
         <div className="mt-2 flex flex-col gap-2">
           {(rows ?? []).map((row) => (
@@ -104,33 +104,33 @@ function ExitSurveyRowCard({ row, highlighted }: { row: ExitSurveyDetail; highli
   return (
     <Link
       href={`/exit-survey/${row.id}`}
-      className={`flex items-center justify-between rounded-xl border p-4 dark:border-border ${
+      className={`flex items-center justify-between rounded-xl border p-4  ${
         highlighted
-          ? "border-border-strong bg-card-alt dark:bg-card-alt"
-          : "border-border bg-card dark:bg-card"
+          ? "border-border-strong bg-card-alt "
+          : "border-border bg-card "
       }`}
     >
       <div>
-        <p className="text-sm font-medium text-text-primary dark:text-text-primary">
+        <p className="text-sm font-medium text-text-primary ">
           {row.meetingTitle} · {row.userRole}
           {row.userRole === "mentor" && row.subjectFullName ? ` — about ${row.subjectFullName}` : ""}
         </p>
-        <p className="text-xs text-text-muted dark:text-text-muted">
+        <p className="text-xs text-text-muted ">
           {row.submitterFullName ?? "Unknown"} ·{" "}
           {row.submittedAt ? new Date(row.submittedAt).toLocaleString() : "not submitted"}
         </p>
         {(row.podName || row.mentorNames.length > 0) && (
-          <p className="text-xs text-text-muted dark:text-text-muted">
+          <p className="text-xs text-text-muted ">
             {row.podName ? `Pod: ${row.podName}` : ""}
             {row.podName && row.mentorNames.length > 0 ? " · " : ""}
             {row.mentorNames.length > 0 ? `Mentor(s): ${row.mentorNames.join(", ")}` : ""}
           </p>
         )}
         {row.aiHeadline && (
-          <p className="mt-1 text-xs text-text-primary dark:text-text-primary">{row.aiHeadline}</p>
+          <p className="mt-1 text-xs text-text-primary ">{row.aiHeadline}</p>
         )}
         {row.concernTags.length > 0 && (
-          <p className="mt-1 text-xs text-text-muted dark:text-text-muted">
+          <p className="mt-1 text-xs text-text-muted ">
             Flagged: {row.concernTags.join(", ")}
           </p>
         )}

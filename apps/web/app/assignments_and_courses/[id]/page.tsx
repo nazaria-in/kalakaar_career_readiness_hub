@@ -48,11 +48,11 @@ import { getMentorIdsForMentee } from "@/lib/api/pods";
 const TYPE_ICON = { assignment: ClipboardList, course: BookOpen, resource: FileBox } as const;
 
 const STATUS_META: Record<CompletionStatus, { label: string; icon: typeof CheckCircle2; className: string }> = {
-  completed: { label: "Completed", icon: CheckCircle2, className: "bg-primary/10 text-text-accent dark:bg-primary/15 dark:text-text-accent" },
-  approved_awaiting_completion: { label: "Approved", icon: CheckCircle2, className: "bg-primary/10 text-text-accent dark:bg-primary/15 dark:text-text-accent" },
-  pending_review: { label: "Waiting on review", icon: Clock, className: "bg-card-alt text-text-muted dark:bg-card-alt dark:text-text-muted" },
-  needs_revision: { label: "Needs revision", icon: RotateCcw, className: "bg-destructive/10 text-destructive dark:bg-destructive/15 dark:text-destructive" },
-  not_started: { label: "Not started", icon: Clock, className: "bg-card-alt text-text-muted dark:bg-card-alt dark:text-text-muted" },
+  completed: { label: "Completed", icon: CheckCircle2, className: "bg-primary/10 text-text-accent  " },
+  approved_awaiting_completion: { label: "Approved", icon: CheckCircle2, className: "bg-primary/10 text-text-accent  " },
+  pending_review: { label: "Waiting on review", icon: Clock, className: "bg-card-alt text-text-muted  " },
+  needs_revision: { label: "Needs revision", icon: RotateCcw, className: "bg-destructive/10 text-destructive  " },
+  not_started: { label: "Not started", icon: Clock, className: "bg-card-alt text-text-muted  " },
 };
 
 /**
@@ -134,7 +134,7 @@ export default function ContentItemDetailPage() {
   });
 
   if (loadingItem || !item) {
-    return <p className="p-4 text-sm text-text-muted dark:text-text-muted">Loading…</p>;
+    return <p className="p-4 text-sm text-text-muted ">Loading…</p>;
   }
 
   const Icon = TYPE_ICON[item.content_type];
@@ -150,41 +150,41 @@ export default function ContentItemDetailPage() {
       <button
         type="button"
         onClick={() => router.push("/assignments_and_courses")}
-        className="flex w-fit items-center gap-1.5 text-sm font-medium text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-primary"
+        className="flex w-fit items-center gap-1.5 text-sm font-medium text-text-muted hover:text-text-primary  "
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         Back
       </button>
 
       {/* --- Details --- */}
-      <section className="surface-card flex flex-col gap-3 dark:surface-card">
+      <section className="surface-card flex flex-col gap-3 ">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground dark:bg-accent dark:text-accent-foreground">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground  ">
               <Icon className="h-4.5 w-4.5" />
             </span>
             <div className="flex flex-col">
-              <h1 className="font-heading text-lg font-medium text-text-primary dark:text-text-primary">{item.title}</h1>
-              {item.week && <span className="text-xs text-text-muted dark:text-text-muted">{item.week.name}</span>}
+              <h1 className="font-heading text-lg font-medium text-text-primary ">{item.title}</h1>
+              {item.week && <span className="text-xs text-text-muted ">{item.week.name}</span>}
             </div>
           </div>
           <RequirementBadge requirement={requirement} />
         </div>
 
-        {item.description && <p className="text-sm text-text-primary dark:text-text-primary">{item.description}</p>}
+        {item.description && <p className="text-sm text-text-primary ">{item.description}</p>}
         {item.instructions && (
-          <div className="surface-card-alt dark:surface-card-alt">
-            <p className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+          <div className="surface-card-alt ">
+            <p className="text-xs font-semibold uppercase tracking-wide text-text-muted ">
               Instructions for mentees
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-text-primary dark:text-text-primary">{item.instructions}</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm text-text-primary ">{item.instructions}</p>
           </div>
         )}
 
         {item.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {item.tags.map((tag) => (
-              <span key={tag.id} className="rounded-full border border-border px-2 py-0.5 text-[11px] text-text-muted dark:border-border dark:text-text-muted">
+              <span key={tag.id} className="rounded-full border border-border px-2 py-0.5 text-[11px] text-text-muted  ">
                 {tag.name}
               </span>
             ))}
@@ -197,8 +197,8 @@ export default function ContentItemDetailPage() {
 
       {/* --- Resource links --- */}
       {template.resource_links.length > 0 && (
-        <section className="surface-card flex flex-col gap-2 dark:surface-card">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">External links</h2>
+        <section className="surface-card flex flex-col gap-2 ">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">External links</h2>
           <div className="flex flex-col gap-2">
             {template.resource_links.map((link, i) => (
               <a
@@ -206,12 +206,12 @@ export default function ContentItemDetailPage() {
                 href={normalizeExternalUrl(link.link || "")}
                 target="_blank"
                 rel="noreferrer"
-                className="surface-card-alt flex items-center gap-2 dark:surface-card-alt"
+                className="surface-card-alt flex items-center gap-2 "
               >
-                <Link2 className="h-4 w-4 shrink-0 text-text-muted dark:text-text-muted" />
+                <Link2 className="h-4 w-4 shrink-0 text-text-muted " />
                 <span className="flex flex-col">
-                  <span className="text-sm font-medium text-text-primary dark:text-text-primary">{link.title || link.link}</span>
-                  {link.description && <span className="text-xs text-text-muted dark:text-text-muted">{link.description}</span>}
+                  <span className="text-sm font-medium text-text-primary ">{link.title || link.link}</span>
+                  {link.description && <span className="text-xs text-text-muted ">{link.description}</span>}
                 </span>
               </a>
             ))}
@@ -235,18 +235,18 @@ export default function ContentItemDetailPage() {
 
       {/* --- Roster / per-mentee review (staff/mentor only) --- */}
       {canReview && (
-        <section className="surface-card flex flex-col gap-3 dark:surface-card">
+        <section className="surface-card flex flex-col gap-3 ">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
               Roster
             </h2>
-            <span className="text-xs text-text-muted dark:text-text-muted">{roster?.length ?? 0} mentees</span>
+            <span className="text-xs text-text-muted ">{roster?.length ?? 0} mentees</span>
           </div>
 
           {loadingRoster ? (
-            <p className="text-xs text-text-muted dark:text-text-muted">Loading roster…</p>
+            <p className="text-xs text-text-muted ">Loading roster…</p>
           ) : rosterErrored ? (
-            <p className="text-xs text-destructive dark:text-destructive">
+            <p className="text-xs text-destructive ">
               Couldn&apos;t load the roster — try refreshing.
             </p>
           ) : !roster || roster.length === 0 ? (
@@ -282,7 +282,7 @@ export default function ContentItemDetailPage() {
 function RequirementBadge({ requirement }: { requirement: "required" | "optional" | "disabled" }) {
   const label = requirement === "required" ? "Required" : requirement === "optional" ? "Optional" : "No submission";
   return (
-    <span className="w-fit shrink-0 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-text-muted dark:border-border dark:text-text-muted">
+    <span className="w-fit shrink-0 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-text-muted  ">
       {label}
     </span>
   );
@@ -292,9 +292,9 @@ function TypeSpecificMeta({ item }: { item: ContentItemWithMeta }) {
   const template = item.submission_template;
   if (item.content_type === "assignment") {
     return (
-      <section className="surface-card flex flex-col gap-2 dark:surface-card">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">Assignment settings</h2>
-        <p className="text-sm text-text-primary dark:text-text-primary">
+      <section className="surface-card flex flex-col gap-2 ">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">Assignment settings</h2>
+        <p className="text-sm text-text-primary ">
           Max revisions: {template.type_specific.assignment.submission_links.max_revisions}
         </p>
       </section>
@@ -302,9 +302,9 @@ function TypeSpecificMeta({ item }: { item: ContentItemWithMeta }) {
   }
   if (item.content_type === "course") {
     return (
-      <section className="surface-card flex flex-col gap-2 dark:surface-card">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">Course settings</h2>
-        <p className="text-sm text-text-primary dark:text-text-primary">
+      <section className="surface-card flex flex-col gap-2 ">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">Course settings</h2>
+        <p className="text-sm text-text-primary ">
           Total modules: {template.type_specific.course.modules_total ?? "Not set"}
         </p>
       </section>
@@ -343,8 +343,8 @@ function RosterRow({
       }}
       className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
         isComplete
-          ? "border border-border text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted"
-          : "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+          ? "border border-border text-text-muted hover:text-text-primary  "
+          : "bg-primary text-primary-foreground  "
       }`}
     >
       {isComplete ? <Undo2 className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5" />}
@@ -368,15 +368,15 @@ function RosterRow({
             }
           : undefined
       }
-      className={`surface-card-alt flex flex-col gap-2 dark:surface-card-alt ${
-        canExpandReview ? "cursor-pointer transition-colors hover:bg-card dark:hover:bg-card" : ""
+      className={`surface-card-alt flex flex-col gap-2  ${
+        canExpandReview ? "cursor-pointer transition-colors hover:bg-card " : ""
       }`}
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-text-primary dark:text-text-primary">{row.mentee_name}</span>
+          <span className="text-sm font-medium text-text-primary ">{row.mentee_name}</span>
           {row.due_at && (
-            <span className="text-xs text-text-muted dark:text-text-muted">
+            <span className="text-xs text-text-muted ">
               Due {new Date(row.due_at).toLocaleDateString()}
             </span>
           )}
@@ -388,7 +388,7 @@ function RosterRow({
           </span>
           {canExpandReview ? (
             <ChevronDown
-              className={`h-4 w-4 shrink-0 text-text-muted transition-transform dark:text-text-muted ${
+              className={`h-4 w-4 shrink-0 text-text-muted transition-transform  ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -401,7 +401,7 @@ function RosterRow({
       {expanded && canExpandReview && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex flex-col gap-3 border-t border-border pt-3 dark:border-border"
+          className="flex flex-col gap-3 border-t border-border pt-3 "
         >
           <SubmissionReviewPanel
             dispatchId={row.id}
@@ -455,17 +455,17 @@ function SubmissionReviewPanel({
     },
   });
 
-  if (isLoading) return <p className="text-xs text-text-muted dark:text-text-muted">Loading submissions…</p>;
-  if (!latest) return <p className="text-xs text-text-muted dark:text-text-muted">No submission yet.</p>;
+  if (isLoading) return <p className="text-xs text-text-muted ">Loading submissions…</p>;
+  if (!latest) return <p className="text-xs text-text-muted ">No submission yet.</p>;
 
   return (
     <div className="flex flex-col gap-3">
       {/* --- Latest version: reviewable --- */}
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-text-primary dark:text-text-primary">
+        <span className="text-xs font-semibold text-text-primary ">
           Version {latest.version_number} (latest)
         </span>
-        <span className="text-[11px] text-text-muted dark:text-text-muted">
+        <span className="text-[11px] text-text-muted ">
           Submitted {new Date(latest.submitted_at).toLocaleString()}
         </span>
       </div>
@@ -479,14 +479,14 @@ function SubmissionReviewPanel({
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="Feedback (optional)"
             rows={2}
-            className="resize-none rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
+            className="resize-none rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs text-text-primary   "
           />
           <div className="flex gap-2">
             <button
               type="button"
               disabled={reviewMutation.isPending}
               onClick={() => reviewMutation.mutate("approved")}
-              className="rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+              className="rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50  "
             >
               Approve
             </button>
@@ -494,14 +494,14 @@ function SubmissionReviewPanel({
               type="button"
               disabled={reviewMutation.isPending}
               onClick={() => reviewMutation.mutate("revision_requested")}
-              className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary disabled:opacity-50 dark:border-border dark:text-text-primary"
+              className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary disabled:opacity-50  "
             >
               Request revision
             </button>
           </div>
         </div>
       ) : (
-        <p className="text-xs text-text-muted dark:text-text-muted">
+        <p className="text-xs text-text-muted ">
           Already {latest.status === "approved" ? "approved" : "sent back for revision"}
           {latest.feedback ? ` — "${latest.feedback}"` : ""}.
         </p>
@@ -509,23 +509,23 @@ function SubmissionReviewPanel({
 
       {/* --- Older versions: read-only history --- */}
       {olderSubmissions.length > 0 && (
-        <div className="flex flex-col gap-2 border-t border-border pt-3 dark:border-border">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+        <div className="flex flex-col gap-2 border-t border-border pt-3 ">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-text-muted ">
             Previous versions ({olderSubmissions.length})
           </span>
           {olderSubmissions.map((submission) => (
-            <div key={submission.id} className="surface-card-alt flex flex-col gap-2 dark:surface-card-alt">
+            <div key={submission.id} className="surface-card-alt flex flex-col gap-2 ">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-text-primary dark:text-text-primary">
+                <span className="text-xs font-semibold text-text-primary ">
                   Version {submission.version_number} — {submission.status.replace("_", " ")}
                 </span>
-                <span className="text-[11px] text-text-muted dark:text-text-muted">
+                <span className="text-[11px] text-text-muted ">
                   {new Date(submission.submitted_at).toLocaleString()}
                 </span>
               </div>
               <SubmissionAnswersReadout submission={submission} />
               {submission.feedback && (
-                <p className="text-xs text-text-primary dark:text-text-primary">
+                <p className="text-xs text-text-primary ">
                   Feedback: &quot;{submission.feedback}&quot;
                 </p>
               )}
@@ -540,7 +540,7 @@ function SubmissionReviewPanel({
 function SubmissionAnswersReadout({ submission }: { submission: ContentSubmission }) {
   const answers = submission.answers;
   return (
-    <div className="flex flex-col gap-1.5 text-xs text-text-primary dark:text-text-primary">
+    <div className="flex flex-col gap-1.5 text-xs text-text-primary ">
       {answers.type_specific?.assignment && (
         <>
           <p>
@@ -549,7 +549,7 @@ function SubmissionAnswersReadout({ submission }: { submission: ContentSubmissio
               href={normalizeExternalUrl(answers.type_specific.assignment.submission_link)}
               target="_blank"
               rel="noreferrer"
-              className="text-text-accent underline dark:text-text-accent"
+              className="text-text-accent underline "
             >
               {answers.type_specific.assignment.submission_link}
             </a>
@@ -568,7 +568,7 @@ function SubmissionAnswersReadout({ submission }: { submission: ContentSubmissio
         </>
       )}
       {Object.entries(answers.additional_questions).map(([questionId, value]) => (
-        <p key={questionId} className="text-text-muted dark:text-text-muted">
+        <p key={questionId} className="text-text-muted ">
           {questionId}: {Array.isArray(value) ? value.join(", ") : String(value)}
         </p>
       ))}
@@ -599,16 +599,16 @@ function MySubmissionSection({
 
   if (isLoading) {
     return (
-      <section className="surface-card dark:surface-card">
-        <p className="text-xs text-text-muted dark:text-text-muted">Loading your submission…</p>
+      <section className="surface-card ">
+        <p className="text-xs text-text-muted ">Loading your submission…</p>
       </section>
     );
   }
 
   if (!dispatch) {
     return (
-      <section className="surface-card dark:surface-card">
-        <p className="text-xs text-text-muted dark:text-text-muted">
+      <section className="surface-card ">
+        <p className="text-xs text-text-muted ">
           This item hasn&apos;t been assigned to you yet.
         </p>
       </section>
@@ -626,13 +626,13 @@ function MySubmissionSection({
   const canSubmit = !isMarkedComplete && !revisionLimitReached;
 
   return (
-    <section className="surface-card flex flex-col gap-4 dark:surface-card">
+    <section className="surface-card flex flex-col gap-4 ">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
           Your submission
         </h2>
         {isMarkedComplete && (
-          <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-text-accent dark:bg-primary/15 dark:text-text-accent">
+          <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-text-accent  ">
             <CheckCircle2 className="h-3 w-3" />
             Marked complete
           </span>
@@ -640,34 +640,34 @@ function MySubmissionSection({
       </div>
 
       {latest && (
-        <div className="surface-card-alt flex flex-col gap-2 dark:surface-card-alt">
+        <div className="surface-card-alt flex flex-col gap-2 ">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-text-primary dark:text-text-primary">
+            <span className="text-xs font-semibold text-text-primary ">
               Version {latest.version_number} — {latest.status.replace("_", " ")}
             </span>
-            <span className="text-[11px] text-text-muted dark:text-text-muted">
+            <span className="text-[11px] text-text-muted ">
               {new Date(latest.submitted_at).toLocaleString()}
             </span>
           </div>
           {latest.feedback && (
-            <p className="text-xs text-text-primary dark:text-text-primary">Feedback: &quot;{latest.feedback}&quot;</p>
+            <p className="text-xs text-text-primary ">Feedback: &quot;{latest.feedback}&quot;</p>
           )}
         </div>
       )}
 
       {isMarkedComplete ? (
-        <p className="text-xs text-text-muted dark:text-text-muted">
+        <p className="text-xs text-text-muted ">
           This item has been marked complete — you can&apos;t submit a new version.
         </p>
       ) : (
         <>
           {revisionLimitReached && (
-            <p className="text-xs text-text-muted dark:text-text-muted">
+            <p className="text-xs text-text-muted ">
               You&apos;ve used all {maxRevisions} allowed submissions for this assignment.
             </p>
           )}
 {isPendingReview && (
-  <p className="text-xs text-text-muted dark:text-text-muted">
+  <p className="text-xs text-text-muted ">
     Your latest submission is waiting on review —
     You can still submit a new version below.
   </p>
@@ -807,19 +807,19 @@ function MenteeSubmissionForm({
         e.preventDefault();
         submitMutation.mutate();
       }}
-      className="flex flex-col gap-4 border-t border-border pt-4 dark:border-border"
+      className="flex flex-col gap-4 border-t border-border pt-4 "
     >
       {item.content_type === "assignment" && (
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-text-muted dark:text-text-muted">Submission link</label>
+            <label className="text-xs font-medium text-text-muted ">Submission link</label>
             <input
               type="url"
               required
               value={answers.type_specific?.assignment?.submission_link ?? ""}
               onChange={(e) => patchAssignment({ submission_link: e.target.value })}
               placeholder="https://..."
-              className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+              className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
             />
           </div>
           <RatingInput
@@ -834,7 +834,7 @@ function MenteeSubmissionForm({
       {item.content_type === "course" && (
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-text-muted dark:text-text-muted">Modules completed</label>
+            <label className="text-xs font-medium text-text-muted ">Modules completed</label>
             <input
               type="number"
               min={0}
@@ -843,7 +843,7 @@ function MenteeSubmissionForm({
               onChange={(e) =>
                 patchCourse({ modules_completed: e.target.value === "" ? null : Number(e.target.value) })
               }
-              className="w-24 rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+              className="w-24 rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
             />
           </div>
           <RatingInput
@@ -867,7 +867,7 @@ function MenteeSubmissionForm({
         ))}
 
       {submitMutation.isError && (
-        <p className="text-xs text-destructive dark:text-destructive">
+        <p className="text-xs text-destructive ">
           Something went wrong submitting — please try again.
         </p>
       )}
@@ -875,7 +875,7 @@ function MenteeSubmissionForm({
       <button
         type="submit"
         disabled={!canSubmitForm || submitMutation.isPending}
-        className="w-fit rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+        className="w-fit rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground disabled:opacity-50  "
       >
         {submitMutation.isPending ? "Submitting…" : "Submit"}
       </button>
@@ -896,7 +896,7 @@ function RatingInput({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-text-muted dark:text-text-muted">{label}</label>
+      <label className="text-xs font-medium text-text-muted ">{label}</label>
       <div className="flex gap-1">
         {Array.from({ length: scale }, (_, i) => i + 1).map((n) => (
           <button
@@ -905,8 +905,8 @@ function RatingInput({
             onClick={() => onChange(n)}
             className={`flex h-7 w-7 items-center justify-center rounded-full border text-xs font-medium transition-colors ${
               value === n
-                ? "border-primary bg-primary text-primary-foreground dark:border-primary dark:bg-primary dark:text-primary-foreground"
-                : "border-border text-text-muted hover:border-primary dark:border-border dark:text-text-muted"
+                ? "border-primary bg-primary text-primary-foreground   "
+                : "border-border text-text-muted hover:border-primary  "
             }`}
           >
             {n}
@@ -929,12 +929,12 @@ function AdditionalQuestionInput({
   if (question.component === "short_answer") {
     return (
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-text-muted dark:text-text-muted">{question.question}</label>
+        <label className="text-xs font-medium text-text-muted ">{question.question}</label>
         <textarea
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(e.target.value)}
           rows={2}
-          className="resize-none rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+          className="resize-none rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
         />
       </div>
     );
@@ -954,7 +954,7 @@ function AdditionalQuestionInput({
   if (question.component === "single_select") {
     return (
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-text-muted dark:text-text-muted">{question.question}</label>
+        <label className="text-xs font-medium text-text-muted ">{question.question}</label>
         <div className="flex flex-wrap gap-1.5">
           {question.options.map((option) => (
             <button
@@ -963,8 +963,8 @@ function AdditionalQuestionInput({
               onClick={() => onChange(option)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 value === option
-                  ? "border-primary bg-primary text-primary-foreground dark:border-primary dark:bg-primary dark:text-primary-foreground"
-                  : "border-border text-text-muted hover:border-primary dark:border-border dark:text-text-muted"
+                  ? "border-primary bg-primary text-primary-foreground   "
+                  : "border-border text-text-muted hover:border-primary  "
               }`}
             >
               {option}
@@ -979,7 +979,7 @@ function AdditionalQuestionInput({
   const selected = Array.isArray(value) ? value : [];
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-text-muted dark:text-text-muted">{question.question}</label>
+      <label className="text-xs font-medium text-text-muted ">{question.question}</label>
       <div className="flex flex-wrap gap-1.5">
         {question.options.map((option) => {
           const isSelected = selected.includes(option);
@@ -992,8 +992,8 @@ function AdditionalQuestionInput({
               }
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 isSelected
-                  ? "border-primary bg-primary text-primary-foreground dark:border-primary dark:bg-primary dark:text-primary-foreground"
-                  : "border-border text-text-muted hover:border-primary dark:border-border dark:text-text-muted"
+                  ? "border-primary bg-primary text-primary-foreground   "
+                  : "border-border text-text-muted hover:border-primary  "
               }`}
             >
               {option}

@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 export default function OnboardingPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12 dark:bg-background">
+    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12 ">
       <Suspense fallback={<p className="p-6 text-text-muted">Loading…</p>}>
       <SessionLoadingGate />
       </Suspense>

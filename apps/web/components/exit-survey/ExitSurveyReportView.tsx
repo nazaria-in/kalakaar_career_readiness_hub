@@ -21,39 +21,39 @@ const URGENCY_LABEL: Record<string, string> = {
 };
 
 const SENTIMENT_STYLE: Record<string, string> = {
-  positive: "bg-green-500/15 text-green-700 dark:text-green-300",
-  neutral: "bg-border text-text-muted dark:text-text-muted",
-  negative: "bg-red-500/15 text-red-700 dark:text-red-300",
+  positive: "bg-green-500/15 text-green-700 ",
+  neutral: "bg-border text-text-muted ",
+  negative: "bg-red-500/15 text-red-700 ",
 };
 
 export function ExitSurveyReportView({ detail, redacted }: ExitSurveyReportViewProps) {
   return (
-    <div className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 dark:border-border dark:bg-card">
+    <div className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6  ">
       <div>
-        <h2 className="font-heading text-xl text-text-primary dark:text-text-primary">
+        <h2 className="font-heading text-xl text-text-primary ">
           {detail.meetingTitle}
         </h2>
-        <p className="text-sm text-text-muted dark:text-text-muted">
+        <p className="text-sm text-text-muted ">
           {detail.userRole === "mentor" ? "Mentor" : "Mentee"} survey
           {detail.userRole === "mentor" && detail.subjectFullName ? ` — about ${detail.subjectFullName}` : ""}
           {!redacted && detail.submitterFullName ? ` — filled by ${detail.submitterFullName}` : ""}
         </p>
         {!redacted && (detail.podName || detail.mentorNames.length > 0) && (
-          <p className="text-xs text-text-muted dark:text-text-muted">
+          <p className="text-xs text-text-muted ">
             {detail.podName ? `Pod: ${detail.podName}` : ""}
             {detail.podName && detail.mentorNames.length > 0 ? " · " : ""}
             {detail.mentorNames.length > 0 ? `Mentor(s): ${detail.mentorNames.join(", ")}` : ""}
           </p>
         )}
         {detail.submittedAt && (
-          <p className="text-xs text-text-muted dark:text-text-muted">
+          <p className="text-xs text-text-muted ">
             Submitted {new Date(detail.submittedAt).toLocaleString()}
           </p>
         )}
       </div>
 
       {detail.signal && (
-        <div className="w-fit rounded-lg bg-card-alt px-3 py-2 text-sm text-text-primary dark:bg-card-alt dark:text-text-primary">
+        <div className="w-fit rounded-lg bg-card-alt px-3 py-2 text-sm text-text-primary  ">
           {SIGNAL_LABEL[detail.signal] ?? detail.signal}
         </div>
       )}
@@ -61,25 +61,25 @@ export function ExitSurveyReportView({ detail, redacted }: ExitSurveyReportViewP
       <div className="flex flex-col gap-4">
         {(detail.answers ?? []).map((entry) => (
           <div key={entry.id} className="flex flex-col gap-1">
-            <p className="text-sm font-medium text-text-primary dark:text-text-primary">{entry.question}</p>
-            <p className="text-sm text-text-muted dark:text-text-muted">{formatAnswer(entry)}</p>
+            <p className="text-sm font-medium text-text-primary ">{entry.question}</p>
+            <p className="text-sm text-text-muted ">{formatAnswer(entry)}</p>
           </div>
         ))}
       </div>
 
       {detail.transcript && (
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium text-text-primary dark:text-text-primary">Voice note transcript</p>
-          <p className="rounded-lg bg-card-alt p-3 text-sm text-text-muted dark:bg-card-alt dark:text-text-muted">
+          <p className="text-sm font-medium text-text-primary ">Voice note transcript</p>
+          <p className="rounded-lg bg-card-alt p-3 text-sm text-text-muted  ">
             {detail.transcript}
           </p>
         </div>
       )}
 
       {!redacted && (
-        <div className="flex flex-col gap-3 rounded-lg border border-border-strong bg-card-alt p-4 dark:border-border-strong dark:bg-card-alt">
+        <div className="flex flex-col gap-3 rounded-lg border border-border-strong bg-card-alt p-4  ">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium text-text-primary dark:text-text-primary">Staff triage</p>
+            <p className="text-sm font-medium text-text-primary ">Staff triage</p>
             {detail.sentiment && (
               <span
                 className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${SENTIMENT_STYLE[detail.sentiment]}`}
@@ -90,13 +90,13 @@ export function ExitSurveyReportView({ detail, redacted }: ExitSurveyReportViewP
           </div>
 
           {detail.aiHeadline && (
-            <p className="font-heading text-base text-text-primary dark:text-text-primary">
+            <p className="font-heading text-base text-text-primary ">
               {detail.aiHeadline}
             </p>
           )}
 
           {detail.aiKeyPoints.length > 0 && (
-            <ul className="list-disc pl-5 text-sm text-text-primary dark:text-text-primary">
+            <ul className="list-disc pl-5 text-sm text-text-primary ">
               {detail.aiKeyPoints.map((point, i) => (
                 <li key={i}>{point}</li>
               ))}
@@ -104,10 +104,10 @@ export function ExitSurveyReportView({ detail, redacted }: ExitSurveyReportViewP
           )}
 
           {detail.aiSummary && (
-            <p className="text-sm text-text-muted dark:text-text-muted">{detail.aiSummary}</p>
+            <p className="text-sm text-text-muted ">{detail.aiSummary}</p>
           )}
 
-          <p className="text-sm text-text-muted dark:text-text-muted">
+          <p className="text-sm text-text-muted ">
             {URGENCY_LABEL[detail.followUpUrgency] ?? detail.followUpUrgency}
             {detail.needsFollowUp ? " — flagged for follow-up" : ""}
           </p>
@@ -117,7 +117,7 @@ export function ExitSurveyReportView({ detail, redacted }: ExitSurveyReportViewP
               {detail.concernTags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-accent px-2 py-0.5 text-xs text-accent-foreground dark:bg-accent dark:text-accent-foreground"
+                  className="rounded-full bg-accent px-2 py-0.5 text-xs text-accent-foreground  "
                 >
                   {tag}
                 </span>

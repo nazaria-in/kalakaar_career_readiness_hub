@@ -78,7 +78,7 @@ export function NotificationPermissionPrompt(): React.JSX.Element | null {
     <>
       {/* Backdrop — tap outside to dismiss */}
       <div
-        className="fixed inset-0 z-40 bg-black/30 dark:bg-black/50"
+        className="fixed inset-0 z-40 bg-black/30 "
         aria-hidden="true"
         onClick={handleDismiss}
       />
@@ -88,27 +88,27 @@ export function NotificationPermissionPrompt(): React.JSX.Element | null {
         role="dialog"
         aria-modal="true"
         aria-label="Enable notifications"
-        className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg rounded-t-2xl border border-border bg-surface p-6 shadow-2xl dark:border-white/10 dark:bg-card md:bottom-6 md:rounded-2xl"
+        className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg rounded-t-2xl border border-border bg-surface p-6 shadow-2xl   md:bottom-6 md:rounded-2xl"
       >
         {/* Dismiss X */}
         <button
           type="button"
           onClick={handleDismiss}
           aria-label="Close"
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-text-muted hover:bg-card-alt dark:text-text-muted dark:hover:bg-white/10"
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-text-muted hover:bg-card-alt  "
         >
           <X size={16} />
         </button>
 
         {/* Icon */}
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 dark:bg-primary/20">
-          <BellRing size={24} className="text-primary dark:text-primary" />
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 ">
+          <BellRing size={24} className="text-primary " />
         </div>
 
-        <h2 className="font-heading text-lg font-semibold text-text-primary dark:text-text-primary">
+        <h2 className="font-heading text-lg font-semibold text-text-primary ">
           Stay in the loop
         </h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-text-muted dark:text-text-muted">
+        <p className="mt-1.5 text-sm leading-relaxed text-text-muted ">
           Get notified about upcoming meetings, assignment deadlines, and messages — even when the app is closed.
         </p>
 
@@ -117,7 +117,7 @@ export function NotificationPermissionPrompt(): React.JSX.Element | null {
           type="button"
           onClick={() => void handleAllow()}
           disabled={isSubscribing}
-          className="mt-5 w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60 dark:bg-primary dark:text-primary-foreground"
+          className="mt-5 w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60  "
         >
           {isSubscribing ? "Enabling…" : "Allow notifications"}
         </button>
@@ -127,14 +127,14 @@ export function NotificationPermissionPrompt(): React.JSX.Element | null {
           <button
             type="button"
             onClick={handleDismiss}
-            className="flex-1 rounded-xl border border-border py-2.5 text-sm font-medium text-text-primary hover:bg-card-alt dark:border-white/10 dark:text-text-primary dark:hover:bg-white/5"
+            className="flex-1 rounded-xl border border-border py-2.5 text-sm font-medium text-text-primary hover:bg-card-alt   "
           >
             Not now
           </button>
           <button
             type="button"
             onClick={handleDontAskAgain}
-            className="flex-1 rounded-xl border border-border py-2.5 text-sm font-medium text-text-muted hover:bg-card-alt dark:border-white/10 dark:text-text-muted dark:hover:bg-white/5"
+            className="flex-1 rounded-xl border border-border py-2.5 text-sm font-medium text-text-muted hover:bg-card-alt   "
           >
             Don&apos;t ask again
           </button>

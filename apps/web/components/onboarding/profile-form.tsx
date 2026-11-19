@@ -8,7 +8,7 @@ import { updateUserProfile } from "@/lib/api/auth";
 import { useSessionStore } from "@/store/session-store";
 
 const inputClass =
-  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-text-primary outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30 dark:border-input dark:bg-background dark:text-text-primary";
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-text-primary outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30   ";
 
 const textareaClass = `${inputClass} min-h-24 resize-y`;
 
@@ -54,12 +54,12 @@ export function ProfileForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-lg rounded-2xl border border-border bg-card p-8 shadow-sm dark:border-border dark:bg-card dark:shadow-none"
+      className="w-full max-w-lg rounded-2xl border border-border bg-card p-8 shadow-sm   "
     >
-      <h1 className="text-lg font-heading text-text-primary dark:text-text-primary">
+      <h1 className="text-lg font-heading text-text-primary ">
         Tell us about yourself
       </h1>
-      <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">
+      <p className="mt-1 text-sm text-muted-foreground ">
         This helps your {role === "mentor" ? "PM" : "mentor"} understand where you&apos;re coming from.
       </p>
 
@@ -118,13 +118,13 @@ export function ProfileForm() {
       </div>
 
       {error && (
-        <p className="mt-4 text-sm text-destructive dark:text-destructive">{error}</p>
+        <p className="mt-4 text-sm text-destructive ">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={!canSubmit}
-        className="mt-6 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+        className="mt-6 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50  "
       >
         {submitting ? "Saving…" : "Finish setup"}
       </button>
@@ -156,18 +156,18 @@ function Field({
     <div>
       <label
         htmlFor={htmlFor}
-        className="mb-1.5 flex items-baseline justify-between text-sm font-medium text-text-primary dark:text-text-primary"
+        className="mb-1.5 flex items-baseline justify-between text-sm font-medium text-text-primary "
       >
         <span>
           {label}{" "}
           {optional && (
-            <span className="font-normal text-muted-foreground dark:text-muted-foreground">
+            <span className="font-normal text-muted-foreground ">
               (optional)
             </span>
           )}
         </span>
         {hint && (
-          <span className="text-xs font-normal text-muted-foreground dark:text-muted-foreground">
+          <span className="text-xs font-normal text-muted-foreground ">
             {hint}
           </span>
         )}

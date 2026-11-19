@@ -18,18 +18,18 @@ export function StatusStrip({ tiles }: { tiles: StatusTile[] }) {
           <div
             className={`flex flex-col gap-1 rounded-xl border p-4 ${
               tile.alert
-                ? "bg-card-strong border-border-strong dark:bg-card-strong dark:border-border-strong"
-                : "bg-card border-border dark:bg-card dark:border-border"
+                ? "bg-card-strong border-border-strong  "
+                : "bg-card border-border  "
             }`}
           >
             <span
               className={`font-heading text-2xl font-semibold ${
-                tile.alert ? "text-text-accent dark:text-text-accent" : "text-text-primary dark:text-text-primary"
+                tile.alert ? "text-text-accent " : "text-text-primary "
               }`}
             >
               {tile.value}
             </span>
-            <span className="text-xs text-text-muted dark:text-text-muted">{tile.label}</span>
+            <span className="text-xs text-text-muted ">{tile.label}</span>
           </div>
         );
 

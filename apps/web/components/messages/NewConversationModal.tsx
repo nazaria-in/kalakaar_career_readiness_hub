@@ -170,7 +170,7 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
       <div className="flex flex-col gap-4 max-h-[70vh]">
         {kindOptions.length > 1 && (
           <div>
-            <label className="text-sm font-medium text-text-primary dark:text-text-primary">Type</label>
+            <label className="text-sm font-medium text-text-primary ">Type</label>
             <div className="flex flex-wrap gap-2 mt-1">
               {kindOptions.map((opt) => (
                 <button
@@ -183,8 +183,8 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
                   className={cn(
                     "rounded-full px-3 py-1.5 text-xs font-medium border transition-colors",
                     kind === opt.value
-                      ? "bg-primary text-primary-foreground border-primary dark:bg-primary dark:text-primary-foreground dark:border-primary"
-                      : "bg-surface text-text-muted dark:bg-surface dark:text-text-muted border-border-strong dark:border-border-strong"
+                      ? "bg-primary text-primary-foreground border-primary   "
+                      : "bg-surface text-text-muted   border-border-strong "
                   )}
                 >
                   {opt.label}
@@ -196,36 +196,36 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
 
         {kind !== "direct" && (
           <div>
-            <label className="text-sm font-medium text-text-primary dark:text-text-primary">Conversation name</label>
+            <label className="text-sm font-medium text-text-primary ">Conversation name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. team 3 check-in"
-              className="mt-1 w-full rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface px-3 py-2 text-sm text-text-primary dark:text-text-primary outline-none focus:border-primary dark:focus:border-primary"
+              className="mt-1 w-full rounded-lg border border-border-strong  bg-surface  px-3 py-2 text-sm text-text-primary  outline-none focus:border-primary "
             />
           </div>
         )}
 
         {(kind === "pod" || kind === "group") && (
           <div>
-            <label className="text-sm font-medium text-text-primary dark:text-text-primary">
-              Description <span className="text-text-muted dark:text-text-muted font-normal">(optional)</span>
+            <label className="text-sm font-medium text-text-primary ">
+              Description <span className="text-text-muted  font-normal">(optional)</span>
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What's this conversation for?"
               rows={2}
-              className="mt-1 w-full resize-none rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface px-3 py-2 text-sm text-text-primary dark:text-text-primary outline-none focus:border-primary dark:focus:border-primary"
+              className="mt-1 w-full resize-none rounded-lg border border-border-strong  bg-surface  px-3 py-2 text-sm text-text-primary  outline-none focus:border-primary "
             />
           </div>
         )}
 
         {isMentor && kind === "pod" && (
           <div>
-            <label className="text-sm font-medium text-text-primary dark:text-text-primary">Team</label>
-            <p className="text-xs text-text-muted dark:text-text-muted mb-1">
+            <label className="text-sm font-medium text-text-primary ">Team</label>
+            <p className="text-xs text-text-muted  mb-1">
               You can only message mentees from one team per conversation.
             </p>
             <select
@@ -235,7 +235,7 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
                 setSelectedIds([]);
               }}
               disabled={podsLoading}
-              className="w-full rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface px-3 py-2 text-sm text-text-primary dark:text-text-primary"
+              className="w-full rounded-lg border border-border-strong  bg-surface  px-3 py-2 text-sm text-text-primary "
             >
               <option value="">{podsLoading ? "Loading teams..." : "Select a team..."}</option>
               {(mentorPodGroups ?? []).map((pod) => (
@@ -250,12 +250,12 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
         {isBroadcast && (
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm font-medium text-text-primary dark:text-text-primary">Cohort</label>
+              <label className="text-sm font-medium text-text-primary ">Cohort</label>
               <select
                 value={selectedCohortId ?? ""}
                 onChange={(e) => setSelectedCohortId(e.target.value || null)}
                 disabled={cohortsLoading}
-                className="mt-1 w-full rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface px-3 py-2 text-sm text-text-primary dark:text-text-primary"
+                className="mt-1 w-full rounded-lg border border-border-strong  bg-surface  px-3 py-2 text-sm text-text-primary "
               >
                 <option value="">{cohortsLoading ? "Loading…" : "Select…"}</option>
                 {(cohorts ?? []).map((c) => (
@@ -266,14 +266,14 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-text-primary dark:text-text-primary">Audience</label>
+              <label className="text-sm font-medium text-text-primary ">Audience</label>
               <select
                 value={audience}
                 onChange={(e) => {
                   const next = e.target.value;
                   setAudience(isBroadcastAudience(next) ? next : "");
                 }}
-                className="mt-1 w-full rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface px-3 py-2 text-sm text-text-primary dark:text-text-primary"
+                className="mt-1 w-full rounded-lg border border-border-strong  bg-surface  px-3 py-2 text-sm text-text-primary "
               >
                 <option value="">Select…</option>
                 {AUDIENCE_OPTIONS.map((opt) => (
@@ -326,18 +326,18 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
         )}
 
         {!isBroadcast && selectedIds.length > 0 && (
-          <div className="border-t border-border dark:border-border pt-3">
-            <p className="text-xs font-medium text-text-muted dark:text-text-muted mb-2">
+          <div className="border-t border-border  pt-3">
+            <p className="text-xs font-medium text-text-muted  mb-2">
               Permissions — uncheck to make read-only
             </p>
             <div className="flex flex-col gap-1 max-h-32 overflow-y-auto">
               {selectedIds.map((id) => (
-                <label key={id} className="flex items-center gap-2 text-sm text-text-primary dark:text-text-primary">
+                <label key={id} className="flex items-center gap-2 text-sm text-text-primary ">
                   <input
                     type="checkbox"
                     checked={!readOnlyIds.has(id)}
                     onChange={() => toggleReadOnly(id)}
-                    className="h-3.5 w-3.5 accent-primary dark:accent-primary"
+                    className="h-3.5 w-3.5 accent-primary "
                   />
                   Can send messages — {displayNameFor(id)}
                 </label>
@@ -346,13 +346,13 @@ export function NewConversationModal({ isOpen, onClose }: NewConversationModalPr
           </div>
         )}
 
-        {error && <p className="text-sm text-destructive dark:text-destructive">{error}</p>}
+        {error && <p className="text-sm text-destructive ">{error}</p>}
 
         <button
           type="button"
           onClick={() => void handleCreate()}
           disabled={submitting || !canSubmit}
-          className="rounded-lg px-4 py-2 text-sm font-medium bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-lg px-4 py-2 text-sm font-medium bg-primary text-primary-foreground   disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {submitting ? "Creating…" : "Create conversation"}
         </button>

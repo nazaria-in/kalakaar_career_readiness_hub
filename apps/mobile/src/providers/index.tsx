@@ -1,3 +1,4 @@
+// apps/mobile/src/providers/index.ts
 import type { ReactNode } from "react";
 import { QueryProvider } from "./query-provider";
 import { SessionProvider } from "./session-provider";

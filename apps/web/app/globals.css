@@ -312,7 +312,7 @@
 
 @layer components {
   /* Reusable card-step utilities — use these instead of hand-rolling
-     bg-white/dark:bg-* pairs on every component. Always pair a surface
+     bg-white/ pairs on every component. Always pair a surface
      step with a border so adjacent same-toned blocks still separate. */
   .surface-card {
     @apply bg-card text-text-primary border border-border rounded-xl p-4;

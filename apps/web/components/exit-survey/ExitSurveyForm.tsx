@@ -211,13 +211,13 @@ export function ExitSurveyForm({
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 text-text-primary dark:border-border dark:bg-card dark:text-text-primary">
+    <div className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 text-text-primary   ">
       <div>
-        <h2 className="font-heading text-xl text-text-primary dark:text-text-primary">
+        <h2 className="font-heading text-xl text-text-primary ">
           {role === "mentor" ? "Mentor exit form" : "Mentee exit form"}
         </h2>
         {role === "mentor" && subjectFullName && (
-          <p className="text-sm text-text-muted dark:text-text-muted">About: {subjectFullName}</p>
+          <p className="text-sm text-text-muted ">About: {subjectFullName}</p>
         )}
       </div>
 
@@ -234,13 +234,13 @@ export function ExitSurveyForm({
           ))}
         </div>
       ) : (
-        <p className="text-sm text-text-muted dark:text-text-muted">
+        <p className="text-sm text-text-muted ">
           No structured questions for this role yet — just share a voice note or a short note below.
         </p>
       )}
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-primary dark:text-text-primary">
+        <span className="text-sm font-medium text-text-primary ">
           {voicePromptLabel || "Voice note"} {transcriptRequired ? "(required)" : "(optional)"}
         </span>
 
@@ -251,8 +251,8 @@ export function ExitSurveyForm({
             disabled={recorder.status === "requesting_permission" || isTranscribing}
             className={`relative flex w-fit items-center gap-2 rounded-lg border px-4 py-2 text-sm transition-all duration-200 disabled:opacity-60 ${
               recorder.status === "recording"
-                ? "border-destructive/40 bg-destructive/10 text-destructive dark:border-destructive/40 dark:bg-destructive/10 dark:text-destructive"
-                : "border-border bg-card-alt text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+                ? "border-destructive/40 bg-destructive/10 text-destructive   "
+                : "border-border bg-card-alt text-text-primary   "
             }`}
           >
             {recorder.status === "recording" && (
@@ -274,7 +274,7 @@ export function ExitSurveyForm({
               type="button"
               onClick={handleUseRecording}
               disabled={isTranscribing}
-              className="w-fit rounded-lg bg-accent px-4 py-2 text-sm text-accent-foreground disabled:opacity-60 dark:bg-accent dark:text-accent-foreground"
+              className="w-fit rounded-lg bg-accent px-4 py-2 text-sm text-accent-foreground disabled:opacity-60  "
             >
               {isTranscribing ? "Transcribing..." : "Use this recording"}
             </button>
@@ -284,7 +284,7 @@ export function ExitSurveyForm({
             <button
               type="button"
               onClick={recorder.reset}
-              className="text-sm text-text-muted underline dark:text-text-muted"
+              className="text-sm text-text-muted underline "
             >
               Discard
             </button>
@@ -299,17 +299,17 @@ export function ExitSurveyForm({
         )}
 
         {(recorder.status === "denied" || recorder.status === "error") && recorder.errorMessage && (
-          <p className="text-sm text-text-muted dark:text-text-muted">{recorder.errorMessage}</p>
+          <p className="text-sm text-text-muted ">{recorder.errorMessage}</p>
         )}
 
-        {aiError && <p className="text-sm text-destructive dark:text-destructive">{aiError}</p>}
+        {aiError && <p className="text-sm text-destructive ">{aiError}</p>}
 
         <textarea
           value={transcript}
           onChange={(e) => setTranscript(e.target.value)}
           placeholder="Transcript will appear here — you can edit it, or type a note directly instead of recording."
           rows={3}
-          className="rounded-lg border border-border bg-card-alt p-2 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+          className="rounded-lg border border-border bg-card-alt p-2 text-sm text-text-primary   "
         />
 
         {/* Intentionally no AI summary/analysis preview here — see the
@@ -318,14 +318,14 @@ export function ExitSurveyForm({
 
       <SignalPicker value={signal} onChange={setSignal} />
 
-      {error && <p className="text-sm text-destructive dark:text-destructive">{error}</p>}
-      {aiError && <p className="text-sm text-destructive dark:text-destructive">{aiError}</p>}
+      {error && <p className="text-sm text-destructive ">{error}</p>}
+      {aiError && <p className="text-sm text-destructive ">{aiError}</p>}
 
       <button
         type="button"
         onClick={handleSubmit}
         disabled={isSubmitting}
-        className="w-fit rounded-lg bg-primary px-5 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60 dark:bg-primary dark:text-primary-foreground"
+        className="w-fit rounded-lg bg-primary px-5 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60  "
       >
         {isSubmitting ? "Submitting..." : "Submit exit survey"}
       </button>
@@ -414,14 +414,14 @@ interface QuestionFieldProps {
 function QuestionField({ entry, value, onSelect, onToggleOption }: QuestionFieldProps) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-text-primary dark:text-text-primary">{entry.question}</span>
+      <span className="text-sm font-medium text-text-primary ">{entry.question}</span>
 
       {entry.component === "single_select" && (
         <div className="flex flex-col gap-1.5">
           {entry.options.map((option) => (
             <label
               key={option}
-              className="flex cursor-pointer items-center gap-2 text-sm text-text-primary dark:text-text-primary"
+              className="flex cursor-pointer items-center gap-2 text-sm text-text-primary "
             >
               <input
                 type="radio"
@@ -443,7 +443,7 @@ function QuestionField({ entry, value, onSelect, onToggleOption }: QuestionField
             return (
               <label
                 key={option}
-                className="flex cursor-pointer items-center gap-2 text-sm text-text-primary dark:text-text-primary"
+                className="flex cursor-pointer items-center gap-2 text-sm text-text-primary "
               >
                 <input
                   type="checkbox"
@@ -468,8 +468,8 @@ function QuestionField({ entry, value, onSelect, onToggleOption }: QuestionField
               aria-label={`Rate ${star} out of ${entry.scale}`}
               className={`text-2xl ${
                 typeof value === "number" && value >= star
-                  ? "text-text-accent dark:text-text-accent"
-                  : "text-border-strong dark:text-border-strong"
+                  ? "text-text-accent "
+                  : "text-border-strong "
               }`}
             >
               ★
@@ -483,7 +483,7 @@ function QuestionField({ entry, value, onSelect, onToggleOption }: QuestionField
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onSelect(e.target.value)}
           rows={2}
-          className="rounded-lg border border-border bg-card-alt p-2 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
+          className="rounded-lg border border-border bg-card-alt p-2 text-sm text-text-primary   "
         />
       )}
     </div>
@@ -504,7 +504,7 @@ const SIGNAL_OPTIONS: { value: ExitSurveySignal; label: string; dotClass: string
 function SignalPicker({ value, onChange }: SignalPickerProps) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-text-primary dark:text-text-primary">
+      <span className="text-sm font-medium text-text-primary ">
         How are things overall?
       </span>
       <div className="flex flex-col gap-2">
@@ -513,11 +513,11 @@ function SignalPicker({ value, onChange }: SignalPickerProps) {
             key={option.value}
             type="button"
             onClick={() => onChange(option.value)}
-            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm dark:border-border ${
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm  ${
               value === option.value
-                ? "border-primary bg-accent dark:bg-accent"
-                : "border-border bg-card-alt dark:bg-card-alt"
-            } text-text-primary dark:text-text-primary`}
+                ? "border-primary bg-accent "
+                : "border-border bg-card-alt "
+            } text-text-primary 
           >
             <span className={`h-3 w-3 rounded-full ${option.dotClass}`} />
             {option.label}

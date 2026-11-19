@@ -89,14 +89,14 @@ export default function DashboardPage() {
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Meetings Track Column */}
           <div className="lg:col-span-2 space-y-3">
-            <h2 className="font-heading text-sm font-semibold text-text-primary dark:text-text-primary">
+            <h2 className="font-heading text-sm font-semibold text-text-primary ">
               Upcoming Live Sessions
             </h2>
 
             {meetingsLoading ? (
-              <div className="text-sm text-text-primary/50 dark:text-text-primary/50">Loading timeline...</div>
+              <div className="text-sm text-text-primary/50 ">Loading timeline...</div>
             ) : !meetings || meetings.length === 0 ? (
-              <div className="border border-dashed border-border dark:border-border p-4 rounded-xl text-center text-xs text-text-muted dark:text-text-muted">
+              <div className="border border-dashed border-border  p-4 rounded-xl text-center text-xs text-text-muted ">
                 No meetings scheduled for this week.
               </div>
             ) : (
@@ -135,10 +135,10 @@ export default function DashboardPage() {
         {userId && <UpcomingContentWidget menteeId={userId} />}
 
         {permissionLevel === "staff" && (
-          <section className="rounded-2xl border border-dashed border-border dark:border-border p-4">
-            <p className="text-sm text-text-primary/70 dark:text-text-primary/70">
+          <section className="rounded-2xl border border-dashed border-border  p-4">
+            <p className="text-sm text-text-primary/70 ">
               Mentor approvals waiting for review live at{" "}
-              <Link href="/admin/users" className="text-text-accent dark:text-text-accent hover:underline">
+              <Link href="/admin/users" className="text-text-accent  hover:underline">
                 /admin/users
               </Link>
               .
@@ -164,19 +164,19 @@ export default function DashboardPage() {
                   href={selectedItem.meetLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center rounded-lg bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground px-4 py-2 text-sm font-medium hover:opacity-90"
+                  className="inline-flex items-center rounded-lg bg-primary  text-primary-foreground  px-4 py-2 text-sm font-medium hover:opacity-90"
                 >
                   Join Meeting
                 </a>
               ) : (
-                <span className="text-xs text-text-muted dark:text-text-muted">
+                <span className="text-xs text-text-muted ">
                   No meeting link available.
                 </span>
               )
             ) : (
               <Link
                 href={`/assignments/${selectedItem.assignmentId}`}
-                className="inline-flex items-center rounded-lg bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground px-4 py-2 text-sm font-medium hover:opacity-90"
+                className="inline-flex items-center rounded-lg bg-primary  text-primary-foreground  px-4 py-2 text-sm font-medium hover:opacity-90"
               >
                 View Assignment Details
               </Link>

@@ -233,7 +233,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-text-primary dark:text-text-primary" htmlFor="meeting-title">
+        <label className="text-sm font-medium text-text-primary " htmlFor="meeting-title">
           Title
         </label>
         <input
@@ -243,13 +243,13 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
           onChange={(e) => setTitle(e.target.value)}
           required
           placeholder="e.g. Weekly check-in"
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary dark:border-border dark:bg-white/5 dark:text-text-primary"
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary   "
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-text-primary dark:text-text-primary" htmlFor="meeting-description">
-          Description <span className="text-text-primary/50 dark:text-text-primary/50">(optional)</span>
+        <label className="text-sm font-medium text-text-primary " htmlFor="meeting-description">
+          Description <span className="text-text-primary/50 ">(optional)</span>
         </label>
         <textarea
           id="meeting-description"
@@ -257,13 +257,13 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
           placeholder="What's this meeting about?"
-          className="resize-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary dark:border-border dark:bg-white/5 dark:text-text-primary"
+          className="resize-none rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary   "
         />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="flex flex-1 flex-col gap-1">
-          <label className="text-sm font-medium text-text-primary dark:text-text-primary" htmlFor="meeting-starts">
+          <label className="text-sm font-medium text-text-primary " htmlFor="meeting-starts">
             Starts
           </label>
           <input
@@ -274,11 +274,11 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
             onChange={(e) => setStartsAt(e.target.value)}
             required
             aria-invalid={!isStartInFuture}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary aria-[invalid=true]:border-destructive dark:border-border dark:bg-surface dark:text-text-primary"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary aria-[invalid=true]:border-destructive   "
           />
         </div>
         <div className="flex flex-1 flex-col gap-1">
-          <label className="text-sm font-medium text-text-primary dark:text-text-primary" htmlFor="meeting-ends">
+          <label className="text-sm font-medium text-text-primary " htmlFor="meeting-ends">
             Ends
           </label>
           <input
@@ -289,7 +289,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
             required
             min={startsAt || undefined}
             aria-invalid={!isRangeValid}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary aria-[invalid=true]:border-destructive dark:border-border dark:bg-surface dark:text-text-primary"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary aria-[invalid=true]:border-destructive   "
           />
         </div>
       </div>
@@ -299,7 +299,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-text-primary dark:text-text-primary">
+          <span className="text-sm font-medium text-text-primary ">
             Invite
             {selectedIds.length > 0 && (
               <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
@@ -319,7 +319,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search people…"
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted dark:border-border dark:bg-white/5 dark:text-text-primary"
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted   "
         />
 
         {selectedIds.length > 0 && (
@@ -330,7 +330,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
               return (
                 <span
                   key={id}
-                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card-alt px-2.5 py-1 text-xs font-medium text-text-primary dark:border-white/10 dark:bg-white/5"
+                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card-alt px-2.5 py-1 text-xs font-medium text-text-primary  "
                 >
                   {person.fullName ?? "Unnamed"}
                   <button
@@ -350,9 +350,9 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
         {candidatesQuery.isLoading ? (
           <p className="text-sm text-text-muted">Loading people…</p>
         ) : (
-          <div className="max-h-64 overflow-y-auto rounded-xl border border-border dark:border-white/10">
+          <div className="max-h-64 overflow-y-auto rounded-xl border border-border ">
             {isSearching ? (
-              <div className="flex flex-col divide-y divide-border dark:divide-white/10">
+              <div className="flex flex-col divide-y divide-border ">
                 {searchResults.length === 0 ? (
                   <p className="px-3 py-4 text-center text-sm text-text-muted">No one matches that search.</p>
                 ) : (
@@ -368,7 +368,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
                 )}
               </div>
             ) : (
-              <div className="flex flex-col divide-y divide-border dark:divide-white/10">
+              <div className="flex flex-col divide-y divide-border ">
                 {teamGroups.map((group) => {
                   const memberIds = group.members.map((m) => m.id);
                   const selectedCount = memberIds.filter((id) => selectedSet.has(id)).length;
@@ -378,7 +378,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
 
                   return (
                     <div key={group.key}>
-                      <div className="flex items-center gap-2 bg-card px-3 py-2 dark:bg-card">
+                      <div className="flex items-center gap-2 bg-card px-3 py-2 ">
                         <button
                           type="button"
                           onClick={() => toggleTeam(group.key)}
@@ -403,7 +403,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
                         <button
                           type="button"
                           onClick={() => toggleTeam(group.key)}
-                          className="flex-1 text-left text-sm font-semibold text-text-muted dark:text-text-muted"
+                          className="flex-1 text-left text-sm font-semibold text-text-muted "
                         >
                           {group.label}
                         </button>
@@ -414,7 +414,7 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
                       </div>
 
                       {!isCollapsed && (
-                        <div className="flex flex-col divide-y divide-border dark:divide-white/10">
+                        <div className="flex flex-col divide-y divide-border ">
                           {group.members.map((person) => (
                             <PersonRow
                               key={person.id}
@@ -441,14 +441,14 @@ function MeetingFormFields({ currentUserId, initialStartsAt, onClose }: MeetingF
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-border px-4 py-2 text-sm text-text-primary hover:bg-card dark:border-border dark:text-text-primary dark:hover:bg-card"
+          className="rounded-lg border border-border px-4 py-2 text-sm text-text-primary hover:bg-card   "
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={mutation.isPending || !title.trim() || selectedIds.length === 0 || !isRangeValid || !isStartInFuture}
-          className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground hover:opacity-90 disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
+          className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground hover:opacity-90 disabled:opacity-50  "
         >
           {mutation.isPending ? "Scheduling…" : "Schedule meeting"}
         </button>
@@ -472,9 +472,9 @@ function PersonRow({
 }) {
   return (
     <label
-      className={`flex cursor-pointer items-center gap-3 px-3 py-2.5 transition-colors hover:bg-card-alt dark:hover:bg-white/5 ${
+      className={`flex cursor-pointer items-center gap-3 px-3 py-2.5 transition-colors hover:bg-card-alt  ${
         indented ? "pl-10" : ""
-      } ${selected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
+      } ${selected ? "bg-primary/5 " : ""}`}
     >
       <input
         type="checkbox"
@@ -483,13 +483,13 @@ function PersonRow({
         className="h-3.5 w-3.5 shrink-0 accent-[var(--color-nazaria-burgundy)]"
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-text-primary dark:text-text-primary">
+        <p className="truncate text-sm font-medium text-text-primary ">
           {person.fullName ?? "Unnamed"}
         </p>
         <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-          {person.role && <span className="text-xs capitalize text-text-muted dark:text-text-muted">{person.role}</span>}
+          {person.role && <span className="text-xs capitalize text-text-muted ">{person.role}</span>}
           {showTeamChip && person.podName && (
-            <span className="rounded-full border border-border bg-card-alt px-1.5 py-0.5 text-[10px] font-medium text-text-muted dark:border-white/10 dark:bg-white/5">
+            <span className="rounded-full border border-border bg-card-alt px-1.5 py-0.5 text-[10px] font-medium text-text-muted  ">
               {person.podName}
             </span>
           )}

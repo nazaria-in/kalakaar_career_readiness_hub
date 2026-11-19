@@ -57,44 +57,44 @@ export function MessageComposer({ disabled, disabledReason, replyingTo, onCancel
 
   if (disabled) {
     return (
-      <div className="border-t border-border-strong dark:border-border-strong bg-card dark:bg-card px-4 py-3">
-        <p className="text-sm text-text-muted dark:text-text-muted text-center">{disabledReason}</p>
+      <div className="border-t border-border-strong  bg-card  px-4 py-3">
+        <p className="text-sm text-text-muted  text-center">{disabledReason}</p>
       </div>
     );
   }
 
   return (
-    <div className="border-t border-border-strong dark:border-border-strong bg-card dark:bg-card">
+    <div className="border-t border-border-strong  bg-card ">
       {replyingTo && (
-        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border dark:border-border bg-surface dark:bg-surface">
-          <div className="min-w-0 flex-1 border-l-2 border-primary dark:border-primary pl-2">
-            <p className="text-xs font-medium text-primary dark:text-primary">
+        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border  bg-surface ">
+          <div className="min-w-0 flex-1 border-l-2 border-primary  pl-2">
+            <p className="text-xs font-medium text-primary ">
               {replyingTo.senderName ?? "Replying"}
             </p>
-            <p className="truncate text-xs text-text-muted dark:text-text-muted">
+            <p className="truncate text-xs text-text-muted ">
               {replyingTo.deleted_at ? "This message was deleted" : replyingTo.body}
             </p>
           </div>
           <button
             type="button"
             onClick={onCancelReply}
-            className="shrink-0 rounded-full p-1 hover:bg-card-alt dark:hover:bg-card-alt"
+            className="shrink-0 rounded-full p-1 hover:bg-card-alt "
             aria-label="Cancel reply"
           >
-            <X className="h-4 w-4 text-text-muted dark:text-text-muted" />
+            <X className="h-4 w-4 text-text-muted " />
           </button>
         </div>
       )}
 
       <div className="px-3 py-3 flex items-end gap-2 relative">
-        <div className="flex flex-1 items-end gap-1 rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface px-2 py-1.5">
+        <div className="flex flex-1 items-end gap-1 rounded-lg border border-border-strong  bg-surface  px-2 py-1.5">
           <button
             type="button"
             onClick={() => setEmojiOpen((open) => !open)}
-            className="shrink-0 rounded-full p-1.5 hover:bg-card-alt dark:hover:bg-card-alt"
+            className="shrink-0 rounded-full p-1.5 hover:bg-card-alt "
             aria-label="Add emoji"
           >
-            <Smile className="h-5 w-5 text-text-muted dark:text-text-muted" />
+            <Smile className="h-5 w-5 text-text-muted " />
           </button>
 
           <textarea
@@ -105,8 +105,8 @@ export function MessageComposer({ disabled, disabledReason, replyingTo, onCancel
             placeholder="Type a message"
             rows={1}
             className={cn(
-              "flex-1 resize-none bg-transparent text-text-primary dark:text-text-primary",
-              "placeholder:text-text-muted dark:placeholder:text-text-muted",
+              "flex-1 resize-none bg-transparent text-text-primary ",
+              "placeholder:text-text-muted ",
               "px-1.5 py-1 text-sm outline-none max-h-32"
             )}
           />
@@ -118,7 +118,7 @@ export function MessageComposer({ disabled, disabledReason, replyingTo, onCancel
           disabled={!body.trim() || sending}
           className={cn(
             "shrink-0 rounded-full p-2.5 transition-colors",
-            "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground",
+            "bg-primary text-primary-foreground  ",
             "disabled:opacity-40 disabled:cursor-not-allowed"
           )}
           aria-label="Send message"

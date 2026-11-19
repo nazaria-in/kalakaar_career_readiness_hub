@@ -16,10 +16,10 @@ export default function MessagesLayout({ children }: MessagesLayoutProps) {
   const activeConversationId = isThreadRoute ? pathname.split("/")[2] : undefined;
 
   return (
-    <div className="flex h-[calc(100dvh-var(--app-shell-offset,4rem))] bg-surface dark:bg-surface">
+    <div className="flex h-[calc(100dvh-var(--app-shell-offset,4rem))] bg-surface ">
       <div
         className={cn(
-          "w-full md:w-80 lg:w-96 shrink-0 border-r border-border-strong dark:border-border-strong",
+          "w-full md:w-80 lg:w-96 shrink-0 border-r border-border-strong ",
           isThreadRoute ? "hidden md:block" : "block"
         )}
       >
