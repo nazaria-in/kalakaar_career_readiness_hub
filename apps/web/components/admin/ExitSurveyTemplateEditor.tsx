@@ -195,7 +195,7 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="inline-flex w-fit rounded-full border border-border p-0.5 ">
+      <div className="inline-flex w-fit rounded-full border border-border p-0.5 dark:border-border">
         {(["mentor", "mentee"] as const).map((r) => (
           <button
             key={r}
@@ -206,9 +206,9 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
               setWorking(null);
               setIsCreating(false);
             }}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium capitalize  ${
+            className={`rounded-full px-4 py-1.5 text-sm font-medium capitalize dark:text-text-primary ${
               role === r
-                ? "bg-primary text-primary-foreground  "
+                ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
                 : "text-text-primary/60"
             }`}
           >
@@ -217,60 +217,60 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
         ))}
       </div>
 
-      {error && <p className="text-sm text-destructive ">{error}</p>}
+      {error && <p className="text-sm text-destructive dark:text-destructive">{error}</p>}
 
       {!working ? (
         <div className="flex flex-col gap-4">
           {/* Card list instead of a native <select> — active template is
               visually obvious, not just a "(active)" suffix in a dropdown. */}
-          {templatesLoading && <p className="text-sm text-text-muted ">Loading...</p>}
+          {templatesLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading...</p>}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {(templates ?? []).map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setWorking(toWorkingTemplate(t))}
-                className={`flex flex-col items-start gap-1 rounded-xl border p-4 text-left  ${
+                className={`flex flex-col items-start gap-1 rounded-xl border p-4 text-left dark:border-border ${
                   t.isActive
-                    ? "border-primary bg-accent "
-                    : "border-border bg-card "
+                    ? "border-primary bg-accent dark:bg-accent"
+                    : "border-border bg-card dark:bg-card"
                 }`}
               >
                 <div className="flex w-full items-center justify-between">
-                  <p className="font-medium text-text-primary ">{t.title}</p>
+                  <p className="font-medium text-text-primary dark:text-text-primary">{t.title}</p>
                   {t.isActive && (
-                    <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground  ">
+                    <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground dark:bg-primary dark:text-primary-foreground">
                       Active
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-text-muted ">
+                <p className="text-xs text-text-muted dark:text-text-muted">
                   {t.questions.length} question{t.questions.length === 1 ? "" : "s"}
                 </p>
               </button>
             ))}
 
             {isCreating ? (
-              <div className="flex flex-col gap-2 rounded-xl border border-border p-4 ">
+              <div className="flex flex-col gap-2 rounded-xl border border-border p-4 dark:border-border">
                 <input
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="Template title"
                   autoFocus
-                  className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
+                  className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
                 />
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={handleCreateTemplate}
-                    className="rounded-lg bg-primary px-3 py-1.5 text-sm text-primary-foreground  "
+                    className="rounded-lg bg-primary px-3 py-1.5 text-sm text-primary-foreground dark:bg-primary dark:text-primary-foreground"
                   >
                     Create
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsCreating(false)}
-                    className="rounded-lg px-3 py-1.5 text-sm text-text-muted "
+                    className="rounded-lg px-3 py-1.5 text-sm text-text-muted dark:text-text-muted"
                   >
                     Cancel
                   </button>
@@ -280,7 +280,7 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
               <button
                 type="button"
                 onClick={() => setIsCreating(true)}
-                className="flex items-center justify-center rounded-xl border border-dashed border-border p-4 text-sm text-text-muted  "
+                className="flex items-center justify-center rounded-xl border border-dashed border-border p-4 text-sm text-text-muted dark:border-border dark:text-text-muted"
               >
                 + New template
               </button>
@@ -288,12 +288,12 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
           </div>
         </div>
       ) : (
-        <div className="surface-card flex flex-col gap-4 ">
+        <div className="surface-card flex flex-col gap-4 dark:surface-card">
           <div className="flex items-center justify-between gap-2">
             <button
               type="button"
               onClick={() => setWorking(null)}
-              className="text-sm text-text-muted underline "
+              className="text-sm text-text-muted underline dark:text-text-muted"
             >
               ← Back to templates
             </button>
@@ -301,7 +301,7 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
               type="button"
               onClick={handleActivate}
               disabled={working.isActive}
-              className="rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground disabled:opacity-60  "
+              className="rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground disabled:opacity-60 dark:bg-accent dark:text-accent-foreground"
             >
               {working.isActive ? "Active" : "Make active"}
             </button>
@@ -310,18 +310,18 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
           <input
             value={working.title}
             onChange={(e) => updateWorking({ title: e.target.value })}
-            className="rounded-lg border border-border bg-card-alt px-3 py-2 text-lg font-medium text-text-primary   "
+            className="rounded-lg border border-border bg-card-alt px-3 py-2 text-lg font-medium text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
           />
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-text-muted ">
+            <label className="text-xs font-medium text-text-muted dark:text-text-muted">
               Voice recording prompt (shown above the record button — leave blank for default &quot;Voice note&quot;)
             </label>
             <input
               value={working.voicePromptLabel}
               onChange={(e) => updateWorking({ voicePromptLabel: e.target.value })}
               placeholder="e.g. Anything else about this session?"
-              className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
+              className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
             />
           </div>
 
@@ -350,7 +350,7 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
                 key={component}
                 type="button"
                 onClick={() => addQuestion(component)}
-                className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-primary  "
+                className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-primary dark:border-border dark:text-text-primary"
               >
                 + {COMPONENT_LABELS[component]}
               </button>
@@ -362,15 +362,15 @@ export function ExitSurveyTemplateEditor({ currentUserId }: ExitSurveyTemplateEd
               type="button"
               onClick={handleSave}
               disabled={saveState === "saving"}
-              className="w-fit rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-60  "
+              className="w-fit rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-60 dark:bg-primary dark:text-primary-foreground"
             >
               {saveState === "saving" ? "Saving..." : "Save questions"}
             </button>
             {saveState === "saved" && (
-              <span className="text-sm text-text-muted ">Saved.</span>
+              <span className="text-sm text-text-muted dark:text-text-muted">Saved.</span>
             )}
             {saveState === "error" && (
-              <span className="text-sm text-destructive ">Save failed — see error above.</span>
+              <span className="text-sm text-destructive dark:text-destructive">Save failed — see error above.</span>
             )}
           </div>
         </div>
@@ -408,17 +408,17 @@ function QuestionEditor({
     : undefined;
 
   return (
-    <div className="surface-card-alt flex flex-col gap-3 ">
+    <div className="surface-card-alt flex flex-col gap-3 dark:surface-card-alt">
       <div className="flex items-center justify-between gap-2">
         <input
           value={question.question}
           onChange={(e) => onChangeText(e.target.value)}
-          className="flex-1 rounded border border-border bg-card px-2 py-1 text-sm text-text-primary   "
+          className="flex-1 rounded border border-border bg-card px-2 py-1 text-sm text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
         />
-        <span className="whitespace-nowrap text-xs text-text-muted ">
+        <span className="whitespace-nowrap text-xs text-text-muted dark:text-text-muted">
           {COMPONENT_LABELS[question.component]}
         </span>
-        <button type="button" onClick={onRemove} className="text-xs text-destructive ">
+        <button type="button" onClick={onRemove} className="text-xs text-destructive dark:text-destructive">
           Remove
         </button>
       </div>
@@ -430,13 +430,13 @@ function QuestionEditor({
               <input
                 value={option}
                 onChange={(e) => onUpdateOption(i, e.target.value)}
-                className="flex-1 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
+                className="flex-1 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
               />
               <button
                 type="button"
                 onClick={() => onRemoveOption(i)}
                 disabled={question.options.length <= 1}
-                className="text-xs text-destructive disabled:opacity-40 "
+                className="text-xs text-destructive disabled:opacity-40 dark:text-destructive"
               >
                 ✕
               </button>
@@ -445,7 +445,7 @@ function QuestionEditor({
           <button
             type="button"
             onClick={onAddOption}
-            className="w-fit text-xs text-text-accent "
+            className="w-fit text-xs text-text-accent dark:text-text-accent"
           >
             + Add option
           </button>
@@ -454,19 +454,19 @@ function QuestionEditor({
 
       {question.component === "rating" && (
         <div className="flex items-center gap-2 pl-2">
-          <label className="text-xs text-text-muted ">Scale (out of):</label>
+          <label className="text-xs text-text-muted dark:text-text-muted">Scale (out of):</label>
           <input
             type="number"
             value={question.scale}
             onChange={(e) => onChangeScale(Number(e.target.value) || 5)}
-            className="w-16 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
+            className="w-16 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
           />
         </div>
       )}
 
       {/* Sub-question / conditional visibility builder */}
-      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2 ">
-        <label className="text-xs text-text-muted ">Only show this if:</label>
+      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2 dark:border-border">
+        <label className="text-xs text-text-muted dark:text-text-muted">Only show this if:</label>
         <select
           value={question.showIf?.questionId ?? ""}
           onChange={(e) => {
@@ -484,7 +484,7 @@ function QuestionEditor({
             }
           }}
           disabled={priorQuestions.length === 0}
-          className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary disabled:opacity-40   "
+          className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary disabled:opacity-40 dark:border-border dark:bg-card dark:text-text-primary"
         >
           <option value="">Always show</option>
           {priorQuestions.map((p) => (
@@ -497,7 +497,7 @@ function QuestionEditor({
         {question.showIf &&
           (parentQuestion?.component === "single_select" || parentQuestion?.component === "multi_select") && (
             <>
-              <label className="text-xs text-text-muted ">
+              <label className="text-xs text-text-muted dark:text-text-muted">
                 {parentQuestion.component === "multi_select" ? "includes" : "equals"}
               </label>
               <select
@@ -505,7 +505,7 @@ function QuestionEditor({
                 onChange={(e) =>
                   onChangeShowIf({ questionId: question.showIf!.questionId, equals: e.target.value })
                 }
-                className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
+                className="rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
               >
                 {parentQuestion.options.map((option) => (
                   <option key={option} value={option}>
@@ -518,7 +518,7 @@ function QuestionEditor({
 
         {question.showIf && parentQuestion?.component === "rating" && (
           <>
-            <label className="text-xs text-text-muted ">rated at least</label>
+            <label className="text-xs text-text-muted dark:text-text-muted">rated at least</label>
             <input
               type="number"
               min={1}
@@ -530,14 +530,14 @@ function QuestionEditor({
                   atLeast: Number(e.target.value) || 1,
                 })
               }
-              className="w-14 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary   "
+              className="w-14 rounded border border-border bg-card px-2 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
             />
-            <span className="text-xs text-text-muted ">/ {parentQuestion.scale}</span>
+            <span className="text-xs text-text-muted dark:text-text-muted">/ {parentQuestion.scale}</span>
           </>
         )}
       </div>
       {priorQuestions.length === 0 && (
-        <p className="pl-2 text-xs text-text-muted ">
+        <p className="pl-2 text-xs text-text-muted dark:text-text-muted">
           No earlier questions yet to make this conditional on.
         </p>
       )}

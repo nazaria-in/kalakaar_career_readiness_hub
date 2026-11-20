@@ -252,7 +252,7 @@ function PageHeader({
   onTabChange: (t: ContentTab) => void;
 }) {
   return (
-    <div className="inline-flex w-fit rounded-full border border-border bg-card p-0.5  ">
+    <div className="inline-flex w-fit rounded-full border border-border bg-card p-0.5 dark:border-border dark:bg-card">
       {TAB_DEFS.map((t) => (
         <button
           key={t.value}
@@ -260,8 +260,8 @@ function PageHeader({
           onClick={() => onTabChange(t.value)}
           className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
             tab === t.value
-              ? "bg-white text-primary-foreground  "
-              : "text-text-muted "
+              ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+              : "text-text-muted dark:text-text-muted"
           }`}
         >
           {t.label}
@@ -289,7 +289,7 @@ function FilterBarWithToggle({
       <button
         type="button"
         onClick={onToggleFilters}
-        className="flex w-fit items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary sm:hidden  "
+        className="flex w-fit items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary sm:hidden dark:border-border dark:text-text-primary"
       >
         <SlidersHorizontal className="h-3.5 w-3.5" />
         Filters
@@ -317,8 +317,8 @@ function StatusFilterChips({
           onClick={() => onChange(def.value)}
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
             value === def.value
-              ? "bg-white   "
-              : "border border-border text-text-muted hover:text-text-primary   "
+              ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+              : "border border-border text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
           }`}
         >
           {def.label}
@@ -382,7 +382,7 @@ function MenteeView({
       <StatusFilterChips value={statusFilter} onChange={onStatusFilterChange} />
 
       {loading ? (
-        <p className="text-sm text-text-muted ">Loading…</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>
       ) : visible.length === 0 ? (
         <EmptyState
           title={`No ${tabNoun(tab, true)} yet`}
@@ -393,7 +393,7 @@ function MenteeView({
           <div className="flex flex-col gap-3">
             <SectionLabel label="To do" count={toDo.length} />
             {toDo.length === 0 ? (
-              <p className="px-1 text-xs text-text-muted ">
+              <p className="px-1 text-xs text-text-muted dark:text-text-muted">
                 You&apos;re all caught up.
               </p>
             ) : (
@@ -491,7 +491,7 @@ function StaffView({
           <button
             type="button"
             onClick={onCreate}
-            className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-white px-4 py-2 text-sm font-medium text-primary-foreground  "
+            className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground dark:bg-primary dark:text-primary-foreground"
           >
             <Plus className="h-4 w-4" />
             Create {tabNoun(tab, false)}
@@ -500,7 +500,7 @@ function StaffView({
       </div>
 
       {loading ? (
-        <p className="text-sm text-text-muted ">Loading…</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>
       ) : items.length === 0 ? (
         <EmptyState
           title={`No ${tabNoun(tab, true)} yet`}
@@ -515,7 +515,7 @@ function StaffView({
                 key={week.id}
                 title={week.name}
                 count={weekItems.length}
-                accentClassName="bg-white"
+                accentClassName="bg-primary"
                 defaultOpen
               >
                 <CardGrid>
@@ -568,8 +568,8 @@ function tabNoun(tab: ContentTab, plural: boolean): string {
 function SectionLabel({ label, count }: { label: string; count: number }) {
   return (
     <div className="flex items-center gap-2 px-1">
-      <h2 className="text-sm font-semibold text-text-primary ">{label}</h2>
-      <span className="rounded-full bg-card-alt px-1.5 py-0.5 text-[11px] text-text-muted  ">
+      <h2 className="text-sm font-semibold text-text-primary dark:text-text-primary">{label}</h2>
+      <span className="rounded-full bg-card-alt px-1.5 py-0.5 text-[11px] text-text-muted dark:bg-card-alt dark:text-text-muted">
         {count}
       </span>
     </div>

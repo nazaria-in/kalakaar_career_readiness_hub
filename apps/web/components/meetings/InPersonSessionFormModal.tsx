@@ -1,18 +1,21 @@
 // /components/meetings/InPersonSessionFormModal.tsx
+
 "use client";
 
 import * as React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Modal } from "@/components/shared/Modal";
 import { createInPersonSessionSeries } from "@/lib/api/in-person-sessions";
-import type { RecurrenceType } from "@repo/shared";
+import type { RecurrenceType } from "@/types/in-person-sessions";
 
 export interface InPersonSessionFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentUserId: string;
   cohortId: string | null;
+  /** Prefilled from clicking an empty timeline slot, same pattern as MeetingFormModal. */
   initialStartsAt?: string;
+  /** Query keys to invalidate on success, e.g. [["in-person-sessions", cohortId]]. */
   invalidateQueryKeys?: unknown[][];
 }
 
@@ -26,7 +29,7 @@ const WEEKDAY_OPTIONS = [
   { value: 6, label: "Saturday" },
 ];
 
-const INITIAL_OCCURRENCE_COUNT = 12;
+const INITIAL_OCCURRENCE_COUNT = 12; // ~3 months of weekly sessions materialized up front
 
 function toTimeInputValue(iso: string | undefined): string {
   if (!iso) return "09:00";
@@ -44,6 +47,7 @@ export function InPersonSessionFormModal({
 }: InPersonSessionFormModalProps): React.JSX.Element {
   const queryClient = useQueryClient();
 
+  // Track the prev prop to reset state synchronously during render when modal opens
   const [prevIsOpen, setPrevIsOpen] = React.useState(isOpen);
   const [prevInitialStartsAt, setPrevInitialStartsAt] = React.useState(initialStartsAt);
 
@@ -57,6 +61,7 @@ export function InPersonSessionFormModal({
   const [startTime, setStartTime] = React.useState(() => toTimeInputValue(initialStartsAt));
   const [endTime, setEndTime] = React.useState("11:00");
 
+  // Synchronous state adjustment during render when the modal opens or initial state changes
   if (isOpen !== prevIsOpen || initialStartsAt !== prevInitialStartsAt) {
     setPrevIsOpen(isOpen);
     setPrevInitialStartsAt(initialStartsAt);
@@ -198,8 +203,8 @@ export function InPersonSessionFormModal({
 
           {recurrence === "weekly" && (
             <p className="text-xs text-text-muted">
-              This creates the next {INITIAL_OCCURRENCE_COUNT} weekly occurrences. Each week can be edited or cancelled
-              individually afterward without affecting the others.
+              This creates the next {INITIAL_OCCURRENCE_COUNT} weekly occurrences. Each week can be edited or
+              cancelled individually afterward without affecting the others.
             </p>
           )}
         </fieldset>

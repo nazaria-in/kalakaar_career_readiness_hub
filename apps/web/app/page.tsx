@@ -1,6 +1,9 @@
 // app/page.tsx
 "use client";
 
+import { Card } from "@repo/ui";
+
+
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -136,20 +139,20 @@ const HOW_IT_WORKS: { step: string; title: string; body: string }[] = [
 
 const SIGNALS: { color: string; ring: string; label: string; body: string }[] = [
   {
-    color: "bg-[#2f9e5c] ",
-    ring: "ring-[#2f9e5c]/30 ",
+    color: "bg-[#2f9e5c] dark:bg-[#4ade80]",
+    ring: "ring-[#2f9e5c]/30 dark:ring-[#4ade80]/30",
     label: "On track",
     body: "The session happened, the work is moving, no follow-up needed.",
   },
   {
-    color: "bg-[#e0b400] ",
-    ring: "ring-[#e0b400]/30 ",
+    color: "bg-[#e0b400] dark:bg-[#fde047]",
+    ring: "ring-[#e0b400]/30 dark:ring-[#fde047]/30",
     label: "Facing a few challenges",
     body: "Something's slowing things down — worth a mentor associate keeping an eye on it.",
   },
   {
-    color: "bg-[#b3392f] ",
-    ring: "ring-[#b3392f]/30 ",
+    color: "bg-[#b3392f] dark:bg-[#f87171]",
+    ring: "ring-[#b3392f]/30 dark:ring-[#f87171]/30",
     label: "Needs a check-in",
     body: "The Nazaria team follows up directly — no one has to read every form to catch it.",
   },
@@ -175,6 +178,10 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-surface text-text-primary">
+      <Card title="Hello" description="Shared card test">
+        <Card title="Nested" />
+      </Card>
+      <div className="bg-red-500 p-4 text-white">Direct test</div>
       {/* ---------------- Nav ---------------- */}
       <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -249,10 +256,10 @@ export default function LandingPage() {
               role="img"
               aria-label="Three concentric rings representing the green, yellow, and red exit-survey signals"
             >
-              <circle cx="100" cy="100" r="90" className="fill-none stroke-[#b3392f]/25 " strokeWidth="16" />
-              <circle cx="100" cy="100" r="62" className="fill-none stroke-[#e0b400]/35 " strokeWidth="16" />
-              <circle cx="100" cy="100" r="34" className="fill-[#2f9e5c] " />
-              <circle cx="100" cy="100" r="90" className="fill-none stroke-[#b3392f]  opacity-70" strokeWidth="3" strokeDasharray="6 14" />
+              <circle cx="100" cy="100" r="90" className="fill-none stroke-[#b3392f]/25 dark:stroke-[#f87171]/25" strokeWidth="16" />
+              <circle cx="100" cy="100" r="62" className="fill-none stroke-[#e0b400]/35 dark:stroke-[#fde047]/35" strokeWidth="16" />
+              <circle cx="100" cy="100" r="34" className="fill-[#2f9e5c] dark:fill-[#4ade80]" />
+              <circle cx="100" cy="100" r="90" className="fill-none stroke-[#b3392f] dark:stroke-[#f87171] opacity-70" strokeWidth="3" strokeDasharray="6 14" />
             </svg>
             <div className="grid w-full gap-3 text-left">
               {SIGNALS.map((signal) => (

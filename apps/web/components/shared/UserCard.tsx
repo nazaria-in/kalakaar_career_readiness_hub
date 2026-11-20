@@ -55,16 +55,16 @@ export function UserCard({
     <Link
       href={`/admin?id=${person.id}`}
       onClick={(e) => e.stopPropagation()}
-      className="font-medium text-text-primary hover:text-text-accent hover:underline  "
+      className="font-medium text-text-primary hover:text-text-accent hover:underline dark:text-text-primary dark:hover:text-text-accent"
     >
       {name}
     </Link>
   ) : (
-    <span className="font-medium text-text-primary ">{name}</span>
+    <span className="font-medium text-text-primary dark:text-text-primary">{name}</span>
   );
 
   const committedTag = committed && (
-    <span className="ml-auto shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground  ">
+    <span className="ml-auto shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground dark:bg-secondary dark:text-secondary-foreground">
       Already assigned
     </span>
   );
@@ -83,7 +83,7 @@ export function UserCard({
     return (
       <div
         onClick={isSelectable ? onToggleSelect : undefined}
-        className={`flex items-center justify-between gap-3 bg-card border border-border rounded-xl px-3 py-2.5   ${
+        className={`flex items-center justify-between gap-3 bg-card border border-border rounded-xl px-3 py-2.5 dark:bg-card dark:border-border ${
           isSelectable ? "cursor-pointer" : ""
         }`}
       >
@@ -92,7 +92,7 @@ export function UserCard({
           <RoleBadge role={person.role} />
           <div className="min-w-0">
             {nameEl}
-            <p className="truncate text-xs text-text-muted ">
+            <p className="truncate text-xs text-text-muted dark:text-text-muted">
               {person.schoolOrOrg ?? "—"}
               {person.approvalStatus !== "approved" ? ` · ${person.approvalStatus}` : ""}
             </p>
@@ -106,7 +106,7 @@ export function UserCard({
   return (
     <div
       onClick={isSelectable ? onToggleSelect : undefined}
-      className={`flex flex-col gap-2 bg-card border border-border rounded-xl p-4   ${
+      className={`flex flex-col gap-2 bg-card border border-border rounded-xl p-4 dark:bg-card dark:border-border ${
         isSelectable ? "cursor-pointer" : ""
       }`}
     >
@@ -116,14 +116,14 @@ export function UserCard({
           <div className="min-w-0">
             {nameEl}
             {person.schoolOrOrg && (
-              <p className="truncate text-xs text-text-muted ">{person.schoolOrOrg}</p>
+              <p className="truncate text-xs text-text-muted dark:text-text-muted">{person.schoolOrOrg}</p>
             )}
           </div>
         </div>
         <RoleBadge role={person.role} />
       </div>
       {person.approvalStatus !== "approved" && (
-        <p className="text-xs text-text-muted ">{person.approvalStatus}</p>
+        <p className="text-xs text-text-muted dark:text-text-muted">{person.approvalStatus}</p>
       )}
       {isSelectable ? (
         committedTag && <div className="pt-1">{committedTag}</div>

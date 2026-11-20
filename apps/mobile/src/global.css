@@ -1,3 +1,6 @@
+/* apps/mobile/src/global.css */
+@import "@repo/ui/src/theme.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

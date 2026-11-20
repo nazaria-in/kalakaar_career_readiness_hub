@@ -245,12 +245,12 @@ export function PeopleGrid({
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
         <SmartFilterBar fieldDefs={fieldDefs} state={filterState} />
-        <div className="inline-flex shrink-0 rounded-full border border-border p-0.5 ">
+        <div className="inline-flex shrink-0 rounded-full border border-border p-0.5 dark:border-border">
           <button
             type="button"
             onClick={() => setView("list")}
             aria-label="List view"
-            className={`rounded-full p-1.5 ${view === "list" ? "bg-primary text-primary-foreground" : "text-text-muted "}`}
+            className={`rounded-full p-1.5 ${view === "list" ? "bg-primary text-primary-foreground" : "text-text-muted dark:text-text-muted"}`}
           >
             <List className="h-4 w-4" />
           </button>
@@ -258,28 +258,28 @@ export function PeopleGrid({
             type="button"
             onClick={() => setView("card")}
             aria-label="Card view"
-            className={`rounded-full p-1.5 ${view === "card" ? "bg-primary text-primary-foreground" : "text-text-muted "}`}
+            className={`rounded-full p-1.5 ${view === "card" ? "bg-primary text-primary-foreground" : "text-text-muted dark:text-text-muted"}`}
           >
             <LayoutGrid className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {isLoading && <p className="text-sm text-text-muted ">Loading…</p>}
+      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>}
       {error && (
-        <p className="text-sm text-destructive ">
+        <p className="text-sm text-destructive dark:text-destructive">
           {error instanceof Error ? error.message : "Couldn't load people."}
         </p>
       )}
       {!isLoading && (data ?? []).length === 0 && !explicitGroups && (
-        <p className="text-sm text-text-muted ">{emptyMessage}</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">{emptyMessage}</p>
       )}
 
       {selectable && showSelectAllVisible && visibleIds.length > 0 && (
         <button
           type="button"
           onClick={toggleAllVisible}
-          className="w-fit rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-card-alt   "
+          className="w-fit rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-card-alt dark:border-border dark:text-text-primary dark:hover:bg-card-alt"
         >
           {allVisibleSelected ? "Clear all visible" : `Select all visible (${visibleIds.length})`}
         </button>
@@ -304,11 +304,11 @@ export function PeopleGrid({
                   onToggle={() => toggleGroup(memberIds, allSelected)}
                 />
               ) : (
-                <h4 className="text-sm font-semibold text-text-muted ">{group.label}</h4>
+                <h4 className="text-sm font-semibold text-text-muted dark:text-text-muted">{group.label}</h4>
               )
             )}
             {memberIds.length === 0 ? (
-              <p className="pl-1 text-xs text-text-muted/70 ">No members yet.</p>
+              <p className="pl-1 text-xs text-text-muted/70 dark:text-text-muted/70">No members yet.</p>
             ) : (
               <div className={view === "card" ? "grid gap-2 sm:grid-cols-2" : "flex flex-col gap-2"}>
                 {group.people.map((person) =>
@@ -407,7 +407,7 @@ function GroupSelectAllHeader({
 
   return (
     <label
-      className={`flex items-center gap-2 border-b border-border pb-1.5  ${
+      className={`flex items-center gap-2 border-b border-border pb-1.5 dark:border-border ${
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
       }`}
     >
@@ -419,8 +419,8 @@ function GroupSelectAllHeader({
         disabled={disabled}
         className="h-3.5 w-3.5 accent-[var(--color-nazaria-burgundy)]"
       />
-      <span className="text-sm font-semibold text-text-muted ">{label}</span>
-      <span className="ml-auto text-xs text-text-muted ">{count}</span>
+      <span className="text-sm font-semibold text-text-muted dark:text-text-muted">{label}</span>
+      <span className="ml-auto text-xs text-text-muted dark:text-text-muted">{count}</span>
     </label>
   );
 }

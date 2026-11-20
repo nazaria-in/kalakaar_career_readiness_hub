@@ -8,7 +8,7 @@ import { signIn } from "@/lib/api/auth";
 import { PasswordInput } from "./passwordInput";
 
 const inputClass =
-  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-text-primary outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30  ";
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-text-primary outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30 dark:bg-white/5 dark:border-white/10";
 
 export function LoginForm() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm "
+      className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none"
     >
       <h1 className="text-lg font-heading text-text-primary">Welcome back</h1>
       <p className="mt-1.5 text-sm text-muted-foreground">Log in to continue.</p>
@@ -88,7 +88,7 @@ export function LoginForm() {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive ">
+        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive dark:bg-destructive/15">
           {error}
         </p>
       )}

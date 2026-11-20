@@ -1,0 +1,44 @@
+/* packages/ui/src/theme.css */
+
+:root {
+  /* Light: brand palette */
+  --color-surface: 255 255 255;
+  --color-card: 246 249 248;
+  --color-card-alt: 234 242 241;
+  --color-card-strong: 255 255 255;
+
+  --color-text-primary: 0 80 79;        /* #00504f */
+  --color-text-muted: 75 106 105;       /* #4b6a69 */
+  --color-text-accent: 137 45 59;       /* #892d3b */
+
+  --color-border: 215 230 228;          /* #d7e6e4 */
+  --color-border-strong: 179 223 222;   /* #b3dfde */
+
+  --color-primary: 137 45 59;           /* #892d3b */
+  --color-primary-foreground: 255 255 255;
+  --color-secondary: 220 236 234;       /* #dcecea */
+  --color-secondary-foreground: 0 80 79;
+  --color-destructive: 217 58 58;       /* #d93a3a */
+}
+
+.dark {
+  /* Dark: neutral, easy to read, no brand colors.
+     Surfaces step up in lightness so nested cards stay visible. */
+  --color-surface: 11 15 14;            /* #0b0f0e page */
+  --color-card: 22 27 26;               /* #161b1a */
+  --color-card-alt: 31 38 36;           /* #1f2624 */
+  --color-card-strong: 40 49 47;        /* #28312f */
+
+  --color-text-primary: 242 245 244;    /* #f2f5f4 */
+  --color-text-muted: 163 175 173;      /* #a3afad */
+  --color-text-accent: 212 216 214;     /* #d4d8d6 neutral light */
+
+  --color-border: 46 56 54;             /* #2e3836 */
+  --color-border-strong: 72 84 82;      /* #485452 */
+
+  --color-primary: 228 228 231;         /* #e4e4e7 light neutral button */
+  --color-primary-foreground: 11 15 14;
+  --color-secondary: 40 49 47;
+  --color-secondary-foreground: 242 245 244;
+  --color-destructive: 248 113 113;     /* #f87171 readable on dark */
+}

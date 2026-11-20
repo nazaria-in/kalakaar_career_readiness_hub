@@ -42,10 +42,10 @@ export function ExitSurveySignalsSection({ scopePodId, scopeSubjectUserId }: Exi
     <div className="flex flex-col gap-3">
       <SmartFilterBar fieldDefs={EXIT_SURVEY_STAFF_FIELD_DEFS} state={filterState} />
 
-      {isLoading && <p className="text-sm text-text-muted ">Loading…</p>}
-      {error && <p className="text-sm text-destructive ">Couldn&apos;t load exit surveys.</p>}
+      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>}
+      {error && <p className="text-sm text-destructive dark:text-destructive">Couldn&apos;t load exit surveys.</p>}
       {!isLoading && rows.length === 0 && (
-        <p className="text-sm text-text-muted ">No submitted exit surveys match these filters.</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">No submitted exit surveys match these filters.</p>
       )}
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -63,26 +63,26 @@ function ExitSurveySignalCard({ row }: { row: ExitSurveyDetail }) {
   return (
     <Link
       href={`/exit-survey/${row.id}`}
-      className={`flex flex-col gap-1.5 rounded-xl border p-3 transition-colors hover:border-border-strong  ${
+      className={`flex flex-col gap-1.5 rounded-xl border p-3 transition-colors hover:border-border-strong dark:hover:border-border-strong ${
         needsAttention
-          ? "border-text-accent/40 bg-card-strong  "
-          : "border-border bg-card  "
+          ? "border-text-accent/40 bg-card-strong dark:border-text-accent/40 dark:bg-card-strong"
+          : "border-border bg-card dark:border-border dark:bg-card"
       }`}
     >
       <div className="flex items-center gap-2">
         <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${row.signal ? SIGNAL_DOT[row.signal] : "bg-text-muted"}`} />
-        <span className="truncate text-sm font-medium text-text-primary ">
+        <span className="truncate text-sm font-medium text-text-primary dark:text-text-primary">
           {row.subjectFullName ?? "Unknown"}
         </span>
-        <span className="ml-auto shrink-0 text-xs capitalize text-text-muted ">{row.userRole}</span>
+        <span className="ml-auto shrink-0 text-xs capitalize text-text-muted dark:text-text-muted">{row.userRole}</span>
       </div>
       {needsAttention && (
-        <span className="w-fit rounded-full bg-text-accent/15 px-2 py-0.5 text-[10px] font-semibold text-text-accent  ">
+        <span className="w-fit rounded-full bg-text-accent/15 px-2 py-0.5 text-[10px] font-semibold text-text-accent dark:bg-text-accent/20 dark:text-text-accent">
           Needs attention
         </span>
       )}
-      {row.aiHeadline && <p className="line-clamp-2 text-xs text-text-muted ">{row.aiHeadline}</p>}
-      <p className="text-[11px] text-text-muted ">
+      {row.aiHeadline && <p className="line-clamp-2 text-xs text-text-muted dark:text-text-muted">{row.aiHeadline}</p>}
+      <p className="text-[11px] text-text-muted dark:text-text-muted">
         {row.podName ? `${row.podName} · ` : ""}
         {row.submittedAt ? new Date(row.submittedAt).toLocaleDateString() : "—"}
       </p>

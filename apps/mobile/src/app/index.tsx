@@ -12,6 +12,9 @@ import {
 } from "lucide-react-native";
 import { useSessionStore } from "../store/session-store";
 
+import { Card } from "@repo/ui";
+
+
 type Audience = "mentee" | "mentor";
 
 const AUDIENCE_COPY: Record<
@@ -124,6 +127,9 @@ export default function LandingScreen() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       {/* Header */}
+      <Card title="Hello" description="Shared card test">
+        <Card title="Nested" />
+      </Card>
       <View style={styles.header}>
         <Text style={styles.brand}>Nazaria</Text>
         <Text style={styles.brandSub}>Kalkaaar Career Readiness Hub</Text>

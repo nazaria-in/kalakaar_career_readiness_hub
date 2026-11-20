@@ -16,7 +16,7 @@ export function PortionClusterChips({ clusters, value, onChange }: PortionCluste
 
   return (
     <div className="flex items-center gap-3">
-      <span className="shrink-0 text-xs font-medium text-text-muted ">
+      <span className="shrink-0 text-xs font-medium text-text-muted dark:text-text-muted">
         Select Semester
       </span>
       <div
@@ -48,8 +48,8 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
       onClick={onClick}
       className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
         active
-          ? "bg-primary text-primary-foreground  "
-          : "border border-border bg-card text-text-muted hover:text-text-primary    "
+          ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+          : "border border-border bg-card text-text-muted hover:text-text-primary dark:border-border dark:bg-card dark:text-text-muted dark:hover:text-text-primary"
       }`}
     >
       {label}

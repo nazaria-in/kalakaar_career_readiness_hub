@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import "./globals.css";
+import "@repo/ui/src/theme.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { SessionProvider } from "@/providers/session-provider";

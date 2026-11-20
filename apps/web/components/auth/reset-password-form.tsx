@@ -72,7 +72,7 @@ export function ResetPasswordForm() {
 
   if (done) {
     return (
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm ">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none">
         <h1 className="text-lg font-heading text-text-primary">Password updated</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">Redirecting you to login…</p>
       </div>
@@ -81,7 +81,7 @@ export function ResetPasswordForm() {
 
   if (linkInvalid) {
     return (
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm ">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none">
         <h1 className="text-lg font-heading text-text-primary">Link expired or invalid</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
           This password reset link is no longer valid. Request a new one from the login page.
@@ -95,7 +95,7 @@ export function ResetPasswordForm() {
   // to avoid letting the user type into fields that can't submit yet.
   if (!sessionReady) {
     return (
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm ">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none">
         <h1 className="text-lg font-heading text-text-primary">Set a new password</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">Verifying your reset link…</p>
 
@@ -110,7 +110,7 @@ export function ResetPasswordForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm "
+      className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm dark:shadow-none"
     >
       <h1 className="text-lg font-heading text-text-primary">Set a new password</h1>
       <p className="mt-1.5 text-sm text-muted-foreground">
@@ -152,7 +152,7 @@ export function ResetPasswordForm() {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive ">
+        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive dark:bg-destructive/15">
           {error}
         </p>
       )}

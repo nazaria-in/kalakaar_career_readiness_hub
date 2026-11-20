@@ -174,14 +174,14 @@ export default function ConversationThreadPage() {
 
   if (isLoading || !currentUser) {
     return (
-      <div className="flex h-full items-center justify-center bg-surface ">
-        <p className="text-sm text-text-muted ">Loading conversation…</p>
+      <div className="flex h-full items-center justify-center bg-surface dark:bg-surface">
+        <p className="text-sm text-text-muted dark:text-text-muted">Loading conversation…</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full bg-surface ">
+    <div className="flex h-full bg-surface dark:bg-surface">
       <div className="flex h-full flex-1 min-w-0 flex-col">
         <ConversationHeader
           name={resolvedName}

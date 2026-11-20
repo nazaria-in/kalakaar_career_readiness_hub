@@ -1,23 +1,31 @@
+// /components/meetings/AcceptDeclineControls.tsx
+
 "use client";
 
 import * as React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import posthog from "posthog-js";
 import { updateParticipantStatus } from "@/lib/api/meetings";
-import type { MeetingWithParticipants } from "@repo/shared";
+import type { MeetingWithParticipants } from "@/types/meetings";
 
 export interface AcceptDeclineControlsProps {
   meeting: MeetingWithParticipants;
   currentUserId: string;
+  /** Query keys to invalidate after a response, so every surface this is mounted on refreshes. */
   invalidateQueryKeys?: string[][];
 }
 
+/**
+ * Shared between /meetings (pending invites section) and the dashboard.
+ * Renders nothing if the current user isn't a pending participant on this meeting.
+ */
 export function AcceptDeclineControls({
   meeting,
   currentUserId,
   invalidateQueryKeys = [],
 }: AcceptDeclineControlsProps): React.JSX.Element | null {
   const queryClient = useQueryClient();
+
   const participant = meeting.participants.find((p) => p.user_id === currentUserId);
 
   const mutation = useMutation({
@@ -67,7 +75,9 @@ export function AcceptDeclineControls({
           Accept
         </button>
       </div>
-      {mutation.isError && <p className="text-xs text-destructive">{(mutation.error as Error).message}</p>}
+      {mutation.isError && (
+        <p className="text-xs text-destructive">{(mutation.error as Error).message}</p>
+      )}
     </div>
   );
 }

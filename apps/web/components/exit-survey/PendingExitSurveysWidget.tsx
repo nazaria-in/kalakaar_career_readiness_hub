@@ -45,7 +45,7 @@ export function PendingExitSurveysWidget({ userId, className }: PendingExitSurve
           <Link
             key={survey.exitSurveyId}
             href={`/exit-survey/${survey.exitSurveyId}`}
-            className="flex flex-col gap-0.5 rounded-xl border border-border bg-card px-3 py-2.5 transition-colors hover:bg-card-alt "
+            className="flex flex-col gap-0.5 rounded-xl border border-border bg-card px-3 py-2.5 transition-colors hover:bg-card-alt dark:border-white/10"
           >
             <span className="text-sm font-medium text-text-primary">
               {survey.subjectFullName ?? survey.title}

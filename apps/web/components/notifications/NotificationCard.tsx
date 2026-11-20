@@ -120,7 +120,7 @@ export function NotificationCard({
             type="button"
             onClick={() => void handleMarkRead()}
             aria-label="Mark as read"
-            className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-card-alt "
+            className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-card-alt dark:hover:bg-white/10"
           >
             <Check size={14} />
           </button>
@@ -130,7 +130,7 @@ export function NotificationCard({
             onClick={() => void handleDelete()}
             disabled={isDeleting}
             aria-label="Delete notification"
-            className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-card-alt hover:text-destructive disabled:opacity-40  "
+            className="flex h-7 w-7 items-center justify-center rounded-full text-text-muted hover:bg-card-alt hover:text-destructive disabled:opacity-40 dark:hover:bg-white/10 dark:hover:text-destructive"
           >
             <Trash2 size={13} />
           </button>

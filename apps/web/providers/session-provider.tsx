@@ -7,7 +7,7 @@ import posthog from "posthog-js";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { useSessionStore } from "@/store/session-store";
-import { type Role } from "@repo/shared";
+import type { Role } from "@/providers/role-provider";
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const setSession = useSessionStore((s) => s.setSession);

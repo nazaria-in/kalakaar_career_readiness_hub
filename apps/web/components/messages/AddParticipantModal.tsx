@@ -115,7 +115,7 @@ export function AddParticipantModal({
           )}
         </div>
 
-        {error && <p className="text-sm text-destructive ">{error}</p>}
+        {error && <p className="text-sm text-destructive dark:text-destructive">{error}</p>}
 
         <button
           type="button"

@@ -34,7 +34,7 @@ export function FilterChip({ label, state, onChange }: FilterChipProps) {
         state === "anti-selected" &&
           "border-destructive/40 bg-destructive/10 text-destructive line-through",
         state === null &&
-          "border-border bg-transparent text-text-primary hover:bg-surface-muted "
+          "border-border bg-transparent text-text-primary hover:bg-surface-muted dark:hover:bg-white/5"
       )}
     >
       {label}

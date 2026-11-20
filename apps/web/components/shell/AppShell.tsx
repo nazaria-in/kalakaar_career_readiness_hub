@@ -77,12 +77,12 @@ export function AppShell({
       <aside
         className={cn(
           "hidden md:flex flex-col items-center justify-between",
-          "w-14 shrink-0 py-4 border-r border-border ",
-          "bg-surface "
+          "w-14 shrink-0 py-4 border-r border-border dark:border-white/10",
+          "bg-surface dark:bg-surface"
         )}
       >
         <div className="flex flex-col items-center gap-1.5">
-          <div className="mb-5 flex h-8 w-8 items-center justify-center rounded-full bg-transparent   overflow-hidden">
+          <div className="mb-5 flex h-8 w-8 items-center justify-center rounded-full bg-transparent dark:bg-white dark:p-1 overflow-hidden">
             <Image src="/logo.webp" alt="Logo" width={32} height={32} className="object-contain" priority />
           </div>
 
@@ -104,12 +104,12 @@ export function AppShell({
                     "relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
                     active
                       ? "bg-primary text-primary-foreground"
-                      : "text-text-primary/70 hover:bg-surface-muted hover:text-text-accent  "
+                      : "text-text-primary/70 hover:bg-surface-muted hover:text-text-accent dark:text-text-primary/60 dark:hover:bg-white/5"
                   )}
                 >
                   <Icon className="h-5 w-5" strokeWidth={active ? 2.25 : 1.75} />
                   {badge > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-surface " />
+                    <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-surface dark:ring-surface" />
                   )}
                 </Link>
               );
@@ -126,7 +126,7 @@ export function AppShell({
               "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
               pathname?.startsWith("/profile")
                 ? "bg-primary text-primary-foreground"
-                : "text-text-primary/70 hover:bg-surface-muted  "
+                : "text-text-primary/70 hover:bg-surface-muted dark:text-text-primary/60 dark:hover:bg-white/5"
             )}
             aria-label="Profile"
           >
@@ -135,7 +135,7 @@ export function AppShell({
           <button
             type="button"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-text-primary/70 transition-colors hover:bg-surface-muted  "
+            className="flex h-8 w-8 items-center justify-center rounded-full text-text-primary/70 transition-colors hover:bg-surface-muted dark:text-text-primary/60 dark:hover:bg-white/5"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -146,7 +146,7 @@ export function AppShell({
 
       {/* ── Main column ──────────────────────────────────────────────── */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border bg-surface px-4  ">
+        <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border bg-surface px-4 dark:border-white/10 dark:bg-surface">
           <h1 className="truncate font-heading text-lg font-semibold text-text-primary">{pageTitle}</h1>
 
           {globalSearch && <div className="hidden flex-1 justify-center sm:flex">{globalSearch}</div>}
@@ -155,7 +155,7 @@ export function AppShell({
             {headerExtra}
             <Link
               href="/chat"
-              className="relative flex h-9 w-9 items-center justify-center rounded-full text-text-primary transition-colors hover:bg-surface-muted "
+              className="relative flex h-9 w-9 items-center justify-center rounded-full text-text-primary transition-colors hover:bg-surface-muted dark:hover:bg-white/5"
               aria-label="Messages"
             >
               <MessageIcon />
@@ -185,7 +185,7 @@ export function AppShell({
           theme toggle — the two controls visible only in the desktop
           sidebar are not lost on mobile. */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-20 flex h-16 items-center justify-around border-t border-border bg-surface md:hidden  "
+        className="fixed inset-x-0 bottom-0 z-20 flex h-16 items-center justify-around border-t border-border bg-surface md:hidden dark:border-white/10 dark:bg-surface"
         aria-label={`${role} navigation`}
       >
         {mobileVisible.map((item) => {
@@ -199,7 +199,7 @@ export function AppShell({
               aria-current={active ? "page" : undefined}
               className={cn(
                 "relative flex flex-col items-center gap-0.5 px-2 py-1",
-                active ? "text-text-accent" : "text-text-primary/60 "
+                active ? "text-text-accent" : "text-text-primary/60 dark:text-text-primary/50"
               )}
             >
               <Icon className="h-5 w-5 shrink-0" strokeWidth={active ? 2.25 : 1.75} />
@@ -223,7 +223,7 @@ export function AppShell({
               "relative flex flex-col items-center gap-0.5 px-2 py-1",
               overflowHasActive
                 ? "text-text-accent"
-                : "text-text-primary/60 "
+                : "text-text-primary/60 dark:text-text-primary/50"
             )}
           >
             <MoreHorizontal className="h-5 w-5 shrink-0" strokeWidth={overflowHasActive ? 2.25 : 1.75} />
@@ -241,7 +241,7 @@ export function AppShell({
             type="button"
             onClick={() => setMoreOpen(true)}
             aria-label="More options"
-            className="relative flex flex-col items-center gap-0.5 px-2 py-1 text-text-primary/60 "
+            className="relative flex flex-col items-center gap-0.5 px-2 py-1 text-text-primary/60 dark:text-text-primary/50"
           >
             <MoreHorizontal className="h-5 w-5 shrink-0" strokeWidth={1.75} />
             <span className="hidden text-[11px] xs:block">More</span>
@@ -257,16 +257,16 @@ export function AppShell({
             onClick={() => setMoreOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative w-full rounded-t-2xl border-t border-border bg-surface p-4 pb-8  ">
+          <div className="relative w-full rounded-t-2xl border-t border-border bg-surface p-4 pb-8 dark:border-white/10 dark:bg-surface">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-heading text-base font-semibold text-text-primary ">
+              <h2 className="font-heading text-base font-semibold text-text-primary dark:text-text-primary">
                 More
               </h2>
               <button
                 type="button"
                 onClick={() => setMoreOpen(false)}
                 aria-label="Close"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-muted  "
+                className="flex h-8 w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-muted dark:text-text-muted dark:hover:bg-white/5"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -287,7 +287,7 @@ export function AppShell({
                       "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm",
                       active
                         ? "bg-primary text-primary-foreground"
-                        : "text-text-primary hover:bg-surface-muted  "
+                        : "text-text-primary hover:bg-surface-muted dark:text-text-primary dark:hover:bg-white/5"
                     )}
                   >
                     <Icon className="h-5 w-5 shrink-0" strokeWidth={active ? 2.25 : 1.75} />
@@ -300,7 +300,7 @@ export function AppShell({
               })}
 
               {/* Divider before utility items */}
-              <div className="my-2 border-t border-border " />
+              <div className="my-2 border-t border-border dark:border-white/10" />
 
               {/* Profile — always in More on mobile */}
               <Link
@@ -310,7 +310,7 @@ export function AppShell({
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm",
                   pathname?.startsWith("/profile")
                     ? "bg-primary text-primary-foreground"
-                    : "text-text-primary hover:bg-surface-muted  "
+                    : "text-text-primary hover:bg-surface-muted dark:text-text-primary dark:hover:bg-white/5"
                 )}
               >
                 <User className="h-5 w-5 shrink-0" strokeWidth={1.75} />
@@ -324,7 +324,7 @@ export function AppShell({
                   setTheme(theme === "dark" ? "light" : "dark");
                   setMoreOpen(false);
                 }}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-text-primary hover:bg-surface-muted  "
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-text-primary hover:bg-surface-muted dark:text-text-primary dark:hover:bg-white/5"
               >
                 {theme === "dark" ? (
                   <Sun className="h-5 w-5 shrink-0" strokeWidth={1.75} />

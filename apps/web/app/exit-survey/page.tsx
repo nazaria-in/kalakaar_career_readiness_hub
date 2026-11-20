@@ -95,9 +95,9 @@ export default function ExitSurveyLandingPage() {
         {isStaff ? (
           <ExitSurveyStaffDashboard />
         ) : isLoading ? (
-          <p className="text-sm text-text-muted ">Loading...</p>
+          <p className="text-sm text-text-muted dark:text-text-muted">Loading...</p>
         ) : error ? (
-          <p className="text-sm text-destructive ">{error}</p>
+          <p className="text-sm text-destructive dark:text-destructive">{error}</p>
         ) : userId && role ? (
           <ExitSurveyPendingList userId={userId} role={role} />
         ) : null}

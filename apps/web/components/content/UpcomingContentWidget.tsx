@@ -50,15 +50,15 @@ export function UpcomingContentWidget({ menteeId, limit = 5 }: UpcomingContentWi
   const visible = sorted.slice(0, limit);
 
   return (
-    <section className="surface-card flex flex-col gap-3 ">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted ">
+    <section className="surface-card flex flex-col gap-3 dark:surface-card">
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
         Upcoming
       </h2>
 
       {isLoading ? (
-        <p className="text-xs text-text-muted ">Loading…</p>
+        <p className="text-xs text-text-muted dark:text-text-muted">Loading…</p>
       ) : hasError ? (
-        <p className="text-xs text-destructive ">Couldn&apos;t load upcoming items.</p>
+        <p className="text-xs text-destructive dark:text-destructive">Couldn&apos;t load upcoming items.</p>
       ) : visible.length === 0 ? (
         <EmptyState title="You're all caught up" description="Nothing outstanding right now." />
       ) : (

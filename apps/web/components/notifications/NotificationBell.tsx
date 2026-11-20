@@ -213,7 +213,7 @@ export function NotificationBell({ userId }: NotificationBellProps): React.JSX.E
         type="button"
         disabled
         aria-label="Notifications loading"
-        className="relative rounded-full p-2 text-text-primary/40 "
+        className="relative rounded-full p-2 text-text-primary/40 dark:text-text-primary/30"
       >
         <Bell size={20} />
       </button>
@@ -226,7 +226,7 @@ export function NotificationBell({ userId }: NotificationBellProps): React.JSX.E
         type="button"
         onClick={toggleOpen}
         aria-label="Notifications"
-        className="relative rounded-full p-2 text-text-primary hover:bg-card-alt "
+        className="relative rounded-full p-2 text-text-primary hover:bg-card-alt dark:hover:bg-white/5"
       >
         <Bell size={20} />
         {unreadCount > 0 && (
@@ -237,8 +237,8 @@ export function NotificationBell({ userId }: NotificationBellProps): React.JSX.E
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-2 w-96 max-w-[90vw] rounded-2xl border border-border bg-surface shadow-lg  ">
-          <div className="flex items-center justify-between border-b border-border p-3 ">
+        <div className="absolute right-0 z-50 mt-2 w-96 max-w-[90vw] rounded-2xl border border-border bg-surface shadow-lg dark:border-white/10 dark:bg-surface">
+          <div className="flex items-center justify-between border-b border-border p-3 dark:border-white/10">
             <p className="font-heading text-sm font-semibold text-text-primary">Notifications</p>
             <button
               type="button"
@@ -249,7 +249,7 @@ export function NotificationBell({ userId }: NotificationBellProps): React.JSX.E
             </button>
           </div>
 
-          <div className="flex gap-1.5 overflow-x-auto border-b border-border p-2 ">
+          <div className="flex gap-1.5 overflow-x-auto border-b border-border p-2 dark:border-white/10">
             {(["all", "unread", "meetings", "assignments", "messages"] as QuickFilter[]).map((filter) => (
               <button
                 key={filter}
@@ -258,7 +258,7 @@ export function NotificationBell({ userId }: NotificationBellProps): React.JSX.E
                 className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium capitalize ${
                   quickFilter === filter
                     ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border text-text-muted hover:bg-card-alt  "
+                    : "border-border text-text-muted hover:bg-card-alt dark:border-white/10 dark:hover:bg-white/5"
                 }`}
               >
                 {filter}
@@ -284,7 +284,7 @@ export function NotificationBell({ userId }: NotificationBellProps): React.JSX.E
             )}
           </div>
 
-          <div className="border-t border-border p-2 text-center ">
+          <div className="border-t border-border p-2 text-center dark:border-white/10">
             <Link
               href="/notifications"
               className="text-xs font-medium text-text-accent hover:underline"

@@ -98,8 +98,8 @@ export function ConversationsListPanel({
   const showDirectory = showStaffAllTab && staffTab === "all";
 
   return (
-    <div className="flex h-full flex-col bg-surface ">
-      <div className="p-3 border-b border-border-strong  bg-card  shadow-sm space-y-3 z-10">
+    <div className="flex h-full flex-col bg-surface dark:bg-surface">
+      <div className="p-3 border-b border-border-strong dark:border-border-strong bg-card dark:bg-card shadow-sm space-y-3 z-10">
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -107,16 +107,16 @@ export function ConversationsListPanel({
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search conversations"
             className={cn(
-              "flex-1 rounded-lg border border-border-strong  bg-surface ",
-              "text-text-primary  placeholder:text-text-muted ",
-              "px-3 py-2 text-sm outline-none focus:border-primary "
+              "flex-1 rounded-lg border border-border-strong dark:border-border-strong bg-surface dark:bg-surface",
+              "text-text-primary dark:text-text-primary placeholder:text-text-muted dark:placeholder:text-text-muted",
+              "px-3 py-2 text-sm outline-none focus:border-primary dark:focus:border-primary"
             )}
           />
           {canCreate && !pickerMode && (
             <button
               type="button"
               onClick={() => setShowNewModal(true)}
-              className="shrink-0 flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium bg-primary text-primary-foreground   shadow-sm"
+              className="shrink-0 flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground shadow-sm"
             >
               <Plus className="h-4 w-4" /> New
             </button>
@@ -124,15 +124,15 @@ export function ConversationsListPanel({
         </div>
 
         {showStaffAllTab && (
-          <div className="inline-flex rounded-full border border-border-strong  p-0.5 bg-surface ">
+          <div className="inline-flex rounded-full border border-border-strong dark:border-border-strong p-0.5 bg-surface dark:bg-surface">
             <button
               type="button"
               onClick={() => setStaffTab("mine")}
               className={cn(
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                 staffTab === "mine"
-                  ? "bg-primary text-primary-foreground  "
-                  : "text-text-muted "
+                  ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+                  : "text-text-muted dark:text-text-muted"
               )}
             >
               My conversations
@@ -143,8 +143,8 @@ export function ConversationsListPanel({
               className={cn(
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                 staffTab === "all"
-                  ? "bg-primary text-primary-foreground  "
-                  : "text-text-muted "
+                  ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+                  : "text-text-muted dark:text-text-muted"
               )}
             >
               All conversations
@@ -162,8 +162,8 @@ export function ConversationsListPanel({
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
                   filter === f.key
-                    ? "bg-primary text-primary-foreground border-primary   "
-                    : "bg-surface text-text-muted   border-border-strong  hover:bg-card-alt "
+                    ? "bg-primary text-primary-foreground border-primary dark:bg-primary dark:text-primary-foreground dark:border-primary"
+                    : "bg-surface text-text-muted dark:bg-surface dark:text-text-muted border-border-strong dark:border-border-strong hover:bg-card-alt dark:hover:bg-card-alt"
                 )}
               >
                 {f.label}
@@ -178,7 +178,7 @@ export function ConversationsListPanel({
           <StaffConversationDirectory />
         ) : (
           <div className="p-2 space-y-1">
-            {isLoading && <p className="p-4 text-sm text-text-muted ">Loading conversations…</p>}
+            {isLoading && <p className="p-4 text-sm text-text-muted dark:text-text-muted">Loading conversations…</p>}
             {!isLoading && filtered.length === 0 && (
               <EmptyState
                 title="No conversations found"

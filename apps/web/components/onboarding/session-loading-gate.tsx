@@ -74,7 +74,7 @@ export function SessionLoadingGate(): React.JSX.Element {
         <div
           role="status"
           aria-live="polite"
-          className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-text-muted   "
+          className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-text-muted dark:border-border dark:bg-card dark:text-text-muted"
         >
           <Loader2 className="h-4 w-4 animate-spin" />
           {stuck

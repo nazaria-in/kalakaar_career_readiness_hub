@@ -1,16 +1,13 @@
-// apps/web/components/meetings/in-person-session-timeline-adapter.tsx
+// /components/meetings/in-person-session-timeline-adapter.tsx
+
 "use client";
 
 import * as React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { adaptInPersonSessionToTimelineEvent } from "@repo/shared";
+import { adaptInPersonSessionToTimelineEvent } from "@/lib/timeline/adapters";
 import { cancelSingleOccurrence } from "@/lib/api/in-person-sessions";
-import {
-  canCancelSession,
-  sessionSeriesNote,
-  type InPersonSession,
-  type TimelineEvent,
-} from "@repo/shared";
+import type { InPersonSession } from "@/types/in-person-sessions";
+import type { TimelineEvent } from "@/types/timeline";
 
 interface InPersonSessionDetailsProps {
   session: InPersonSession;
@@ -19,13 +16,12 @@ interface InPersonSessionDetailsProps {
 }
 
 function InPersonSessionDetails({ session }: InPersonSessionDetailsProps): React.JSX.Element {
-  const seriesNote = sessionSeriesNote(session);
   return (
     <div className="flex flex-col gap-2 text-sm text-text-primary">
       {session.location && <p className="text-text-muted">{session.location}</p>}
       {session.description && <p>{session.description}</p>}
       {session.status === "cancelled" && <p className="text-destructive">This session is cancelled.</p>}
-      {seriesNote && <p className="text-xs text-text-muted">{seriesNote}</p>}
+      {session.seriesId && <p className="text-xs text-text-muted">Part of a weekly series — editing here only affects this week.</p>}
     </div>
   );
 }
@@ -42,7 +38,7 @@ function InPersonSessionActions({ session, canManage, invalidateQueryKeys }: InP
     },
   });
 
-  if (!canCancelSession(session, canManage)) return null;
+  if (!canManage || session.status === "cancelled") return null;
 
   return (
     <button
@@ -56,6 +52,12 @@ function InPersonSessionActions({ session, canManage, invalidateQueryKeys }: InP
   );
 }
 
+/**
+ * Mirrors meetingToTimelineEvent's shape: takes the raw row + enough
+ * context to render details/actions, returns a ready TimelineEvent.
+ * canManage should be true for pm/associate only — mentors/mentees see
+ * the session but can't cancel or edit it.
+ */
 export function inPersonSessionToTimelineEvent(
   session: InPersonSession,
   canManage: boolean,

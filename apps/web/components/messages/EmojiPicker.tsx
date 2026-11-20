@@ -23,8 +23,8 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
       <div className="fixed inset-0 z-20" onClick={onClose} />
       <div
         className={cn(
-          "absolute bottom-full left-0 mb-2 z-30 rounded-xl border border-border-strong ",
-          "bg-card  shadow-lg p-2 grid grid-cols-8 gap-1 w-72"
+          "absolute bottom-full left-0 mb-2 z-30 rounded-xl border border-border-strong dark:border-border-strong",
+          "bg-card dark:bg-card shadow-lg p-2 grid grid-cols-8 gap-1 w-72"
         )}
       >
         {EMOJIS.map((emoji) => (
@@ -35,7 +35,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
               onSelect(emoji);
               onClose();
             }}
-            className="text-xl rounded-lg p-1.5 hover:bg-card-alt  transition-colors"
+            className="text-xl rounded-lg p-1.5 hover:bg-card-alt dark:hover:bg-card-alt transition-colors"
           >
             {emoji}
           </button>

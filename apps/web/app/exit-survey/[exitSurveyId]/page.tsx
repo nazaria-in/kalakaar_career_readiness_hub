@@ -72,9 +72,9 @@ export default function ExitSurveyDetailPage() {
   return (
       <div className="mx-auto max-w-2xl p-4 md:p-6">
         {isLoading ? (
-          <p className="text-sm text-text-muted ">Loading...</p>
+          <p className="text-sm text-text-muted dark:text-text-muted">Loading...</p>
         ) : error ? (
-          <p className="text-sm text-destructive ">{error}</p>
+          <p className="text-sm text-destructive dark:text-destructive">{error}</p>
         ) : !detail || !currentUserId ? null : (
           renderContent(detail, currentUserId, isStaff, handleSubmit)
         )}
@@ -94,11 +94,11 @@ function renderContent(
   if (isStaff) {
     if (!detail.submittedAt) {
       return (
-        <div className="surface-card ">
-          <p className="text-sm font-medium text-text-primary ">
+        <div className="surface-card dark:surface-card">
+          <p className="text-sm font-medium text-text-primary dark:text-text-primary">
             {detail.meetingTitle} — not yet submitted
           </p>
-          <p className="mt-1 text-sm text-text-muted ">
+          <p className="mt-1 text-sm text-text-muted dark:text-text-muted">
             {detail.userRole === "mentor" ? "Mentor" : "Mentee"} survey
             {detail.subjectFullName ? ` about ${detail.subjectFullName}` : ""}, waiting on{" "}
             {detail.submitterFullName ?? "the submitter"}.
@@ -112,7 +112,7 @@ function renderContent(
   // Not staff and not the owner — nothing to show.
   if (!isOwner) {
     return (
-      <p className="text-sm text-text-muted ">
+      <p className="text-sm text-text-muted dark:text-text-muted">
         This exit survey isn&apos;t visible to your account.
       </p>
     );

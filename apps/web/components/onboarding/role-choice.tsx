@@ -131,15 +131,15 @@ export function RoleChoice({ disabled = false }: RoleChoiceProps) {
   return (
     <div
       className={cn(
-        "w-full max-w-lg rounded-2xl border border-border bg-card p-8 shadow-sm transition-opacity   ",
+        "w-full max-w-lg rounded-2xl border border-border bg-card p-8 shadow-sm transition-opacity dark:border-border dark:bg-card dark:shadow-none",
         disabled && "pointer-events-none opacity-60"
       )}
       aria-busy={disabled}
     >
-      <h1 className="text-lg font-heading text-text-primary ">
+      <h1 className="text-lg font-heading text-text-primary dark:text-text-primary">
         How will you be joining?
       </h1>
-      <p className="mt-1.5 text-sm text-text-muted ">
+      <p className="mt-1.5 text-sm text-text-muted dark:text-text-muted">
         You can&apos;t change this later without contacting your program manager.
       </p>
 
@@ -174,7 +174,7 @@ export function RoleChoice({ disabled = false }: RoleChoiceProps) {
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 flex items-center gap-2 rounded-lg bg-card-alt px-3 py-2 text-sm text-text-muted  "
+          className="mt-4 flex items-center gap-2 rounded-lg bg-card-alt px-3 py-2 text-sm text-text-muted dark:bg-card-alt dark:text-text-muted"
         >
           <Loader2 className="h-4 w-4 animate-spin" />
           Waiting for your session to load…
@@ -182,7 +182,7 @@ export function RoleChoice({ disabled = false }: RoleChoiceProps) {
       )}
 
       {error && (
-        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive  ">
+        <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive dark:bg-destructive/15 dark:text-destructive">
           {error}
         </p>
       )}
@@ -191,7 +191,7 @@ export function RoleChoice({ disabled = false }: RoleChoiceProps) {
         type="button"
         disabled={disabled || !selected || submitting || waitingForSession || isResuming || !hydrated}
         onClick={handleContinue}
-        className="mt-7 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50  "
+        className="mt-7 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
       >
         {!hydrated || isResuming
           ? "Loading your session…"
@@ -228,22 +228,22 @@ function RoleCard({
       className={cn(
         "flex flex-col items-start gap-2.5 rounded-xl border p-4 text-left transition-colors disabled:cursor-not-allowed",
         active
-          ? "border-ring bg-card-alt ring-2 ring-ring/30  "
-          : "border-border hover:bg-card-alt/50  "
+          ? "border-ring bg-card-alt ring-2 ring-ring/30 dark:border-ring dark:bg-card-alt"
+          : "border-border hover:bg-card-alt/50 dark:border-border dark:hover:bg-card-alt/50"
       )}
     >
       <span
         className={cn(
           "flex h-9 w-9 items-center justify-center rounded-lg",
           active
-            ? "bg-primary text-primary-foreground  "
-            : "bg-card-alt text-text-accent  "
+            ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+            : "bg-card-alt text-text-accent dark:bg-card-alt dark:text-text-accent"
         )}
       >
         {icon}
       </span>
-      <span className="text-sm font-medium text-text-primary ">{title}</span>
-      <span className="text-xs leading-relaxed text-text-muted ">{description}</span>
+      <span className="text-sm font-medium text-text-primary dark:text-text-primary">{title}</span>
+      <span className="text-xs leading-relaxed text-text-muted dark:text-text-muted">{description}</span>
     </button>
   );
 }

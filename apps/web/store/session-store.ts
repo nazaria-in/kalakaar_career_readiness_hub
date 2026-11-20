@@ -1,6 +1,8 @@
 // store/session-store.ts
 import { create } from "zustand";
-import { type Role, type ApprovalStatus } from "@repo/shared";
+import type { Role } from "@/providers/role-provider";
+
+export type ApprovalStatus = "pending" | "approved" | "rejected" | string;
 
 interface SessionState {
   userId: string | null;
@@ -19,7 +21,7 @@ interface SessionState {
   setRole: (role: Role) => void;
   setFullName: (fullName: string) => void;
   setApprovalStatus: (status: ApprovalStatus) => void;
-  setHydrated: (hydrated: boolean) => void;
+  setHydrated: (hydrated: boolean) => void; // Added helper
   clearSession: () => void;
 }
 
@@ -50,6 +52,6 @@ export const useSessionStore = create<SessionState>((set) => ({
       fullName: null,
       role: null,
       approvalStatus: null,
-      hydrated: true,
+      hydrated: true, // Mark hydrated as true so the app knows we confirmed a logged-out state
     }),
 }));

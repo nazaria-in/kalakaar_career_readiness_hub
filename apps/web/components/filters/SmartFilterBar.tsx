@@ -28,7 +28,7 @@ export function SmartFilterBar({ fieldDefs, state, className }: SmartFilterBarPr
     <div className={cn("flex flex-col gap-3", className)}>
       <div className="flex flex-wrap items-center gap-3">
         {hasSearchableField && (
-          <div className="flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 ">
+          <div className="flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 dark:bg-white/5">
             <Search className="h-4 w-4 shrink-0 text-text-primary/50" />
             <input
               value={filterState.search}
@@ -75,7 +75,7 @@ export function SmartFilterBar({ fieldDefs, state, className }: SmartFilterBarPr
                     "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                     active
                       ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-transparent text-text-primary hover:bg-surface-muted "
+                      : "border-border bg-transparent text-text-primary hover:bg-surface-muted dark:hover:bg-white/5"
                   )}
                 >
                   {field.chipLabel}
@@ -158,7 +158,7 @@ export function SmartFilterBar({ fieldDefs, state, className }: SmartFilterBarPr
           <button
             type="button"
             onClick={clearAll}
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 "
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20"
           >
             <X className="h-3 w-3" />
             Clear all

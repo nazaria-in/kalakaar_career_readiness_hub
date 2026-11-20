@@ -44,7 +44,7 @@ export function WarningModal({
             className={cn(
               "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
               variant === "danger"
-                ? "bg-destructive/10 text-destructive "
+                ? "bg-destructive/10 text-destructive dark:bg-destructive/20"
                 : "bg-accent text-text-accent"
             )}
           >
@@ -54,7 +54,7 @@ export function WarningModal({
         </div>
 
         {errorMessage && (
-          <div className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive ">
+          <div className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive dark:bg-destructive/15">
             {errorMessage}
           </div>
         )}
@@ -65,7 +65,7 @@ export function WarningModal({
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="rounded-full border border-border px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:opacity-50  "
+              className="rounded-full border border-border px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:opacity-50 dark:border-white/10 dark:hover:bg-white/5"
             >
               {cancelLabel}
             </button>

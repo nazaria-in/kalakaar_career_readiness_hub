@@ -366,7 +366,7 @@ export function ContentItemFormModal({
     >
       {step === "details" ? (
         loadingItem && mode === "edit" ? (
-          <p className="p-4 text-sm text-text-muted ">Loading…</p>
+          <p className="p-4 text-sm text-text-muted dark:text-text-muted">Loading…</p>
         ) : (
           <form
             className="flex max-h-[70vh] flex-col gap-5 overflow-y-auto p-1"
@@ -443,7 +443,7 @@ export function ContentItemFormModal({
               />
             </Field>
 
-            <div className="border-t border-border pt-4 ">
+            <div className="border-t border-border pt-4 dark:border-border">
               <ContentSubmissionTemplateEditor
                 contentType={contentType}
                 value={template}
@@ -471,38 +471,38 @@ export function ContentItemFormModal({
                     min={submissionStartsAt || undefined}
                     onChange={(e) => setSubmissionEndsAt(e.target.value)}
                     aria-invalid={submissionWindowInvalid}
-                    className={`${inputClass} aria-[invalid=true]:border-destructive 
+                    className={`${inputClass} aria-[invalid=true]:border-destructive dark:aria-[invalid=true]:border-destructive`}
                   />
                 </div>
                 {submissionWindowInvalid && (
-                  <p className="mt-1 text-[11px] text-destructive ">
+                  <p className="mt-1 text-[11px] text-destructive dark:text-destructive">
                     End date can&apos;t be before the start date.
                   </p>
                 )}
-                <p className="mt-1 text-[11px] text-text-muted ">
+                <p className="mt-1 text-[11px] text-text-muted dark:text-text-muted">
                   When mentees can submit. Powers the calendar/timeline view and due-date reminders.
                 </p>
               </Field>
             )}
 
             {saveDetailsMutation.isError && (
-              <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive ">
+              <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive dark:bg-destructive/15">
                 Couldn&apos;t save. Try again.
               </p>
             )}
 
-            <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-border bg-surface pt-4  ">
+            <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-border bg-surface pt-4 dark:border-border dark:bg-surface">
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-xl border border-border px-5 py-2.5 text-sm font-medium text-text-primary  "
+                className="rounded-xl border border-border px-5 py-2.5 text-sm font-medium text-text-primary dark:border-border dark:text-text-primary"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={!canSubmitDetails || saveDetailsMutation.isPending}
-                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50  "
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
               >
                 {saveDetailsMutation.isPending ? "Saving…" : "Continue"}
               </button>
@@ -512,7 +512,7 @@ export function ContentItemFormModal({
       ) : (
         <div className="flex flex-col gap-5">
           <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-text-muted ">
+            <span className="text-xs font-medium text-text-muted dark:text-text-muted">
               Due date for newly added mentees
             </span>
             <input
@@ -524,7 +524,7 @@ export function ContentItemFormModal({
           </label>
 
           {mode === "edit" && loadingRoster ? (
-            <p className="text-xs text-text-muted ">Loading current roster…</p>
+            <p className="text-xs text-text-muted dark:text-text-muted">Loading current roster…</p>
           ) : (
             <PeopleGrid
               fieldDefs={pickerFieldDefs}
@@ -562,7 +562,7 @@ export function ContentItemFormModal({
           )}
 
           {dispatchMutation.isError && (
-            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive ">
+            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive dark:bg-destructive/15">
               Couldn&apos;t update the mentee list. Try again.
             </p>
           )}
@@ -572,7 +572,7 @@ export function ContentItemFormModal({
               type="button"
               disabled={!canFinishRoster || dispatchMutation.isPending}
               onClick={() => dispatchMutation.mutate()}
-              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50  "
+              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
             >
               {dispatchMutation.isPending
                 ? "Saving…"
@@ -594,7 +594,7 @@ function contentTypeLabel(contentType: ContentType): string {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-card-alt px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary     ";
+  "w-full rounded-xl border border-border bg-card-alt px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary dark:border-border dark:bg-card-alt dark:text-text-primary dark:placeholder:text-text-muted dark:focus:border-primary";
 
 function Field({
   label,
@@ -607,10 +607,10 @@ function Field({
 }) {
   return (
     <label className="flex w-full flex-col gap-1.5">
-      <span className="text-xs font-semibold uppercase tracking-wide text-text-muted ">
+      <span className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
         {label}{" "}
         {optional && (
-          <span className="lowercase font-normal text-text-muted/70 ">
+          <span className="lowercase font-normal text-text-muted/70 dark:text-text-muted/70">
             (optional)
           </span>
         )}
@@ -640,10 +640,10 @@ function TypeSelector({
     const Icon = activeOption.icon;
     return (
       <div className="flex flex-col gap-1.5">
-        <span className="text-xs font-semibold uppercase tracking-wide text-text-muted ">
+        <span className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
           Type
         </span>
-        <span className="flex w-fit items-center gap-1.5 rounded-full border border-border bg-card-alt px-3 py-1.5 text-xs font-medium text-text-primary   ">
+        <span className="flex w-fit items-center gap-1.5 rounded-full border border-border bg-card-alt px-3 py-1.5 text-xs font-medium text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary">
           <Icon className="h-3.5 w-3.5" />
           {activeOption.label}
         </span>
@@ -653,10 +653,10 @@ function TypeSelector({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs font-semibold uppercase tracking-wide text-text-muted ">
+      <span className="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-muted">
         Type
       </span>
-      <div className="inline-flex w-fit flex-wrap gap-1 rounded-full border border-border bg-card-alt p-1  ">
+      <div className="inline-flex w-fit flex-wrap gap-1 rounded-full border border-border bg-card-alt p-1 dark:border-border dark:bg-card-alt">
         {TYPE_OPTIONS.map((option) => {
           const Icon = option.icon;
           const isActive = option.value === value;
@@ -667,8 +667,8 @@ function TypeSelector({
               onClick={() => onChange(option.value)}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                 isActive
-                  ? "bg-primary text-primary-foreground  "
-                  : "text-text-muted hover:text-text-primary  "
+                  ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+                  : "text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-primary"
               }`}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -736,7 +736,7 @@ function WeekField({
         <button
           type="button"
           onClick={() => setCreating(true)}
-          className="flex shrink-0 items-center gap-1 rounded-lg border border-dashed border-border px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary   "
+          className="flex shrink-0 items-center gap-1 rounded-lg border border-dashed border-border px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
         >
           <Plus className="h-3.5 w-3.5" />
           New
@@ -746,16 +746,16 @@ function WeekField({
   }
 
   return (
-    <div className="surface-card-alt flex flex-col gap-2 ">
+    <div className="surface-card-alt flex flex-col gap-2 dark:surface-card-alt">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-text-primary ">
+        <span className="text-xs font-semibold text-text-primary dark:text-text-primary">
           New week
         </span>
         <button
           type="button"
           onClick={() => setCreating(false)}
           aria-label="Cancel new week"
-          className="rounded p-1 text-text-muted hover:bg-card hover:text-text-primary   "
+          className="rounded p-1 text-text-muted hover:bg-card hover:text-text-primary dark:text-text-muted dark:hover:bg-card dark:hover:text-text-primary"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -764,24 +764,24 @@ function WeekField({
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="e.g. Week 4"
-        className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary   "
+        className="rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
       />
       <div className="flex gap-2">
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary   "
+          className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
         />
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary   "
+          className="flex-1 rounded border border-border bg-card px-2 py-1.5 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
         />
       </div>
       {createWeekMutation.isError && (
-        <p className="text-[11px] text-destructive ">
+        <p className="text-[11px] text-destructive dark:text-destructive">
           Couldn&apos;t create week. Try again.
         </p>
       )}
@@ -789,7 +789,7 @@ function WeekField({
         type="button"
         disabled={!canCreate || createWeekMutation.isPending}
         onClick={() => createWeekMutation.mutate()}
-        className="w-fit rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50  "
+        className="w-fit rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
       >
         {createWeekMutation.isPending ? "Creating…" : "Create & select"}
       </button>
@@ -849,7 +849,7 @@ function SemesterField({
             setDraft("");
             setCreating(true);
           }}
-          className="flex shrink-0 items-center gap-1 rounded-lg border border-dashed border-border px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary   "
+          className="flex shrink-0 items-center gap-1 rounded-lg border border-dashed border-border px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
         >
           <Plus className="h-3.5 w-3.5" />
           New
@@ -878,7 +878,7 @@ function SemesterField({
         type="button"
         disabled={!canUseDraft}
         onClick={handleUseDraft}
-        className="shrink-0 rounded-full bg-primary px-3 py-2 text-xs font-medium text-primary-foreground disabled:opacity-50  "
+        className="shrink-0 rounded-full bg-primary px-3 py-2 text-xs font-medium text-primary-foreground disabled:opacity-50 dark:bg-primary dark:text-primary-foreground"
       >
         Use
       </button>
@@ -886,7 +886,7 @@ function SemesterField({
         type="button"
         onClick={() => setCreating(false)}
         aria-label="Cancel new semester"
-        className="shrink-0 rounded p-1 text-text-muted hover:bg-card hover:text-text-primary   "
+        className="shrink-0 rounded p-1 text-text-muted hover:bg-card hover:text-text-primary dark:text-text-muted dark:hover:bg-card dark:hover:text-text-primary"
       >
         <X className="h-3.5 w-3.5" />
       </button>
@@ -957,8 +957,8 @@ function TagMultiSelect({
           key={tag.id}
           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
             selectedIds.includes(tag.id)
-              ? "bg-primary text-primary-foreground  "
-              : "border border-border text-text-muted hover:text-text-primary   "
+              ? "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground"
+              : "border border-border text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
           }`}
         >
           <button type="button" onClick={() => toggle(tag.id)}>
@@ -970,7 +970,7 @@ function TagMultiSelect({
               onClick={() => handleDelete(tag.id, tag.name)}
               disabled={deletingTagId === tag.id}
               aria-label={`Delete tag ${tag.name}`}
-              className="rounded-full p-0.5 hover:bg-black/10 disabled:opacity-50 "
+              className="rounded-full p-0.5 hover:bg-black/10 disabled:opacity-50 dark:hover:bg-white/10"
             >
               <X className="h-2.5 w-2.5" />
             </button>
@@ -991,19 +991,19 @@ function TagMultiSelect({
               }
             }}
             placeholder="New tag"
-            className="w-24 rounded-full border border-border bg-card px-2.5 py-1 text-xs text-text-primary   "
+            className="w-24 rounded-full border border-border bg-card px-2.5 py-1 text-xs text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
           />
           <button
             type="button"
             onClick={handleCreate}
-            className="text-text-accent "
+            className="text-text-accent dark:text-text-accent"
           >
             <Plus className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={() => setCreating(false)}
-            className="text-text-muted "
+            className="text-text-muted dark:text-text-muted"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -1012,7 +1012,7 @@ function TagMultiSelect({
         <button
           type="button"
           onClick={() => setCreating(true)}
-          className="flex items-center gap-1 rounded-full border border-dashed border-border px-2.5 py-1 text-xs text-text-muted hover:text-text-primary   "
+          className="flex items-center gap-1 rounded-full border border-dashed border-border px-2.5 py-1 text-xs text-text-muted hover:text-text-primary dark:border-border dark:text-text-muted dark:hover:text-text-primary"
         >
           <Plus className="h-3 w-3" />
           New tag

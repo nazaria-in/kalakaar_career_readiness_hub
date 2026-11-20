@@ -46,14 +46,14 @@ function Breadcrumbs({ crumb, onNavigate }: { crumb: Crumb; onNavigate: (c: Crum
     <nav className="flex items-center gap-1.5 text-sm">
       {parts.map((part, i) => (
         <span key={i} className="flex items-center gap-1.5">
-          {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-text-muted " />}
+          {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-text-muted dark:text-text-muted" />}
           <button
             type="button"
             onClick={() => onNavigate(part.target)}
             className={
               i === parts.length - 1
-                ? "font-medium text-text-primary "
-                : "text-text-muted hover:text-text-primary  "
+                ? "font-medium text-text-primary dark:text-text-primary"
+                : "text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-primary"
             }
           >
             {part.label}
@@ -91,7 +91,7 @@ function AddCohortForm({ onCreated }: { onCreated: () => void }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 text-sm text-text-accent hover:underline "
+        className="inline-flex items-center gap-1.5 text-sm text-text-accent hover:underline dark:text-text-accent"
       >
         <Plus className="h-3.5 w-3.5" />
         New cohort
@@ -105,26 +105,26 @@ function AddCohortForm({ onCreated }: { onCreated: () => void }) {
         e.preventDefault();
         if (name.trim()) mutation.mutate();
       }}
-      className="flex flex-wrap items-center gap-2 bg-card-alt border border-border rounded-xl p-3  "
+      className="flex flex-wrap items-center gap-2 bg-card-alt border border-border rounded-xl p-3 dark:bg-card-alt dark:border-border"
     >
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Cohort name"
         autoFocus
-        className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-text-primary   "
+        className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
       />
       <input
         type="date"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-text-primary   "
+        className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
       />
       <input
         type="date"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-text-primary   "
+        className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card dark:text-text-primary"
       />
       <button
         type="submit"
@@ -133,7 +133,7 @@ function AddCohortForm({ onCreated }: { onCreated: () => void }) {
       >
         Create
       </button>
-      <button type="button" onClick={() => setOpen(false)} className="text-sm text-text-muted ">
+      <button type="button" onClick={() => setOpen(false)} className="text-sm text-text-muted dark:text-text-muted">
         Cancel
       </button>
     </form>
@@ -164,20 +164,20 @@ function CohortList({ onSelect }: { onSelect: (cohort: CohortSummary) => void })
     <div className="space-y-3">
       <AddCohortForm onCreated={() => queryClient.invalidateQueries({ queryKey: ["cohorts-list"] })} />
 
-      {isLoading && <p className="text-sm text-text-muted ">Loading cohorts…</p>}
+      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading cohorts…</p>}
       {!isLoading && (!data || data.length === 0) && (
-        <p className="text-sm text-text-muted ">No cohorts yet.</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">No cohorts yet.</p>
       )}
 
       <div className="grid gap-2 sm:grid-cols-2">
         {(data ?? []).map((cohort) => (
           <div
             key={cohort.id}
-            className="group relative bg-card border border-border rounded-xl p-4 hover:border-border-strong transition-colors  "
+            className="group relative bg-card border border-border rounded-xl p-4 hover:border-border-strong transition-colors dark:bg-card dark:border-border"
           >
             <button type="button" onClick={() => onSelect(cohort)} className="block w-full text-left pr-7">
-              <p className="font-heading font-semibold text-text-primary ">{cohort.name}</p>
-              <p className="text-sm text-text-muted  capitalize">{cohort.status}</p>
+              <p className="font-heading font-semibold text-text-primary dark:text-text-primary">{cohort.name}</p>
+              <p className="text-sm text-text-muted dark:text-text-muted capitalize">{cohort.status}</p>
             </button>
             <button
               type="button"
@@ -186,7 +186,7 @@ function CohortList({ onSelect }: { onSelect: (cohort: CohortSummary) => void })
                 setPendingDeleteId(cohort.id);
               }}
               aria-label={`Delete ${cohort.name}`}
-              className="absolute right-3 top-3 rounded-full p-1 text-text-muted opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100   "
+              className="absolute right-3 top-3 rounded-full p-1 text-text-muted opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100 dark:text-text-muted dark:hover:bg-destructive/20 dark:hover:text-destructive"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
@@ -233,7 +233,7 @@ function AddPodForm({ cohortId, onCreated }: { cohortId: string; onCreated: () =
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-sm text-text-accent hover:underline "
+        className="text-sm text-text-accent hover:underline dark:text-text-accent"
       >
         + Add team
       </button>
@@ -253,7 +253,7 @@ function AddPodForm({ cohortId, onCreated }: { cohortId: string; onCreated: () =
         onChange={(e) => setName(e.target.value)}
         placeholder="Team name"
         autoFocus
-        className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary   "
+        className="rounded-lg border border-border bg-card-alt px-3 py-1.5 text-sm text-text-primary dark:border-border dark:bg-card-alt dark:text-text-primary"
       />
       <button
         type="submit"
@@ -262,7 +262,7 @@ function AddPodForm({ cohortId, onCreated }: { cohortId: string; onCreated: () =
       >
         Create
       </button>
-      <button type="button" onClick={() => setOpen(false)} className="text-sm text-text-muted ">
+      <button type="button" onClick={() => setOpen(false)} className="text-sm text-text-muted dark:text-text-muted">
         Cancel
       </button>
     </form>
@@ -298,18 +298,18 @@ function PodList({ cohortId, onSelect }: { cohortId: string; onSelect: (pod: Pod
         cohortId={cohortId}
         onCreated={() => queryClient.invalidateQueries({ queryKey: ["pods-for-cohort", cohortId] })}
       />
-      {isLoading && <p className="text-sm text-text-muted ">Loading teams…</p>}
+      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading teams…</p>}
       {!isLoading && (!data || data.length === 0) && (
-        <p className="text-sm text-text-muted ">No teams in this cohort yet.</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">No teams in this cohort yet.</p>
       )}
       <div className="grid gap-2 sm:grid-cols-2">
         {(data ?? []).map((pod) => (
           <div
             key={pod.id}
-            className="group relative bg-card border border-border rounded-xl p-4 hover:border-border-strong transition-colors  "
+            className="group relative bg-card border border-border rounded-xl p-4 hover:border-border-strong transition-colors dark:bg-card dark:border-border"
           >
             <button type="button" onClick={() => onSelect(pod)} className="block w-full text-left pr-7">
-              <p className="font-medium text-text-primary ">{pod.name}</p>
+              <p className="font-medium text-text-primary dark:text-text-primary">{pod.name}</p>
             </button>
             <button
               type="button"
@@ -318,7 +318,7 @@ function PodList({ cohortId, onSelect }: { cohortId: string; onSelect: (pod: Pod
                 setPendingDeleteId(pod.id);
               }}
               aria-label={`Delete ${pod.name}`}
-              className="absolute right-3 top-3 rounded-full p-1 text-text-muted opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100   "
+              className="absolute right-3 top-3 rounded-full p-1 text-text-muted opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100 dark:text-text-muted dark:hover:bg-destructive/20 dark:hover:text-destructive"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
@@ -427,8 +427,8 @@ function PodRosterView({ podId, cohortName, podName }: { podId: string; cohortNa
       {/* Team name + Add button share the same header row, per spec */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs text-text-muted ">{cohortName}</p>
-          <h3 className="font-heading text-lg font-semibold text-text-primary ">{podName}</h3>
+          <p className="text-xs text-text-muted dark:text-text-muted">{cohortName}</p>
+          <h3 className="font-heading text-lg font-semibold text-text-primary dark:text-text-primary">{podName}</h3>
         </div>
         <button
           type="button"
@@ -441,21 +441,21 @@ function PodRosterView({ podId, cohortName, podName }: { podId: string; cohortNa
       </div>
 
       {addingMember && (
-        <div className="bg-card-alt border border-border rounded-xl p-3  ">
+        <div className="bg-card-alt border border-border rounded-xl p-3 dark:bg-card-alt dark:border-border">
           <AddMemberPanel podId={podId} onAdded={() => setAddingMember(false)} />
         </div>
       )}
 
-      {isLoading && <p className="text-sm text-text-muted ">Loading roster…</p>}
+      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading roster…</p>}
       {!isLoading && members.length === 0 && (
-        <p className="text-sm text-text-muted ">No members in this team yet.</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">No members in this team yet.</p>
       )}
 
       <div className="flex flex-col gap-2">
         {members.map((member) => (
           <div
             key={member.user_id}
-            className="flex items-center justify-between gap-3 bg-card border border-border rounded-xl px-3 py-2.5  "
+            className="flex items-center justify-between gap-3 bg-card border border-border rounded-xl px-3 py-2.5 dark:bg-card dark:border-border"
           >
             <button
               type="button"
@@ -464,17 +464,17 @@ function PodRosterView({ podId, cohortName, podName }: { podId: string; cohortNa
             >
               <RoleBadge role={member.role} />
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-text-primary hover:text-text-accent hover:underline  ">
+                <p className="truncate text-sm font-medium text-text-primary hover:text-text-accent hover:underline dark:text-text-primary dark:hover:text-text-accent">
                   {member.full_name ?? member.user_id}
                 </p>
-                <p className="truncate text-xs text-text-muted ">{member.email ?? "no email"}</p>
+                <p className="truncate text-xs text-text-muted dark:text-text-muted">{member.email ?? "no email"}</p>
               </div>
             </button>
 
             <button
               type="button"
               onClick={() => handleRemove(member.user_id)}
-              className="shrink-0 rounded-full px-2.5 py-1 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10  "
+              className="shrink-0 rounded-full px-2.5 py-1 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 dark:text-destructive dark:hover:bg-destructive/20"
             >
               Remove
             </button>

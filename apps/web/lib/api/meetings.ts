@@ -1,30 +1,366 @@
+// /lib/api/meetings.ts
+
 import { createClient } from "@/lib/supabase/client";
-import * as shared from "@repo/shared";
+import { fetchPodMemberGroups, fetchAllPodGroupsForRoles } from "@/lib/api/pods";
+import { cancelMeetingRemindersForParticipant } from "@/lib/notifications/meeting-notifications";
+import type { UserRole } from "@/types/users";
+import type {
+  Meeting,
+  MeetingParticipant,
+  MeetingWithParticipants,
+  ParticipantStatus,
+  InviteCandidate,
+} from "@/types/meetings";
 
-const webApiRequest: shared.ApiRequest = (path, init) => fetch(path, init);
+interface RawParticipantRow {
+  id: string;
+  meeting_id: string;
+  user_id: string;
+  status: ParticipantStatus;
+  invited_by: string | null;
+  responded_at: string | null;
+  user: { id: string; full_name: string | null; role: UserRole } | null;
+}
 
-export const fetchMeetingsInRange = (params: Parameters<typeof shared.fetchMeetingsInRange>[1]) =>
-  shared.fetchMeetingsInRange(createClient(), params);
+interface RawMeetingRow extends Meeting {
+  meeting_participants: RawParticipantRow[];
+}
 
-export const fetchPendingInvitesForUser = (userId: string) =>
-  shared.fetchPendingInvitesForUser(createClient(), userId);
+const MEETING_SELECT = `*, meeting_participants(
+  id, meeting_id, user_id, status, invited_by, responded_at,
+  user:users!meeting_participants_user_id_fkey(id, full_name, role)
+)`;
 
-export const fetchMeetingById = (meetingId: string) =>
-  shared.fetchMeetingById(createClient(), meetingId);
+function hydrateMeeting(row: RawMeetingRow): MeetingWithParticipants {
+  return {
+    ...row,
+    participants: row.meeting_participants.map((p) => ({
+      id: p.id,
+      meeting_id: p.meeting_id,
+      user_id: p.user_id,
+      status: p.status,
+      invited_by: p.invited_by,
+      responded_at: p.responded_at,
+      user: p.user
+        ? { id: p.user.id, full_name: p.user.full_name?.trim() || "Unnamed", role: p.user.role }
+        : undefined,
+    })),
+  };
+}
 
-export const updateParticipantStatus = (participantId: string, status: Parameters<typeof shared.updateParticipantStatus>[2]) =>
-  shared.updateParticipantStatus(createClient(), participantId, status);
+/**
+ * Fetches meetings whose window overlaps [rangeStart, rangeEnd) — for the
+ * calendar grid. pm/associate see every meeting (staff oversight); everyone
+ * else only sees meetings they're actually a participant on. Two-step for
+ * the scoped case (participant meeting_ids, then meetings with full
+ * participant lists) so the returned participant arrays aren't accidentally
+ * trimmed to just the requesting user's own row.
+ */
+export async function fetchMeetingsInRange(params: {
+  userId: string | null;
+  role: UserRole;
+  rangeStart: string;
+  rangeEnd: string;
+}): Promise<MeetingWithParticipants[]> {
+  const { userId, role, rangeStart, rangeEnd } = params;
+  const supabase = createClient();
+  const isStaff = role === "pm" || role === "associate";
 
-export const respondToMeetingInvite = (meetingId: string, status: Parameters<typeof shared.respondToMeetingInvite>[2]) =>
-  shared.respondToMeetingInvite(createClient(), meetingId, status);
+  if (!isStaff && !userId) return [];
 
-export const fetchInviteCandidates = (requesterId: string, requesterRole: shared.UserRole) =>
-  shared.fetchInviteCandidates(createClient(), requesterId, requesterRole);
+  let query = supabase
+    .from("meetings")
+    .select(MEETING_SELECT)
+    .is("deleted_at", null)
+    .lt("starts_at", rangeEnd)
+    .gt("ends_at", rangeStart)
+    .order("starts_at", { ascending: true });
 
-export const updateMeeting = (meetingId: string, input: shared.UpdateMeetingInput) =>
-  shared.updateMeeting(webApiRequest, meetingId, input);
+  if (!isStaff) {
+    const { data: participantRows, error: participantError } = await supabase
+      .from("meeting_participants")
+      .select("meeting_id")
+      .eq("user_id", userId as string);
 
-export const cancelMeeting = (meetingId: string) =>
-  shared.cancelMeeting(webApiRequest, meetingId);
+    if (participantError) throw participantError;
 
-export type { UpdateMeetingInput } from "@repo/shared";
+    const meetingIds = (participantRows ?? []).map((r) => r.meeting_id as string);
+    if (meetingIds.length === 0) return [];
+
+    query = query.in("id", meetingIds);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+
+  return ((data ?? []) as unknown as RawMeetingRow[]).map(hydrateMeeting);
+}
+
+/**
+ * Meetings a given user is pending on (invited, not yet responded) — backs
+ * the shared AcceptDeclineControls surface wherever it's mounted.
+ */
+export async function fetchPendingInvitesForUser(userId: string): Promise<MeetingWithParticipants[]> {
+  const supabase = createClient();
+
+  const { data: participantRows, error: participantError } = await supabase
+    .from("meeting_participants")
+    .select("meeting_id")
+    .eq("user_id", userId)
+    .eq("status", "pending");
+
+  if (participantError) throw participantError;
+
+  const meetingIds = (participantRows ?? []).map((r) => r.meeting_id as string);
+  if (meetingIds.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from("meetings")
+    .select(MEETING_SELECT)
+    .in("id", meetingIds)
+    .is("deleted_at", null)
+    .order("starts_at", { ascending: true });
+
+  if (error) throw error;
+
+  return ((data ?? []) as unknown as RawMeetingRow[]).map(hydrateMeeting);
+}
+
+export async function fetchMeetingById(meetingId: string): Promise<MeetingWithParticipants | null> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("meetings")
+    .select(MEETING_SELECT)
+    .eq("id", meetingId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) return null;
+
+  return hydrateMeeting(data as unknown as RawMeetingRow);
+}
+
+/**
+ * Accept or decline a pending invite by participant row id. Pure
+ * client-side RSVP — no notification side effects here, since callers
+ * that already have a participantId in hand may not have a meetingId
+ * loaded. Use respondToMeetingInvite below when you have meetingId
+ * instead (e.g. from a notification card, which only carries meeting_id).
+ */
+export async function updateParticipantStatus(
+  participantId: string,
+  status: Extract<ParticipantStatus, "accepted" | "declined">,
+): Promise<MeetingParticipant> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("meeting_participants")
+    .update({ status, responded_at: new Date().toISOString() })
+    .eq("id", participantId)
+    .select("id, meeting_id, user_id, status, invited_by, responded_at")
+    .single();
+
+  if (error) throw error;
+  return data as MeetingParticipant;
+}
+
+/**
+ * Preferred entry point when you only have a meeting_id + the current
+ * user (this is what notification cards have — a meeting_invite
+ * notification carries meeting_id, not the participant row id). Resolves
+ * the participant row, updates status, and — on decline — cancels that
+ * user's pending reminder cascade for this meeting.
+ */
+export async function respondToMeetingInvite(
+  meetingId: string,
+  status: Extract<ParticipantStatus, "accepted" | "declined">,
+): Promise<MeetingParticipant> {
+  const supabase = createClient();
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) throw userError;
+  if (!userData.user) throw new Error("Not authenticated.");
+
+  const { data: participant, error: participantError } = await supabase
+    .from("meeting_participants")
+    .select("id")
+    .eq("meeting_id", meetingId)
+    .eq("user_id", userData.user.id)
+    .single();
+
+  if (participantError || !participant) {
+    throw new Error(participantError?.message ?? "Participant record not found for this meeting.");
+  }
+
+  const updated = await updateParticipantStatus(participant.id as string, status);
+
+  if (status === "declined") {
+    try {
+      await cancelMeetingRemindersForParticipant(supabase, meetingId, userData.user.id);
+    } catch (notificationError) {
+      console.error("[meetings] Failed to cancel reminders on decline", notificationError);
+    }
+  }
+
+  return updated;
+}
+
+/**
+ * Invite candidates for the creation form.
+ * - mentor/mentee: every member (mentor + mentee) of the requester's own team(s),
+ *   including teams the requester belongs to that currently have no other members.
+ * - pm/associate: every approved user, ACROSS EVERY TEAM/COHORT, including
+ *   teams with zero members — so the invite picker can group by team and
+ *   let staff "select everyone on Team X" even for a freshly created,
+ *   still-empty team.
+ * Self is always excluded.
+ */
+export async function fetchInviteCandidates(
+  requesterId: string,
+  requesterRole: UserRole,
+): Promise<InviteCandidate[]> {
+  if (requesterRole === "pm" || requesterRole === "associate") {
+    const groups = await fetchAllPodGroupsForRoles(["mentor", "mentee"]);
+
+    const candidates: InviteCandidate[] = [];
+    const seen = new Set<string>();
+    for (const pod of groups) {
+      for (const m of pod.members) {
+        if (m.id === requesterId || seen.has(m.id)) continue;
+        seen.add(m.id);
+        candidates.push({
+          id: m.id,
+          full_name: m.full_name,
+          // fetchAllPodGroupsForRoles doesn't return role per-member — refetch
+          // isn't worth it here; role badge for staff-view candidates isn't
+          // load-bearing for invite selection, so default to "mentee" is
+          // wrong if precision matters. FLAG: if role needs to be exact per
+          // candidate, fetchAllPodGroupsForRoles needs to return it per member.
+          role: "mentee",
+          podId: pod.id,
+          podName: pod.cohortName ? `${pod.cohortName} — ${pod.name}` : pod.name,
+        });
+      }
+    }
+
+    // Staff can also invite users unaffiliated with any team, and the role
+    // badge for pod members above is a placeholder — pull the real roster
+    // (with roles) and merge, using pod assignment where we found one.
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("users")
+      .select("id, full_name, role")
+      .is("deleted_at", null)
+      .eq("approval_status", "approved")
+      .neq("id", requesterId)
+      .order("full_name", { ascending: true });
+    if (error) throw error;
+
+    const podById = new Map(candidates.map((c) => [c.id, c]));
+    return (data ?? []).map((u) => {
+      const podInfo = podById.get(u.id as string);
+      return {
+        id: u.id as string,
+        full_name: (u.full_name as string | null)?.trim() || "Unnamed",
+        role: u.role as UserRole,
+        podId: podInfo?.podId,
+        podName: podInfo?.podName,
+      };
+    });
+  }
+
+  // mentor or mentee: merge both roles across the requester's own team(s) and the pm, assoicates,
+  // including empty ones (e.g. requester is the only member so far).
+  const [mentorGroups, menteeGroups] = await Promise.all([
+    fetchPodMemberGroups({ role: "mentor", mentorId: requesterId, includeEmptyPods: true }),
+    fetchPodMemberGroups({ role: "mentee", mentorId: requesterId, includeEmptyPods: true }),
+  ]);
+
+  const byId = new Map<string, InviteCandidate>();
+
+  for (const pod of mentorGroups) {
+    for (const m of pod.members) {
+      if (m.id !== requesterId) {
+        byId.set(m.id, {
+          id: m.id,
+          full_name: m.full_name,
+          role: "mentor",
+          podId: pod.id,
+          podName: pod.cohortName ? `${pod.cohortName} — ${pod.name}` : pod.name,
+        });
+      }
+    }
+  }
+  for (const pod of menteeGroups) {
+    for (const m of pod.members) {
+      if (m.id !== requesterId) {
+        byId.set(m.id, {
+          id: m.id,
+          full_name: m.full_name,
+          role: "mentee",
+          podId: pod.id,
+          podName: pod.cohortName ? `${pod.cohortName} — ${pod.name}` : pod.name,
+        });
+      }
+    }
+  }
+
+  // NEW: staff are always available to invite, shown ungrouped (no podId)
+  // so they land in the picker's "No team" bucket rather than implying
+  // they belong to the requester's pod.
+  const supabase = createClient();
+  const { data: staffRows, error: staffError } = await supabase
+    .from("users")
+    .select("id, full_name, role")
+    .in("role", ["associate", "pm"])
+    .is("deleted_at", null)
+    .neq("id", requesterId)
+    .order("full_name", { ascending: true });
+  if (staffError) throw staffError;
+
+  for (const u of staffRows ?? []) {
+    byId.set(u.id as string, {
+      id: u.id as string,
+      full_name: (u.full_name as string | null)?.trim() || "Unnamed",
+      role: u.role as UserRole,
+      // no podId/podName — falls into NO_TEAM_KEY in the picker
+    });
+  }
+
+  return Array.from(byId.values()).sort((a, b) => a.full_name.localeCompare(b.full_name));
+}
+
+export interface UpdateMeetingInput {
+  title?: string;
+  description?: string;
+  startsAt?: string;
+  endsAt?: string;
+}
+
+async function patchMeeting(meetingId: string, body: UpdateMeetingInput | { cancel: true }): Promise<void> {
+  const response = await fetch(`/api/meetings/${meetingId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const errorBody = (await response.json().catch(() => ({}))) as { error?: string };
+    throw new Error(errorBody.error ?? "Failed to update meeting");
+  }
+}
+
+/** Edits title/description/time. Server re-checks creator-or-staff + not-yet-started, same as cancel. */
+export async function updateMeeting(meetingId: string, input: UpdateMeetingInput): Promise<void> {
+  return patchMeeting(meetingId, input);
+}
+
+/**
+ * "Delete" is a soft cancel server-side (status: "cancelled", Calendar
+ * event removed) — matches the existing PATCH endpoint's `cancel` flag,
+ * no new endpoint needed.
+ */
+export async function cancelMeeting(meetingId: string): Promise<void> {
+  return patchMeeting(meetingId, { cancel: true });
+}

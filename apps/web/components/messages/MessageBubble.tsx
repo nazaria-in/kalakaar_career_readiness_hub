@@ -29,17 +29,17 @@ function isPending(message: Message | PendingMessage): message is PendingMessage
 function TickMarks({ message }: { message: Message | PendingMessage }) {
   if (isPending(message)) {
     if (message.status === "sending") {
-      return <Clock className="h-3 w-3 text-primary-foreground/70 " />;
+      return <Clock className="h-3 w-3 text-primary-foreground/70 dark:text-primary-foreground/70" />;
     }
     if (message.status === "failed") {
-      return <span className="text-[11px] text-destructive  font-medium">Failed</span>;
+      return <span className="text-[11px] text-destructive dark:text-destructive font-medium">Failed</span>;
     }
   }
   // Sent (confirmed row, or optimistic status === "sent" in the brief window before removal).
   return (
     <span className="inline-flex -space-x-1">
-      <Check className="h-3 w-3 text-primary-foreground/80 " />
-      <Check className="h-3 w-3 text-primary-foreground/80 " />
+      <Check className="h-3 w-3 text-primary-foreground/80 dark:text-primary-foreground/80" />
+      <Check className="h-3 w-3 text-primary-foreground/80 dark:text-primary-foreground/80" />
     </span>
   );
 }
@@ -72,10 +72,10 @@ export function MessageBubble({
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-card-alt "
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-card-alt dark:hover:bg-card-alt"
             aria-label="Message options"
           >
-            <MoreVertical className="h-4 w-4 text-text-muted " />
+            <MoreVertical className="h-4 w-4 text-text-muted dark:text-text-muted" />
           </button>
         )}
 
@@ -84,7 +84,7 @@ export function MessageBubble({
             <button
               type="button"
               onClick={() => onRetry?.(message as PendingMessage)}
-              className="self-end flex items-center gap-1 text-xs text-destructive  mb-1"
+              className="self-end flex items-center gap-1 text-xs text-destructive dark:text-destructive mb-1"
             >
               <RotateCw className="h-3 w-3" /> Tap to retry
             </button>
@@ -93,25 +93,25 @@ export function MessageBubble({
           <div
             className={cn(
               "rounded-2xl px-4 py-2 text-sm shadow-sm",
-              isDeleted && !isStaffViewer && "italic bg-card-alt text-text-muted  ",
+              isDeleted && !isStaffViewer && "italic bg-card-alt text-text-muted dark:bg-card-alt dark:text-text-muted",
               isDeleted &&
                 isStaffViewer &&
-                "border-2 border-red-500  text-text-primary  bg-card ",
-              !isDeleted && isOwn && "bg-primary text-primary-foreground  ",
+                "border-2 border-red-500 dark:border-red-400 text-text-primary dark:text-text-primary bg-card dark:bg-card",
+              !isDeleted && isOwn && "bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground",
               !isDeleted &&
                 !isOwn &&
-                "bg-card-alt text-text-primary   border border-border ",
+                "bg-card-alt text-text-primary dark:bg-card-alt dark:text-text-primary border border-border dark:border-border",
               failed && "opacity-60"
             )}
           >
             {!isOwn && showSenderName && (
-              <p className="text-xs font-semibold text-primary  mb-0.5">
+              <p className="text-xs font-semibold text-primary dark:text-primary mb-0.5">
                 {message.senderName ?? "Unknown member"}
               </p>
             )}
 
             {isDeleted && isStaffViewer && (
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600  mb-1">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600 dark:text-red-400 mb-1">
                 Deleted — visible to staff only
               </p>
             )}
@@ -120,7 +120,7 @@ export function MessageBubble({
               <p
                 className={cn(
                   "text-xs italic mb-1",
-                  isOwn ? "opacity-75" : "text-text-muted "
+                  isOwn ? "opacity-75" : "text-text-muted dark:text-text-muted"
                 )}
               >
                 Forwarded
@@ -135,7 +135,7 @@ export function MessageBubble({
                   "block w-full text-left rounded-lg px-2 py-1 mb-1.5 border-l-2 text-xs",
                   isOwn
                     ? "border-primary-foreground/40 bg-primary-foreground/10 text-primary-foreground/90"
-                    : "border-border-strong  bg-surface/60  text-text-muted "
+                    : "border-border-strong dark:border-border-strong bg-surface/60 dark:bg-surface/60 text-text-muted dark:text-text-muted"
                 )}
               >
                 <span className="block font-medium truncate">{repliedToMessage.senderName ?? "Message"}</span>
@@ -149,8 +149,8 @@ export function MessageBubble({
               {!showRealBody ? "This message was deleted" : message.body}
             </p>
 
-            <div className={cn("flex items-center gap-1 mt-1 justify-end", isOwn ? "" : "text-text-muted ")}>
-              <span className={cn("text-[11px]", isOwn ? "text-primary-foreground/70 " : "text-text-muted ")}>
+            <div className={cn("flex items-center gap-1 mt-1 justify-end", isOwn ? "" : "text-text-muted dark:text-text-muted")}>
+              <span className={cn("text-[11px]", isOwn ? "text-primary-foreground/70 dark:text-primary-foreground/70" : "text-text-muted dark:text-text-muted")}>
                 {time}
               </span>
               {isOwn && !isDeleted && <TickMarks message={message} />}
@@ -162,10 +162,10 @@ export function MessageBubble({
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-card-alt "
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-card-alt dark:hover:bg-card-alt"
             aria-label="Message options"
           >
-            <MoreVertical className="h-4 w-4 text-text-muted " />
+            <MoreVertical className="h-4 w-4 text-text-muted dark:text-text-muted" />
           </button>
         )}
 
@@ -177,7 +177,7 @@ export function MessageBubble({
                 // Anchored via bottom-full instead of top-full: opens upward from the
                 // bubble, which keeps it inside the scrollable message list instead of
                 // rendering past the bottom of the screen for messages near the composer.
-                "absolute bottom-full mb-1 z-50 rounded-lg border border-border-strong  bg-card  shadow-md py-1 min-w-[150px]",
+                "absolute bottom-full mb-1 z-50 rounded-lg border border-border-strong dark:border-border-strong bg-card dark:bg-card shadow-md py-1 min-w-[150px]",
                 isOwn ? "right-0" : "left-0"
               )}
             >
@@ -188,7 +188,7 @@ export function MessageBubble({
                     onReply(message);
                     setMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary  hover:bg-card-alt "
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary dark:text-text-primary hover:bg-card-alt dark:hover:bg-card-alt"
                 >
                   <Reply className="h-4 w-4" /> Reply
                 </button>
@@ -200,7 +200,7 @@ export function MessageBubble({
                     onCopy(message.body);
                     setMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary  hover:bg-card-alt "
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary dark:text-text-primary hover:bg-card-alt dark:hover:bg-card-alt"
                 >
                   <Copy className="h-4 w-4" /> Copy
                 </button>
@@ -212,7 +212,7 @@ export function MessageBubble({
                     onDelete(message.id);
                     setMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive  hover:bg-card-alt "
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive dark:text-destructive hover:bg-card-alt dark:hover:bg-card-alt"
                 >
                   <Trash2 className="h-4 w-4" /> Delete
                 </button>

@@ -26,7 +26,7 @@ export function SortDropdown({ fieldDefs, sortState, onChange }: SortDropdownPro
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted "
+        className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted dark:hover:bg-white/5"
       >
         <ArrowUpDown className="h-3.5 w-3.5" />
         {activeField ? `${"label" in activeField ? activeField.label : activeField.key} (${sortState.direction})` : "Sort"}
@@ -35,7 +35,7 @@ export function SortDropdown({ fieldDefs, sortState, onChange }: SortDropdownPro
       {open && (
         <>
           <div className="fixed inset-0 z-20" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-30 mt-1 min-w-[180px] rounded-2xl border border-border bg-surface p-1.5 shadow-lg ">
+          <div className="absolute right-0 z-30 mt-1 min-w-[180px] rounded-2xl border border-border bg-surface p-1.5 shadow-lg dark:shadow-black/40">
             {sortableFields.map((field) => (
               <div key={field.key} className="flex flex-col">
                 {(["asc", "desc"] as const).map((dir) => {
@@ -50,7 +50,7 @@ export function SortDropdown({ fieldDefs, sortState, onChange }: SortDropdownPro
                       }}
                       className={cn(
                         "flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs",
-                        active ? "bg-primary text-primary-foreground" : "text-text-primary hover:bg-surface-muted "
+                        active ? "bg-primary text-primary-foreground" : "text-text-primary hover:bg-surface-muted dark:hover:bg-white/5"
                       )}
                     >
                       {"label" in field ? field.label : field.key} ({dir === "asc" ? "A→Z / oldest" : "Z→A / newest"})

@@ -1,9 +1,10 @@
-// apps/web/app/meetings/page.tsx
+// /app/meetings/page.tsx — full file, only meetingsQuery changed
+
 "use client";
 
 import * as React from "react";
 import Link from "next/link";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query"; // add useQueryClient
 import { Timeline } from "@/components/timeline/Timeline";
 import { MeetingFormModal } from "@/components/meetings/MeetingFormModal";
 import { InPersonSessionFormModal } from "@/components/meetings/InPersonSessionFormModal";
@@ -13,45 +14,73 @@ import { inPersonSessionToTimelineEvent } from "@/components/meetings/in-person-
 import { fetchMeetingsInRange, fetchPendingInvitesForUser } from "@/lib/api/meetings";
 import { fetchInPersonSessions } from "@/lib/api/in-person-sessions";
 import { fetchContentItemsDueInRange, fetchMenteeContentDispatchesInRange } from "@/lib/api/content-timeline";
+import { adaptContentItemToTimelineEvent, adaptContentDispatchToTimelineEvent } from "@/lib/timeline/adapters";
 import { PendingExitSurveysWidget } from "@/components/exit-survey/PendingExitSurveysWidget";
 import { useRole } from "@/providers/role-provider";
+// TODO(Joseph): swap for your actual current-user hook if the field name differs
 import { useSessionStore } from "@/store/session-store";
-import {
-  adaptContentDispatchToTimelineEvent,
-  adaptContentItemToTimelineEvent,
-  type TimelineEvent,
-  type TimelineEventType,
-} from "@repo/shared";
+import type { TimelineEvent, TimelineEventType } from "@/types/timeline";
 
+
+// Same roles that get the widget on /dashboard — staff get their own
+// org-wide analytics section elsewhere, not this personal list.
 const ROLES_WITH_OWN_PENDING_SURVEYS = ["mentee", "mentor"] as const;
 
-const AVAILABLE_TYPES: TimelineEventType[] = ["meeting", "in_person_session", "assignment", "course", "resource"];
+const AVAILABLE_TYPES: TimelineEventType[] = [
+  "meeting",
+  "in_person_session",
+  "assignment",
+  "course",
+  "resource",
+];
 
 export default function MeetingsPage(): React.JSX.Element {
-  const { role, isDebug } = useRole();
+  const { role, permissionLevel, isDebug } = useRole();
   const userId = useSessionStore((s) => s.userId) as string | undefined;
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient(); 
 
   const [isMeetingFormOpen, setIsMeetingFormOpen] = React.useState(false);
   const [isSessionFormOpen, setIsSessionFormOpen] = React.useState(false);
   const [prefillStartsAt, setPrefillStartsAt] = React.useState<string | undefined>(undefined);
   const [range, setRange] = React.useState<{ start: string; end: string } | null>(null);
 
+  // Debug bypass: previewing as pm/associate via the RoleSwitcher's debug
+  // mode skips the "not logged in" gate, so layout can be checked without a
+  // real session. Any real (non-debug) visit still requires a session.
   const isDebugStaffPreview = isDebug && (role === "pm" || role === "associate");
 
   const showOwnPendingSurveys = role !== null && (ROLES_WITH_OWN_PENDING_SURVEYS as readonly string[]).includes(role);
+
+  // Only pm/associate can create/cancel in-person sessions — mentors and
+  // mentees see them on the timeline but have no management controls.
   const canManageSessions = role === "pm" || role === "associate";
+
+  // Mentees see their own dispatches (with completion status); staff/mentors
+  // see one node per content_item due date instead of one per mentee — see
+  // fetchContentItemsDueInRange for why.
   const isMenteeView = role === "mentee";
+
+  // Mentors only see content items THEY created on the timeline, matching
+  // /app/assignments_and_courses/page.tsx's scopeToCreatedBy. Staff
+  // (pm/associate) get no scope — they see everything, same as before.
   const scopeToCreatedBy = role === "mentor" ? (userId ?? undefined) : undefined;
 
   const handleRangeChange = React.useCallback((rangeStartIso: string, rangeEndIso: string) => {
     setRange({ start: rangeStartIso, end: rangeEndIso });
   }, []);
 
+  // `role` is `Role | null` while the session is still resolving — was
+  // being passed directly into fetchMeetingsInRange's `role: UserRole`
+  // param, which is where the "Type 'Role | null' is not assignable to
+  // type 'UserRole'" error came from. Fixed the same way as
+  // MeetingFormModal: gate the query on role !== null instead of casting
+  // past the null, so queryFn is never actually invoked with one.
   const meetingsQuery = useQuery({
     queryKey: ["meetings", userId, role, range?.start, range?.end],
     queryFn: () => {
-      if (!role) return Promise.reject(new Error("Role not loaded yet"));
+      if (!role) {
+        return Promise.reject(new Error("Role not loaded yet"));
+      }
       return fetchMeetingsInRange({ userId: userId ?? null, role, rangeStart: range!.start, rangeEnd: range!.end });
     },
     enabled: Boolean(range) && role !== null && (Boolean(userId) || isDebugStaffPreview),
@@ -120,10 +149,14 @@ export default function MeetingsPage(): React.JSX.Element {
           adaptContentDispatchToTimelineEvent(dispatch, {
             renderDetails: () => (
               <div className="flex flex-col gap-1 text-sm text-text-primary">
-                {dispatch.content_item.description && <p>{dispatch.content_item.description}</p>}
+                {dispatch.content_item.description && (
+                  <p>{dispatch.content_item.description}</p>
+                )}
                 <p className="text-text-muted">
                   Status:{" "}
-                  <span className="capitalize font-medium">{dispatch.completion_status.replace("_", " ")}</span>
+                  <span className="capitalize font-medium">
+                    {dispatch.completion_status.replace("_", " ")}
+                  </span>
                 </p>
               </div>
             ),
@@ -135,7 +168,7 @@ export default function MeetingsPage(): React.JSX.Element {
                 Open
               </a>
             ),
-          }),
+          })
         )
         .filter((e): e is TimelineEvent => e !== null)
     : [];

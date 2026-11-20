@@ -43,9 +43,9 @@ export function PodCompletionSection({ data, isLoading }: { data: PodStats[]; is
   return (
     <div className="flex flex-col gap-3">
       <SmartFilterBar fieldDefs={fieldDefs} state={filterState} />
-      {isLoading && <p className="text-sm text-text-muted ">Loading…</p>}
+      {isLoading && <p className="text-sm text-text-muted dark:text-text-muted">Loading…</p>}
       {!isLoading && rows.length === 0 && (
-        <p className="text-sm text-text-muted ">No pods match these filters.</p>
+        <p className="text-sm text-text-muted dark:text-text-muted">No pods match these filters.</p>
       )}
       <div className="flex flex-col gap-2">
         {rows.map((pod) => {

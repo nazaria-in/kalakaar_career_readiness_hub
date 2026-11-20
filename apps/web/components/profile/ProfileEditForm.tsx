@@ -229,7 +229,7 @@ export function ProfileEditForm() {
 
       {/* ── Notifications section ── */}
       <div>
-        <p className="mb-2 px-1 text-sm font-medium text-text-primary ">
+        <p className="mb-2 px-1 text-sm font-medium text-text-primary dark:text-text-primary">
           Notifications
         </p>
         <PushNotificationToggle />
@@ -240,7 +240,7 @@ export function ProfileEditForm() {
         type="button"
         onClick={() => void handleSignOut()}
         disabled={signingOut}
-        className="w-full rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50  "
+        className="w-full rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:hover:bg-white/5"
       >
         {signingOut ? "Signing out…" : "Sign out"}
       </button>
